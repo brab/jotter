@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>{% if jlist %}Edit {{ jlist.name }}{% else %}New Jot{% endif %}</h1>
+<div class="row">
+  <div class="span8"> {% if form.errors %}
+    <div class="error"> {{ form.errors }} </div>
+    {% endif %}
+    <form action="" method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form_row">
+        {% if not field.is_hidden %}
+        <div class="field_label">
+          {{ field.label_tag }}
+        </div>
+        {% endif %}
+        <div class="field">
+          {{ field }}
+        </div>
+        {% if field.errors %}
+        <div class="error field_error">
+          {% for error in field.errors %}* {{ error }}{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% if error %}
+      <div class="error form_row">{{ error }}</div>
+      {% endif %}
+      <a class="btn" href="#">Cancel</a>
+      <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+  </div>
+  <div class="span4"> </div>
+</div>
+{% endblock body %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div id="jlists">
+  {% for jlist in jlists %}
+  <div class="jlist-elem">
+    <a href="{% url jotter.jot.views.jlist_view jlist.slug %}">{{ jlist.name }}</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock body %}

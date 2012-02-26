@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" id="html">
+  <head>
+    <title id="tpz_title">{% block title %}Jotter{% endblock title %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="content-language" content="en" />
+    {% block meta %}
+    <meta name="description" content="{% block meta_description %}{% endblock meta_description %}" />
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock meta_keywords %}" />
+    {% endblock meta %}
+
+    {% block stylesheets %}
+    <link href="{{ MEDIA_URL }}css/styles.css" rel="stylesheet" type="text/css" />
+    {% endblock stylesheets %}
+
+    {% block scripts %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/scripts.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>
+    {% endblock scripts %}
+  </head>
+  <body>
+    <!--div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"> <a class="brand" href="#">Base Navigation</a>
+          <ul class="nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </div-->
+    <div class="container">
+      <div class="content">
+        <div id="site-message">
+          {% if messages %}
+          <div> {% for message in messages %} <span {% if messge.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span> {% endfor %} </div>
+          {% endif %}
+          {% block message %} {% endblock message %}
+        </div>
+        {% block body %} {% endblock body %}
+        <footer>
+        <p> &copy; Jotter 2012 </p>
+        </footer>
+      </div>
+    </div>
+  </body>
+
+</html>
