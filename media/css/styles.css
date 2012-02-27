@@ -1,2 +1,6 @@
 @import url("bootstrap.min.css");
 
+a.item-delete {
+    float: right;
+}
+

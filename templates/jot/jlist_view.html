@@ -47,24 +47,38 @@
         $('.modal#jlist-item').modal('hide');
         if (existing_item.length == 1){
           existing_item
-            .attr('data-jlist-item-slug', slug);
-          existing_item.find('.item-edit')
-            .attr('data-item-slug', slug)
+            .attr('data-item-slug', slug);
+          existing_item.find('.item-name')
             .text(retval['data']['_container']['name']);
           existing_item.find('.item-delete')
             .attr('data-item-slug', slug);
+          existing_item.find('.item-description')
+            .text(retval['data']['_container']['description'].split('\\s+').slice(0,3) + ' ...');
+          if (retval['data']['_container']['checked'] == true) {
+            existing_item.find('.item-checked').addClass('icon-flag');
+          }
+          else {
+            existing_item.find('.item-checked').removeClass('icon-flag');
+          }
         }
         else {
           var new_item = $('.jlist-item:first').clone();
           new_item
             .attr('id', item_id)
             .attr('style', 'display:none;')
-            .attr('data-jlist-item-slug', slug);
-          new_item.find('.item-edit')
-            .attr('data-item-slug', slug)
+            .attr('data-item-slug', slug);
+          new_item.find('.item-name')
             .text(retval['data']['_container']['name']);
           new_item.find('.item-delete')
             .attr('data-item-slug', slug);
+          new_item.find('.item-description')
+            .text(retval['data']['_container']['description'].split('\\s+').slice(0,3) + ' ...');
+          if (retval['data']['_container']['checked'] == true) {
+            new_item.find('.item-checked').addClass('icon-flag');
+          }
+          else {
+            new_item.find('.item-checked').removeClass('icon-flag');
+          }
           $('#jlist-items').append(new_item);
           $('#jlist-items .jlist-item:last').animate({opacity:100, height:'toggle'}, 600);
         }
@@ -115,13 +129,22 @@
 {% endblock scripts %}
 
 {% block body %}
-<h1>{{ jlist.name }}</h1>
-<a class="btn btn-success btn-small" id="item-new" href="#"><i class="icon-plus icon-white"></i></a>
+<h1>
+  {{ jlist.name }}
+  <a class="btn btn-success btn-small" id="item-new" href="#"><i class="icon-plus icon-white"></i> New Item</a>
+</h1>
+<br />
 <div id="jlist-items">
   {% for item in jlist_items %}
-  <div class="jlist-item" id="{{ item.id }}" data-jlist-item-slug="{{ item.slug }}"">
-    <a class="item-edit" data-item-slug="{{ item.slug }}" href="#">{{ item.name }}</a>
-    <a class="item-delete" data-item-slug="{{ item.slug }}" href="#"><i class="icon-remove-sign"></i></a>
+  <div class="jlist-item well item-edit" id="{{ item.id }}" data-item-slug="{{ item.slug }}">
+    <h4>
+      <i class="item-checked {% if item.checked %}icon-flag{% endif %}"></i>
+      <span class="item-name">{{ item.name }}</span>
+      <a class="item-delete btn btn-danger btn-mini" data-item-slug="{{ item.slug }}" href="#"><i class="icon-remove-sign icon-white"></i></a>
+    </h4>
+    <p class="item-description">
+      {{ item.description|truncatewords:"4" }}
+    </p>
   </div>
   {% endfor %}
 </div>

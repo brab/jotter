@@ -44,3 +44,7 @@ function api_sync(call, http_method, data) {
     return {'status': result.status, 'data': data}
 }
 
+$(document).ready(function() {
+    setTimeout(function() { window.scrollTo(0, 1) }, 100);
+});
+
