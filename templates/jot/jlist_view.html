@@ -7,6 +7,16 @@
 
     $('.modal#jlist-item').modal('hide');
 
+    // new item form open
+    $('#item-new').on('click', function() {
+      $('#id_slug').val('');
+      $('#id_name').val('');
+      $('#id_description').val('');
+      $('#id_checked').removeAttr('checked');
+
+      $('.modal#jlist-item').modal('show');
+    });
+
     // saving an item
     $('#modal-jlist-item-save').on('click', function() {
       var data = {
@@ -91,7 +101,7 @@
 
 {% block body %}
 <h1>{{ jlist.name }}</h1>
-<a class="btn btn-success btn-small" href="#jlist-item" data-toggle="modal"><i class="icon-plus icon-white"></i></a>
+<a class="btn btn-success btn-small" id="item-new" href="#"><i class="icon-plus icon-white"></i></a>
 <div id="jlist-items">
   {% for item in jlist_items %}
   <div class="jlist-item" data-jlist-item-slug="{{ item.slug }}">
