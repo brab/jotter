@@ -41,18 +41,33 @@
       }
 
       if (retval['status'] == 200) {
+        var slug = retval['data']['_container']['slug'];
+        var item_id = retval['data']['_container']['id'];
+        var existing_item = $('#jlist-items .jlist-item[id=' + item_id  + ']:first');
         $('.modal#jlist-item').modal('hide');
-        var new_item = $('.jlist-item:first').clone();
-        new_item
-          .attr('style', 'display:none;')
-          .attr('data-jlist-item-slug', retval['data']['_container']['slug']);
-        new_item.find('.item-edit')
-          .attr('data-item-slug', retval['data']['_container']['slug'])
-          .text(retval['data']['_container']['name']);
-        new_item.find('.item-delete')
-          .attr('data-item-slug', retval['data']['_container']['slug'])
-        $('#jlist-items').append(new_item);
-        $('#jlist-items .jlist-item:last').animate({opacity:100, height:'toggle'}, 600);
+        if (existing_item.length == 1){
+          existing_item
+            .attr('data-jlist-item-slug', slug);
+          existing_item.find('.item-edit')
+            .attr('data-item-slug', slug)
+            .text(retval['data']['_container']['name']);
+          existing_item.find('.item-delete')
+            .attr('data-item-slug', slug);
+        }
+        else {
+          var new_item = $('.jlist-item:first').clone();
+          new_item
+            .attr('id', item_id)
+            .attr('style', 'display:none;')
+            .attr('data-jlist-item-slug', slug);
+          new_item.find('.item-edit')
+            .attr('data-item-slug', slug)
+            .text(retval['data']['_container']['name']);
+          new_item.find('.item-delete')
+            .attr('data-item-slug', slug);
+          $('#jlist-items').append(new_item);
+          $('#jlist-items .jlist-item:last').animate({opacity:100, height:'toggle'}, 600);
+        }
       }
     });
     $('#form-item-edit').on('submit', function(e) {
@@ -104,7 +119,7 @@
 <a class="btn btn-success btn-small" id="item-new" href="#"><i class="icon-plus icon-white"></i></a>
 <div id="jlist-items">
   {% for item in jlist_items %}
-  <div class="jlist-item" data-jlist-item-slug="{{ item.slug }}">
+  <div class="jlist-item" id="{{ item.id }}" data-jlist-item-slug="{{ item.slug }}"">
     <a class="item-edit" data-item-slug="{{ item.slug }}" href="#">{{ item.name }}</a>
     <a class="item-delete" data-item-slug="{{ item.slug }}" href="#"><i class="icon-remove-sign"></i></a>
   </div>

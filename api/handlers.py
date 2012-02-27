@@ -21,3 +21,21 @@ class jListItemHandler(BaseHandler):
             resp.content = json.dumps(form.errors)
             return resp.__dict__
 
+    def update(self, request, slug):
+        try:
+            item = jListItem.objects.get(slug=slug)
+        except:
+            resp = rc.BAD_REQUEST
+            resp.content = 'jListItem not found with slug: %s' % slug
+            return resp.__dict__
+        form = jListItemForm(instance=item, data=request.data)
+        if form.is_valid():
+            jlist_item = form.save()
+            resp = rc.CREATED
+            resp.content = jlist_item.__dict__
+            return resp.__dict__
+        else:
+            resp = rc.BAD_REQUEST
+            resp.content = json.dumps(form.errors)
+            return resp.__dict__
+
