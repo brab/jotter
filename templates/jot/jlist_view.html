@@ -31,8 +31,8 @@
 
       if (retval['status'] == 200) {
         $('.modal#jlist-item').modal('hide');
-        $('#jlist-items').prepend('<div class="jlist-item" style="display:none;" data-jlist-item-slug="' + retval['data']['_container']['slug'] + '">' + retval['data']['_container']['name'] + '<a class="item-delete" data-item-slug="' + retval['data']['_container']['slug'] + '" href="#"><i class="icon-remove-sign"></i></a>');
-        $('#jlist-items .jlist-item:first').fadeIn('slow');
+        $('#jlist-items').append('<div class="jlist-item" style="display:none;" data-jlist-item-slug="' + retval['data']['_container']['slug'] + '">' + retval['data']['_container']['name'] + '<a class="item-delete" data-item-slug="' + retval['data']['_container']['slug'] + '" href="#"><i class="icon-remove-sign"></i></a>');
+        $('#jlist-items .jlist-item:last').animate({opacity:100, height:'toggle'}, 600);
       }
     });
     $('#jlist-items').on('click', '.item-delete', function() {
@@ -40,7 +40,7 @@
       var retval = api_sync('api/item/' + slug, 'DELETE');
       if (retval['status'] == 204) {
         var item = $(this).parents('.jlist-item');
-        item.fadeOut('slow');
+        item.animate({opacity:0, height:'toggle'}, 600);
         setTimeout(
           function() {
             item.detach();
