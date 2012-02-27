@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^$', 'jotter.account.views.index'),
     url(r'^login$', 'jotter.account.views.login'),
     url(r'^logout$', 'jotter.account.views.logout'),
+    url(r'^api/', include('jotter.api.urls')),
     url(r'^jot/', include('jotter.jot.urls')),
 
     url(r'^admin/', include(admin.site.urls)),

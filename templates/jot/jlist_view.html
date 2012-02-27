@@ -1,5 +1,104 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    $('.modal#jlist-item').modal('hide');
+    $('#modal-jlist-item-save').on('click', function() {
+      var data = {
+        'jlist': $('#id_jlist').val(),
+        'name': $('#id_name').val(),
+        'description': $('#id_description').val(),
+        'checked': false,
+        'slug': ''
+      };
+      if ($('#id_slug').val() != '') {
+        data['slug'] = $('#id_slug').val();
+      }
+      if ($('#id_checked:checked').length == 1) {
+        data['checked'] = true;
+      }
+
+      if ($('#id_slug').val() == '') {
+        var retval = api_sync('api/item/new', 'POST', data);
+      }
+      else {
+        var retval = api_sync('api/item/' + $('#id_slug').val(), 'PUT', data);
+      }
+      ltc(retval);
+
+      if (retval['status'] == 200) {
+        $('.modal#jlist-item').modal('hide');
+        $('#jlist-items').prepend('<div class="jlist-item" style="display:none;" data-jlist-item-slug="' + retval['data']['_container']['slug'] + '">' + retval['data']['_container']['name'] + '<a class="item-delete" data-item-slug="' + retval['data']['_container']['slug'] + '" href="#"><i class="icon-remove-sign"></i></a>');
+        $('#jlist-items .jlist-item:first').fadeIn('slow');
+      }
+    });
+    $('#jlist-items').on('click', '.item-delete', function() {
+      var slug = $(this).attr('data-item-slug');
+      var retval = api_sync('api/item/' + slug, 'DELETE');
+      if (retval['status'] == 204) {
+        var item = $(this).parents('.jlist-item');
+        item.fadeOut('slow');
+        setTimeout(
+          function() {
+            item.detach();
+          },
+          1000);
+      }
+    });
+
+  });
+</script>
+{% endblock scripts %}
+
 {% block body %}
 <h1>{{ jlist.name }}</h1>
+<a class="btn btn-success btn-small" href="#jlist-item" data-toggle="modal"><i class="icon-plus icon-white"></i></a>
+<div id="jlist-items">
+  {% for item in jlist_items %}
+  <div class="jlist-item" id="{{ item.id }}" data-jlist-item-slug="{{ item.slug }}">
+    {{ item.name }}
+    <a class="item-delete" data-item-slug="{{ item.slug }}" href="#"><i class="icon-remove-sign"></i></a>
+  </div>
+  {% endfor %}
+</div>
+
+
+<div class="modal" id="jlist-item" style="display:none;">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h3>Add Item</h3>
+  </div>
+  <div class="modal-body">
+    <form action="" method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form_row">
+        {% if not field.is_hidden %}
+        <div class="field_label">
+          {{ field.label_tag }}
+        </div>
+        {% endif %}
+        <div class="field">
+          {{ field }}
+        </div>
+        {% if field.errors %}
+        <div class="error field_error">
+          {% for error in field.errors %}* {{ error }}{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% if error %}
+      <div class="error form_row">{{ error }}</div>
+      {% endif %}
+    </form>
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-primary btn-large" id="modal-jlist-item-save">Save</a>
+    <a class="btn btn-large" data-dismiss="modal">Cancel</a>
+  </div>
+</div>
 {% endblock body %}
