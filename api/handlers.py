@@ -14,11 +14,7 @@ class jListItemHandler(BaseHandler):
         if form.is_valid():
             jlist_item = form.save()
             resp = rc.CREATED
-            resp.content = {
-                    'name': jlist_item.name,
-                    'slug': jlist_item.slug,
-                    'description': jlist_item.description,
-                    }
+            resp.content = jlist_item.__dict__
             return resp.__dict__
         else:
             resp = rc.BAD_REQUEST
