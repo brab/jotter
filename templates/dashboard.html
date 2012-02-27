@@ -5,6 +5,7 @@
   {% for jlist in jlists %}
   <div class="jlist-elem">
     <a href="{% url jotter.jot.views.jlist_view jlist.slug %}">{{ jlist.name }}</a>
+    <a href="{% url jotter.jot.views.jlist_delete jlist.slug %}"><i class="icon-remove-sign"></i></a>
   </div>
   {% endfor %}
 </div>

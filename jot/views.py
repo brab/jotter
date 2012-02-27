@@ -41,3 +41,18 @@ def jlist_view(request, slug):
         'jlist': jlist,
         })
 
+def jlist_delete(request, slug):
+    try:
+        jlist = jList.objects.get(slug=slug)
+    except:
+        messages.warning(request, 'I can\'t find that Jot')
+    else:
+        if request.user.id is not jlist.owner.id:
+            messages.error(request, 'You don\'t own that Jot')
+        else:
+            jlist.delete()
+            messages.success(request, 'Jot deleted')
+
+    return HttpResponseRedirect(reverse('jotter.account.views.index'))
+
+
