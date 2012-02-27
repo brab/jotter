@@ -53,7 +53,7 @@
           existing_item.find('.item-delete')
             .attr('data-item-slug', slug);
           existing_item.find('.item-description')
-            .text(retval['data']['_container']['description'].split('\\s+').slice(0,3) + ' ...');
+            .text(retval['data']['_container']['description'].split(' ').slice(0,4).join(' ') + ' ...');
           if (retval['data']['_container']['checked'] == true) {
             existing_item.find('.item-checked').addClass('icon-flag');
           }
@@ -72,7 +72,7 @@
           new_item.find('.item-delete')
             .attr('data-item-slug', slug);
           new_item.find('.item-description')
-            .text(retval['data']['_container']['description'].split('\\s+').slice(0,3) + ' ...');
+            .text(retval['data']['_container']['description'].split(' ').slice(0,4).join(' ') + ' ...');
           if (retval['data']['_container']['checked'] == true) {
             new_item.find('.item-checked').addClass('icon-flag');
           }
