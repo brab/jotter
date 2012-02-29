@@ -55,10 +55,10 @@
           existing_item.find('.item-description')
             .text(retval['data']['_container']['description'].split(' ').slice(0,4).join(' ') + ' ...');
           if (retval['data']['_container']['checked'] == true) {
-            existing_item.find('.item-checked').addClass('icon-flag');
+            existing_item.find('.item-checked').addClass('icon-leaf');
           }
           else {
-            existing_item.find('.item-checked').removeClass('icon-flag');
+            existing_item.find('.item-checked').removeClass('icon-leaf');
           }
         }
         else {
@@ -74,10 +74,10 @@
           new_item.find('.item-description')
             .text(retval['data']['_container']['description'].split(' ').slice(0,4).join(' ') + ' ...');
           if (retval['data']['_container']['checked'] == true) {
-            new_item.find('.item-checked').addClass('icon-flag');
+            new_item.find('.item-checked').addClass('icon-leaf');
           }
           else {
-            new_item.find('.item-checked').removeClass('icon-flag');
+            new_item.find('.item-checked').removeClass('icon-leaf');
           }
           $('#jlist-items').append(new_item);
           $('#jlist-items .jlist-item:last').animate({opacity:100, height:'toggle'}, 600);
@@ -129,18 +129,18 @@
 {% endblock scripts %}
 
 {% block body %}
-<h1>
-  {{ jlist.name }}
-  <a class="btn btn-success btn-small" id="item-new" href="#"><i class="icon-plus icon-white"></i> New Item</a>
-</h1>
-<br />
+<div id="jlist-header">
+  <h1 class="inline"> {{ jlist.name }}</h1>
+  <a class="btn btn-success btn-small pull-right" id="item-new" href="#"><i class="icon-plus icon-white"></i> New Item</a>
+</div>
 <div id="jlist-items">
   {% for item in jlist_items %}
-  <div class="jlist-item well item-edit" id="{{ item.id }}" data-item-slug="{{ item.slug }}">
+  <div class="jlist-item item-edit" id="{{ item.id }}" data-item-slug="{{ item.slug }}">
     <h4>
-      <i class="item-checked {% if item.checked %}icon-flag{% endif %}"></i>
+      <i class="item-checked {% if item.checked %}icon-leaf{% endif %}"></i>
       <span class="item-name">{{ item.name }}</span>
-      <a class="item-delete btn btn-danger btn-mini" data-item-slug="{{ item.slug }}" href="#"><i class="icon-remove-sign icon-white"></i></a>
+      <i class="icon-chevron-right opac-light pull-right"></i>
+      <a class="item-delete btn btn-danger btn-mini pull-right" style="display:none;" data-item-slug="{{ item.slug }}" href="#"><i class="icon-remove-sign icon-white"></i></a>
     </h4>
     <p class="item-description">
       {{ item.description|truncatewords:"4" }}
@@ -158,26 +158,16 @@
   <div class="modal-body">
     <form action="" method="POST" id="form-item-edit">
       {% csrf_token %}
-      {% for field in form %}
-      <div class="form_row">
-        {% if not field.is_hidden %}
-        <div class="field_label">
-          {{ field.label_tag }}
-        </div>
-        {% endif %}
-        <div class="field">
-          {{ field }}
-        </div>
-        {% if field.errors %}
-        <div class="error field_error">
-          {% for error in field.errors %}* {{ error }}{% endfor %}
-        </div>
-        {% endif %}
-      </div>
-      {% endfor %}
-      {% if error %}
-      <div class="error form_row">{{ error }}</div>
-      {% endif %}
+      {{ form.slug }}
+      {{ form.jlist }}
+
+      {{ form.checked }}
+
+      {{ form.name.label_tag }}
+      {{ form.name }}
+
+      {{ form.description.label_tag }}
+      {{ form.description }}
     </form>
   </div>
   <div class="modal-footer">

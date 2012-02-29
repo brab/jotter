@@ -17,9 +17,11 @@ class jListItemForm(forms.ModelForm):
     slug = forms.CharField(
             required=False,
             widget=forms.HiddenInput())
+    name = forms.CharField(
+            widget=forms.TextInput(attrs={'class':'span4'}))
     description = forms.CharField(
             required=False,
-            widget=forms.Textarea())
+            widget=forms.Textarea(attrs={'class':'span4','rows':'2',}))
 
     class Meta:
         model = jListItem
