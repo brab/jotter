@@ -129,7 +129,7 @@
 {% endblock scripts %}
 
 {% block body %}
-<div id="jlist-header">
+<div id="header">
   <h1 class="inline"> {{ jlist.name }}</h1>
   <a class="btn btn-success btn-small pull-right" id="item-new" href="#"><i class="icon-plus icon-white"></i> New Item</a>
 </div>
@@ -139,7 +139,7 @@
     <h4>
       <i class="item-checked {% if item.checked %}icon-leaf{% endif %}"></i>
       <span class="item-name">{{ item.name }}</span>
-      <i class="icon-chevron-right opac-light pull-right"></i>
+      <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
       <a class="item-delete btn btn-danger btn-mini pull-right" style="display:none;" data-item-slug="{{ item.slug }}" href="#"><i class="icon-remove-sign icon-white"></i></a>
     </h4>
     <p class="item-description">

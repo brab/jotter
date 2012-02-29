@@ -4,13 +4,7 @@ body {
     background-color: #cccccc;
 }
 
-.page-header {
-  background-color: #f5f5f5;
-  padding: 20px 20px 10px;
-  margin: -20px -20px 20px;
-}
-
-.container > footer p { text-align: center; /* center align it with the container */ }
+footer p { text-align: center; /* center align it with the container */ }
 
 .content {
     background-color: #ffffff;
@@ -19,9 +13,12 @@ body {
     border-radius: 3px;
     padding: 5px;
     margin: 10px -15px;
+    -webkit-box-shadow: 1px 1px #848484;
+    -moz-box-shadow: 1px 1px #848484;
+    box-shadow: 1px 1px #848484;
 }
 
-#jlist-header {
+#header {
     margin: 0 -5px;
     padding: 5px 20px 10px 20px;
     background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 1%, rgba(222,222,222,1) 100%);
