@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h1>{% if jlist %}Edit {{ jlist.name }}{% else %}New Jot{% endif %}</h1>
+<div id="header">
+  <h1>{% if jlist %}Edit {{ jlist.name }}{% else %}New Jot{% endif %}</h1>
+</div>
 <div class="row">
-  <div class="span8"> {% if form.errors %}
-    <div class="error"> {{ form.errors }} </div>
-    {% endif %}
+  <div class="span8">
     <form action="" method="POST">
       {% csrf_token %}
       {% for field in form %}
@@ -25,9 +25,6 @@
         {% endif %}
       </div>
       {% endfor %}
-      {% if error %}
-      <div class="error form_row">{{ error }}</div>
-      {% endif %}
       <a class="btn" href="#">Cancel</a>
       <button class="btn btn-primary" type="submit">Save</button>
     </form>
