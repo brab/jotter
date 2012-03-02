@@ -9,7 +9,7 @@
 
     // new item form open
     $('#item-new').on('click', function() {
-      $('.modal#jlist-item #add-edit-text').text('Add');
+      $('.modal#jlist-item #add-edit-text').text('New');
       $('.modal#jlist-item #item-delete').attr('data-item-slug', '').hide();
       $('#id_slug').val('');
       $('#id_name').val('');
@@ -155,7 +155,7 @@
 <div class="modal" id="jlist-item" style="display:none;">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&times;</a>
-    <h3><span id="add-edit-text">Add</span> Item</h3>
+    <h3><span id="add-edit-text"></span> Item</h3>
   </div>
   <div class="modal-body">
     <a class="btn btn-mini btn-danger btn-large pull-right" id="item-delete" data-item-slug="" href="#"><i class="icon-remove-sign icon-white"></i> Delete</a>
