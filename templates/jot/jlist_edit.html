@@ -1,34 +1,99 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    $('input#admins').on('keyup', function(e) {
+      $('#admins-control-group').removeClass('error warning');
+      var code = (e.keyCode ? e.keyCode : e.which);
+      if (code == 32) {
+        $('#admins-help').text('').hide();
+        var data = {
+          'email': $(this).val(),
+          'jlist_slug': '{{ jlist.slug }}'
+        };
+        var retval = api_sync('api/jlist/admins', 'POST', data);
+        if (retval['data']['status_code'] == 201) {
+          var new_admin_obj = $('#admins-list .label:last').clone();
+          new_admin_obj.find('.email').text(data['email']);
+          $('#admins-list').prepend(new_admin_obj);
+          new_admin_obj.fadeIn('slow');
+          $('input#admins').val('');
+        }
+        else if (retval['data']['status_code'] == 400) {
+          $('#admins-control-group').addClass('error');
+          $('#admins-help').text('Please check the email and try again').slideDown();
+        }
+        else if (retval['data']['status_code'] == 404) {
+          $('#admins-control-group').addClass('warning');
+          $('#admins-help').text('That user\'s not in the system').slideDown();
+        }
+        else if (retval['data']['status_code'] == 409) {
+          $('#admins-control-group').addClass('warning');
+          $('#admins-help').text('You\'re already sharing with that user').slideDown();
+        }
+      }
+    });
+
+    $('.admin-delete').on('click', function() {
+      var email = $(this).siblings('.email').text();
+      var retval = api_sync('api/jlist/{{ jlist.slug }}/admins/' + email, 'DELETE');
+      if (retval['data']['status_code'] == 204){
+        $(this).parents('.admin-elem').slideUp();
+      }
+    });
+
+  });
+</script>
+{% endblock scripts %}
+
 {% block body %}
 <div id="header">
-  <h1>{% if jlist %}Edit {{ jlist.name }}{% else %}New Jot{% endif %}</h1>
+  <h1>{% if jlist %}Edit {% else %}New {% endif %}Jot</h1>
 </div>
-<div class="row">
-  <div class="span8">
-    <form action="" method="POST">
-      {% csrf_token %}
-      {% for field in form %}
-      <div class="form_row">
-        {% if not field.is_hidden %}
-        <div class="field_label">
-          {{ field.label_tag }}
-        </div>
-        {% endif %}
-        <div class="field">
-          {{ field }}
-        </div>
-        {% if field.errors %}
-        <div class="error field_error">
-          {% for error in field.errors %}* {{ error }}{% endfor %}
-        </div>
-        {% endif %}
+{% if jlist %}
+<div class="row" id="jot-edit" style="margin-bottom:-15px;">
+  <a class="btn btn-mini btn-danger pull-right" id="jot-delete" data-jot-slug="" href="#"><i class="icon-remove-sign icon-white"></i> Delete</a>
+</div>
+{% endif %}
+<div class="row" id="jot-edit">
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form.owner }}
+
+    {{ form.name.label_tag }}
+    {{ form.name }}
+
+    {% if jlist %}
+    <div class="control-group" id="admins-control-group">
+      <label for="admins">Admins</a>
+      <input class="span3" id="admins" name="admins" />
+      <span class="help-inline" id="admins-help" style="display:none;"></span>
+    </div>
+    <p class="help-block">
+      Enter emails of users you would like to share this Jot with, separated by spaces
+    </p>
+    <div id="admins-list">
+      {% for admin in jlist.admins.all %}
+      <div class="label label-info admin-elem">
+        <span class="email">{{ admin.email }}</span>
+        <a class="close pull-right admin-delete" href="#">&times;</a>
       </div>
       {% endfor %}
-      <a class="btn" href="#">Cancel</a>
-      <button class="btn btn-primary" type="submit">Save</button>
-    </form>
-  </div>
-  <div class="span4"> </div>
+
+      <!-- an empty one for cloning -->
+      <div class="label label-info admin-elem" style="display:none;">
+        <span class="email"></span>
+        <a class="close pull-right admin-delete" href="#">&times;</a>
+      </div>
+
+    </div>
+    {% endif %}
+
+    <button class="btn btn-large btn-primary pull-right" type="submit" style="margin-left:4px;">Save</button>
+    <a class="btn btn-large pull-right" href="{% if jlist %}{% url jotter.jot.views.jlist_view jlist.slug %}{% else %}{% url jotter.account.views.index %}{% endif %}">Cancel</a>
+  </form>
 </div>
 {% endblock body %}

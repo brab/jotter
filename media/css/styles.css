@@ -33,6 +33,23 @@ footer p { text-align: center; /* center align it with the container */ }
     margin-top: 4px;;
 }
 
+#jot-edit {
+    margin: 10px 0;
+    padding: 0 20px;
+}
+
+#jot-edit-alert {
+    margin-top: 5px;
+}
+
+#admins-list {
+    margin: 5px 0 15px 0;
+}
+
+#admins-list .label {
+    margin-bottom: 3px;
+}
+
 #jlist-items, #jlists {
     margin: 0 -5px 5px -5px;
 }

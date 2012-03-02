@@ -170,6 +170,7 @@
 
 </div>
 <a class="btn btn-small" id="jots" href="{% url jotter.account.views.index %}"><i class="icon-arrow-left"></i> Jots</a>
+<a class="btn btn-small pull-right" href="{% url jotter.jot.views.jlist_edit jlist.slug %}"><i class="icon-edit"></i> Edit Jot</a>
 
 
 <div class="modal" id="jlist-item" style="display:none;">
@@ -178,7 +179,7 @@
     <h3><span id="add-edit-text"></span> Item</h3>
   </div>
   <div class="modal-body">
-    <a class="btn btn-mini btn-danger btn-large pull-right" id="item-delete" data-item-slug="" href="#"><i class="icon-remove-sign icon-white"></i> Delete</a>
+    <a class="btn btn-mini btn-danger pull-right" id="item-delete" data-item-slug="" href="#"><i class="icon-remove-sign icon-white"></i> Delete</a>
     <form action="" method="POST" id="form-item-edit">
       {% csrf_token %}
       {{ form.slug }}

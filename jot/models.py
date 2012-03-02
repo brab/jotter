@@ -20,7 +20,7 @@ class jList(models.Model):
             pass
 
         if not self.id \
-        or not jList.name == self.name:
+        or not jlist.name == self.name:
             all_slugs = [l.slug for l in jList.objects.all()]
             slug = slugify(self.name)
             while slug in all_slugs:
