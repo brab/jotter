@@ -32,6 +32,13 @@
         </div>
         {% block body %} {% endblock body %}
         <footer>
+        <p>
+          {% if user.is_authenticated %}
+          {{ user.email }}
+          {% if user.email %}<span> | </span>{% endif %}
+          <a href="{% url jotter.account.views.logout %}">logout</a>
+          {% endif %}
+        </p>
         <p> &copy; Jotter 2012 </p>
         </footer>
       </div>
