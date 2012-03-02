@@ -9,6 +9,8 @@
 
     // new item form open
     $('#item-new').on('click', function() {
+      $('.modal#jlist-item #add-edit-text').text('Add');
+      $('.modal#jlist-item #item-delete').attr('data-item-slug', '').hide();
       $('#id_slug').val('');
       $('#id_name').val('');
       $('#id_description').val('');
@@ -50,8 +52,6 @@
             .attr('data-item-slug', slug);
           existing_item.find('.item-name')
             .text(retval['data']['_container']['name']);
-          existing_item.find('.item-delete')
-            .attr('data-item-slug', slug);
           existing_item.find('.item-description')
             .text(retval['data']['_container']['description'].split(' ').slice(0,4).join(' ') + ' ...');
           if (retval['data']['_container']['checked'] == true) {
@@ -69,8 +69,6 @@
             .attr('data-item-slug', slug);
           new_item.find('.item-name')
             .text(retval['data']['_container']['name']);
-          new_item.find('.item-delete')
-            .attr('data-item-slug', slug);
           new_item.find('.item-description')
             .text(retval['data']['_container']['description'].split(' ').slice(0,4).join(' ') + ' ...');
           if (retval['data']['_container']['checked'] == true) {
@@ -106,21 +104,25 @@
         $('#id_checked').removeAttr('checked');
       }
 
+      $('.modal#jlist-item #add-edit-text').text('Edit');
+      $('.modal#jlist-item #item-delete').attr('data-item-slug', slug).show();
+
       $('.modal#jlist-item').modal('show');
     });
 
     // deleting an item
-    $('#jlist-items').on('click', '.item-delete', function() {
+    $('#item-delete').on('click', function() {
       var slug = $(this).attr('data-item-slug');
       var retval = api_sync('api/item/' + slug, 'DELETE');
       if (retval['status'] == 204) {
-        var item = $(this).parents('.jlist-item');
+        var item = $('.jlist-item[data-item-slug="' + slug + '"]');
         item.animate({opacity:0, height:'toggle'}, 600);
         setTimeout(
           function() {
             item.detach();
           },
           1000);
+        $('.modal#jlist-item').modal('hide');
       }
     });
 
@@ -140,7 +142,6 @@
       <i class="item-checked {% if item.checked %}icon-leaf{% endif %}"></i>
       <span class="item-name">{{ item.name }}</span>
       <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
-      <a class="item-delete btn btn-danger btn-mini pull-right" style="display:none;" data-item-slug="{{ item.slug }}" href="#"><i class="icon-remove-sign icon-white"></i></a>
     </h4>
     <p class="item-description">
       {{ item.description|truncatewords:"4" }}
@@ -154,9 +155,10 @@
 <div class="modal" id="jlist-item" style="display:none;">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&times;</a>
-    <h3>Add Item</h3>
+    <h3><span id="add-edit-text">Add</span> Item</h3>
   </div>
   <div class="modal-body">
+    <a class="btn btn-mini btn-danger btn-large pull-right" id="item-delete" data-item-slug="" href="#"><i class="icon-remove-sign icon-white"></i> Delete</a>
     <form action="" method="POST" id="form-item-edit">
       {% csrf_token %}
       {{ form.slug }}
