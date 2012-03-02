@@ -52,8 +52,12 @@
             .attr('data-item-slug', slug);
           existing_item.find('.item-name')
             .text(retval['data']['_container']['name']);
-          existing_item.find('.item-description')
-            .text(retval['data']['_container']['description'].split(' ').slice(0,4).join(' ') + ' ...');
+          var description_array = retval['data']['_container']['description'].split(' ');
+          var description = description_array.slice(0,4).join(' ');
+          if (description_array.length > 4) {
+            description += ' ...';
+          }
+          existing_item.find('.item-description').text(description);
           if (retval['data']['_container']['checked'] == true) {
             existing_item.find('.item-checked').addClass('icon-leaf');
           }
@@ -69,8 +73,12 @@
             .attr('data-item-slug', slug);
           new_item.find('.item-name')
             .text(retval['data']['_container']['name']);
-          new_item.find('.item-description')
-            .text(retval['data']['_container']['description'].split(' ').slice(0,4).join(' ') + ' ...');
+          var description_array = retval['data']['_container']['description'].split(' ');
+          var description = description_array.slice(0,4).join(' ');
+          if (description_array.length > 4) {
+            description += ' ...';
+          }
+          new_item.find('.item-description').text(description);
           if (retval['data']['_container']['checked'] == true) {
             new_item.find('.item-checked').addClass('icon-leaf');
           }
@@ -148,6 +156,18 @@
     </p>
   </div>
   {% endfor %}
+
+  <!-- an empty one for cloning -->
+  <div class="jlist-item item-edit" id="" data-item-slug="" style="display:none;">
+    <h4>
+      <i class="item-checked"></i>
+      <span class="item-name"></span>
+      <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
+    </h4>
+    <p class="item-description">
+    </p>
+  </div>
+
 </div>
 <a class="btn btn-small" id="jots" href="{% url jotter.account.views.index %}"><i class="icon-arrow-left"></i> Jots</a>
 
