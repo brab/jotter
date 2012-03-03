@@ -1,6 +1,6 @@
 import os, sys
 
-path = '/Users/jotter/sites/jotter/apache'
+path = '/Users/jotter/sites/jotter'
 if path not in sys.path:
     sys.path.append(path)
 
