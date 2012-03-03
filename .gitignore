@@ -5,5 +5,6 @@
 *.log
 *.psd
 local_settings.py
+prod_settings.py
 dev_db
 
