@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h1>Login</h1>
+<div id="header">
+  <h1>Login</h1>
+</div>
 <div class="row">
   <div class="span8"> {% if form.errors %}
     <div class="error"> {{ form.errors }} </div>
@@ -16,7 +18,7 @@
         <div class="error"> {% for error in field.errors %}{{ error }}{% endfor %} </div>
         {% endif %} </div>
       {% endfor %}
-      <button class="btn" type="submit">Login</button>
+      <button class="btn btn-large btn-primary" type="submit">Login</button>
     </form>
   </div>
   <div class="span4"> </div>
