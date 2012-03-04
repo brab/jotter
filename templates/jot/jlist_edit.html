@@ -50,14 +50,14 @@
 {% endblock scripts %}
 
 {% block body %}
-<div id="header">
-  <h1>{% if jlist %}Edit {% else %}New {% endif %}Jot</h1>
-</div>
+<div id="inner-header">
+  <h2 class="inline">Jot It</h2>
 {% if jlist %}
-<div class="row" id="jot-edit" style="margin-bottom:-15px;">
-  <a class="btn btn-mini btn-danger pull-right" id="jot-delete" data-jot-slug="" href="#"><i class="icon-remove-sign icon-white"></i> Delete</a>
-</div>
+  <a class="btn btn-mini btn-danger pull-right" id="jot-delete" data-jot-slug="" href="#" style="margin: 10px 10px 0 0;"><i class="icon-remove-sign icon-white"></i></a>
 {% endif %}
+</div>
+<div class="row" id="jot-edit" style="margin-bottom:-15px;">
+</div>
 <div class="row" id="jot-edit">
   <form action="" method="POST">
     {% csrf_token %}
@@ -92,8 +92,10 @@
     </div>
     {% endif %}
 
-    <button class="btn btn-large btn-primary pull-right" type="submit" style="margin-left:4px;">Save</button>
-    <a class="btn btn-large pull-right" href="{% if jlist %}{% url jotter.jot.views.jlist_view jlist.slug %}{% else %}{% url jotter.account.views.index %}{% endif %}">Cancel</a>
+    <div class="controls-bottom">
+      <button class="btn btn-large btn-primary pull-right" type="submit" style="margin-left:4px;">Save</button>
+      <a class="btn btn-large pull-right" href="{% if jlist %}{% url jotter.jot.views.jlist_view jlist.slug %}{% else %}{% url jotter.account.views.index %}{% endif %}">Cancel</a>
+    </div>
   </form>
 </div>
 {% endblock body %}

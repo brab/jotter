@@ -138,10 +138,13 @@
 </script>
 {% endblock scripts %}
 
+{% block header %}
+  <a class="btn btn-success btn-small pull-right" id="item-new" href="#"><i class="icon-plus icon-white"></i></a>
+{% endblock header %}
+
 {% block body %}
-<div id="header">
-  <h1 class="inline"> {{ jlist.name }}</h1>
-  <a class="btn btn-success btn-small pull-right" id="item-new" href="#"><i class="icon-plus icon-white"></i> New Item</a>
+<div id="inner-header">
+  <h2 class="inline"> {{ jlist.name }}</h1>
 </div>
 <div id="jlist-items">
   {% for item in jlist_items %}
@@ -169,8 +172,10 @@
   </div>
 
 </div>
-<a class="btn btn-small" id="jots" href="{% url jotter.account.views.index %}"><i class="icon-arrow-left"></i> Jots</a>
-<a class="btn btn-small pull-right" href="{% url jotter.jot.views.jlist_edit jlist.slug %}"><i class="icon-edit"></i> Edit Jot</a>
+<div class="controls-bottom">
+  <a class="btn btn-small" id="jots" href="{% url jotter.account.views.index %}"><i class="icon-arrow-left"></i> Jots</a>
+  <a class="btn btn-small pull-right" href="{% url jotter.jot.views.jlist_edit jlist.slug %}"><i class="icon-edit"></i> Edit Jot</a>
+</div>
 
 
 <div class="modal" id="jlist-item" style="display:none;">
@@ -179,7 +184,7 @@
     <h3><span id="add-edit-text"></span> Item</h3>
   </div>
   <div class="modal-body">
-    <a class="btn btn-mini btn-danger pull-right" id="item-delete" data-item-slug="" href="#"><i class="icon-remove-sign icon-white"></i> Delete</a>
+    <a class="btn btn-mini btn-danger pull-right" id="item-delete" data-item-slug="" href="#"><i class="icon-remove-sign icon-white"></i></a>
     <form action="" method="POST" id="form-item-edit">
       {% csrf_token %}
       {{ form.slug }}

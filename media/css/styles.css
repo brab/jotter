@@ -1,7 +1,26 @@
 @import url("bootstrap.min.css");
 
+@font-face {
+    font-family: "Estrya Handwriting";
+    src: url("fonts/Jellyka_Estrya_Handwriting.ttf");
+}
+
 body {
     background-color: #cccccc;
+}
+
+#banner {
+    display: inline-block;
+    font-family: "Estrya Handwriting", "Lucida Grande", sans-serif;
+    font-size: 100px;
+    margin: 8px 15px 15px 5px;
+}
+
+#banner a {
+    color: #000000;
+}
+#banner a:hover {
+    text-decoration: none;
 }
 
 footer p { text-align: center; /* center align it with the container */ }
@@ -11,11 +30,26 @@ footer p { text-align: center; /* center align it with the container */ }
     -webkitborder-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    padding: 5px;
+    padding: 5px 5px 0 5px;
     margin: 10px -15px;
     -webkit-box-shadow: 1px 1px #848484;
     -moz-box-shadow: 1px 1px #848484;
     box-shadow: 1px 1px #848484;
+}
+
+#inner-header {
+    margin: 0px 5px 0 5px;
+}
+
+.controls-bottom {
+    padding-bottom: 5px;
+}
+.controls-bottom::before, .controls-bottom::after {
+    display: table;
+    content: "";
+}
+.controls-bottom::after {
+    clear: both;
 }
 
 #header {
@@ -30,7 +64,7 @@ footer p { text-align: center; /* center align it with the container */ }
 }
 
 #header a {
-    margin-top: 4px;;
+    margin-top: 8px;
 }
 
 #jot-edit {

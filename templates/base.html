@@ -31,6 +31,12 @@
           {% endif %}
           {% block message %} {% endblock message %}
         </div>
+        <div id="header">
+          <div id="banner">
+            <a href="{% url jotter.account.views.index %}">jotter</a>
+          </div>
+          {% block header %}{% endblock header %}
+        </div>
         {% block body %} {% endblock body %}
         </footer>
       </div>

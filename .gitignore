@@ -4,6 +4,7 @@
 *.db
 *.log
 *.psd
+*.DS_Store
 local_settings.py
 prod_settings.py
 dev_db
