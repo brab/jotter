@@ -12,39 +12,50 @@
       }
     });
 
-    $('input#admins').on('keyup', function(e) {
+    $('input#admins').on('change', function(e) {
+      if ($(this).val() == '') {
+        return;
+      }
       $('#admins-control-group').removeClass('error warning');
+      $('#admins-help').text('').hide();
+      var data = {
+        'email': $(this).val(),
+        'jlist_slug': '{{ jlist.slug }}'
+      };
+      var retval = api_sync('api/jlist/admins', 'POST', data);
+      if (retval['data']['status_code'] == 201) {
+        var new_admin_obj = $('#admins-list .label:last').clone();
+        new_admin_obj.find('.email').text(data['email']);
+        $('#admins-list').prepend(new_admin_obj);
+        new_admin_obj.fadeIn('slow');
+        $('input#admins').val('');
+      }
+      else if (retval['data']['status_code'] == 400) {
+        $('#admins-control-group').addClass('error');
+        $('#admins-help').text('Please check the email and try again').slideDown();
+      }
+      else if (retval['data']['status_code'] == 404) {
+        $('#admins-control-group').addClass('warning');
+        $('#admins-help').text('That user\'s not in the system').slideDown();
+      }
+      else if (retval['data']['status_code'] == 409) {
+        $('#admins-control-group').addClass('warning');
+        $('#admins-help').text('You\'re already sharing with that user').slideDown();
+      }
+    });
+    $('input#admins').on('keypress', function(e) {
       var code = (e.keyCode ? e.keyCode : e.which);
       if (code == 32) {
-        $('#admins-help').text('').hide();
-        var data = {
-          'email': $(this).val(),
-          'jlist_slug': '{{ jlist.slug }}'
-        };
-        var retval = api_sync('api/jlist/admins', 'POST', data);
-        if (retval['data']['status_code'] == 201) {
-          var new_admin_obj = $('#admins-list .label:last').clone();
-          new_admin_obj.find('.email').text(data['email']);
-          $('#admins-list').prepend(new_admin_obj);
-          new_admin_obj.fadeIn('slow');
-          $('input#admins').val('');
-        }
-        else if (retval['data']['status_code'] == 400) {
-          $('#admins-control-group').addClass('error');
-          $('#admins-help').text('Please check the email and try again').slideDown();
-        }
-        else if (retval['data']['status_code'] == 404) {
-          $('#admins-control-group').addClass('warning');
-          $('#admins-help').text('That user\'s not in the system').slideDown();
-        }
-        else if (retval['data']['status_code'] == 409) {
-          $('#admins-control-group').addClass('warning');
-          $('#admins-help').text('You\'re already sharing with that user').slideDown();
-        }
+        $(this).change();
+      }
+      else if (code == 13) {
+        e.preventDefault();
+        $(this).change();
+        return false;
       }
     });
 
-    $('.admin-delete').on('click', function() {
+    $('#admins-list').on('click', '.admin-delete', function() {
       var email = $(this).siblings('.email').text();
       var retval = api_sync('api/jlist/{{ jlist.slug }}/admins/' + email, 'DELETE');
       if (retval['data']['status_code'] == 204){
