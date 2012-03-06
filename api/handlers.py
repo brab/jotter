@@ -9,6 +9,22 @@ from piston.utils import rc, throttle, validate
 from jotter.jot.forms import jListItemForm
 from jotter.jot.models import jList, jListItem
 
+class jListHandler(BaseHandler):
+    model = jList
+
+    def delete(self, request, slug):
+        try:
+            jlist = jList.objects.get(slug=slug)
+        except:
+            resp = rc.NOT_FOUND
+            resp.content = {'error': 'jlist not found',}
+            return resp.__dict__
+
+        jlist.delete()
+        resp = rc.DELETED
+        return resp.__dict__
+
+
 class jListItemHandler(BaseHandler):
     model = jListItem
 

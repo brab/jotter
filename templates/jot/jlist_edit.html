@@ -5,6 +5,13 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
+    $('#jot-delete').on('click', function() {
+      var retval = api_sync('api/jlist/{{ jlist.slug }}', 'DELETE');
+      if (retval['data']['status_code'] == 204) {
+        window.location = '{% url jotter.account.views.index %}';
+      }
+    });
+
     $('input#admins').on('keyup', function(e) {
       $('#admins-control-group').removeClass('error warning');
       var code = (e.keyCode ? e.keyCode : e.which);
@@ -52,8 +59,8 @@
 {% block body %}
 <div id="inner-header">
   <h2 class="inline">Jot It</h2>
-{% if jlist %}
-  <a class="btn btn-mini btn-danger pull-right" id="jot-delete" data-jot-slug="" href="#" style="margin: 10px 10px 0 0;"><i class="icon-remove-sign icon-white"></i></a>
+{% if jlist and jlist.owner == user %}
+<button class="btn btn-mini btn-danger pull-right" id="jot-delete" data-jot-slug="{{ jlist.slug }}" style="margin: 10px 10px 0 0;"><i class="icon-remove-sign icon-white"></i></button>
 {% endif %}
 </div>
 <div class="row" id="jot-edit" style="margin-bottom:-15px;">
