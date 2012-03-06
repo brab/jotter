@@ -10,12 +10,12 @@ jlist_admins_handler = Resource(jListAdminsHandler)
 
 urlpatterns = patterns('',
         url(r'^item/new', jlist_item_handler),
-        url(r'^item/(?P<slug>\S+)', jlist_item_handler),
+        url(r'^item/(?P<slug>[-a-z0-9_]+)', jlist_item_handler),
 
-        url(r'^jlist/(?P<slug>\S+)', jlist_handler),
+        url(r'^jlist/(?P<slug>[-a-z0-9_]+)', jlist_handler),
 
         url(r'^jlist/admins', jlist_admins_handler),
-        url(r'^jlist/(?P<slug>\S+)/admins/(?P<email>\S+)',
+        url(r'^jlist/(?P<slug>[-a-z0-9_]+)/admins/(?P<email>\S+)',
             jlist_admins_handler),
         )
 

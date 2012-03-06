@@ -109,9 +109,7 @@ class jListAdminsHandler(BaseHandler):
             return resp.__dict__
 
         try:
-            user = User.objects \
-                    .exclude(id=request.user.id) \
-                    .get(email__iexact=email)
+            user = User.objects.get(email__iexact=email)
         except:
             resp = rc.NOT_FOUND
             resp.content = {'error': 'user not found',}
