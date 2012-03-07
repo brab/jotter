@@ -101,7 +101,8 @@
       var slug = $(this).attr('data-item-slug');
       var retval = api_sync('api/item/' + slug, 'GET');
       var item = retval['data'][0];
-      $('#id_jlist').val(item['jlist']['id']);
+      // the api call doesn't include the jlist id
+      //$('#id_jlist').val(item['jlist']['id']);
       $('#id_slug').val(item['slug']);
       $('#id_name').val(item['name']);
       $('#id_description').val(item['description']);
