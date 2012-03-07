@@ -39,6 +39,7 @@ footer p { text-align: center; /* center align it with the container */ }
 
 #inner-header {
     margin: 0px 5px 0 5px;
+    padding-right: 30px;
 }
 
 .controls-bottom {
@@ -85,7 +86,7 @@ footer p { text-align: center; /* center align it with the container */ }
 }
 
 #jlist-sort {
-    margin: 8px 8px 0 0;
+    margin: 8px -22px 0 0;
 }
 
 #jlist-items, #jlists {
@@ -117,7 +118,7 @@ i.icon-inactive {
 }
 
 .inline {
-    display: inline-block;
+    display: inline;
 }
 
 [class^="icon-medium-"], [class*=" icon-medium-"] {
