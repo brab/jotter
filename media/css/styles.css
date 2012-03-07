@@ -116,7 +116,7 @@ i.icon-inactive {
     display: inline-block;
 }
 
-[class^="icon-big-"], [class*=" icon-big-"] {
+[class^="icon-medium-"], [class*=" icon-medium-"] {
     display: inline-block;
     width: 18px;
     height: 18px;
@@ -128,10 +128,22 @@ i.icon-inactive {
     margin-right: .4em;
 }
 
-.icon-big-leaf {
+[class^="icon-big-"], [class*=" icon-big-"] {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 20px;
+    vertical-align: text-top;
+    background-size: 25px;
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+    margin-right: .4em;
+}
+
+.icon-big-leaf, .icon-medium-leaf {
     background-image: url("../img/glyphicons_001_leaf.png");
 }
-.icon-big-circle-remove {
+.icon-big-circle-remove, .icon-big-circle-remove {
     background-image: url("../img/glyphicons_192_circle_remove.png");
 }
 
