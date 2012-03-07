@@ -38,7 +38,7 @@ def jlist_view(request, slug):
         messages.warning(request, 'I can\'t find that Jot')
         return HttpResponseRedirect(reverse('jotter.account.views.index'))
 
-    jlist_items = jlist.jlistitem_set.all()
+    jlist_items = jlist.jlistitem_set.all().order_by('name')
     form = jListItemForm(initial={'jlist': jlist,})
 
     return direct_to_template(request, 'jot/jlist_view.html', {

@@ -84,6 +84,10 @@ footer p { text-align: center; /* center align it with the container */ }
     margin-bottom: 3px;
 }
 
+#jlist-sort {
+    margin: 8px 8px 0 0;
+}
+
 #jlist-items, #jlists {
     margin: 0 -5px 5px -5px;
 }
@@ -142,6 +146,9 @@ i.icon-inactive {
 
 .icon-big-leaf, .icon-medium-leaf {
     background-image: url("../img/glyphicons_001_leaf.png");
+}
+.icon-big-list, .icon-medium-list {
+    background-image: url("../img/glyphicons_114_list.png");
 }
 .icon-big-circle-remove, .icon-big-circle-remove {
     background-image: url("../img/glyphicons_192_circle_remove.png");
