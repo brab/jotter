@@ -171,7 +171,7 @@
   {% for item in jlist_items %}
   <div class="jlist-item item-edit" id="{{ item.id }}" data-item-slug="{{ item.slug }}">
     <h4>
-      <i class="item-checked icon-leaf-big {% if not item.checked %}icon-inactive{% endif %}" data-slug="{{ item.slug }}"></i>
+      <i class="item-checked icon-big-leaf {% if not item.checked %}icon-inactive{% endif %}" data-slug="{{ item.slug }}"></i>
       <span class="item-name">{{ item.name }}</span>
       <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
     </h4>
@@ -184,7 +184,7 @@
   <!-- an empty one for cloning -->
   <div class="jlist-item item-edit" id="" data-item-slug="" style="display:none;">
     <h4>
-      <i class="item-checked icon-leaf-big"></i>
+      <i class="item-checked icon-big-leaf"></i>
       <span class="item-name"></span>
       <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
     </h4>
@@ -205,7 +205,7 @@
     <h3><span id="add-edit-text"></span> Item</h3>
   </div>
   <div class="modal-body">
-    <a class="btn btn-mini btn-danger pull-right" id="item-delete" data-item-slug="" href="#"><i class="icon-remove-sign icon-white"></i></a>
+    <a class="pull-right" id="item-delete" data-item-slug="" href="#"><i class="icon-big-circle-remove"></i></a>
     <form action="" method="POST" id="form-item-edit">
       {% csrf_token %}
       {{ form.slug }}
@@ -214,7 +214,7 @@
       {{ form.checked }}
 
       <div>
-        <i class="icon-leaf-big" id="form-item-checked"></i>
+        <i class="icon-big-leaf" id="form-item-checked"></i>
       </div>
 
       {{ form.name.label_tag }}

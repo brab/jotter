@@ -71,7 +71,7 @@
 <div id="inner-header">
   <h2 class="inline">Jot It</h2>
 {% if jlist and jlist.owner == user %}
-<button class="btn btn-mini btn-danger pull-right" id="jot-delete" data-jot-slug="{{ jlist.slug }}" style="margin: 10px 10px 0 0;"><i class="icon-remove-sign icon-white"></i></button>
+<a class="pull-right" id="jot-delete" data-jot-slug="{{ jlist.slug }}" style="margin: 10px 10px 0 0;"><i class="icon-big-circle-remove"></i></a>
 {% endif %}
 </div>
 <div class="row" id="jot-edit" style="margin-bottom:-15px;">

@@ -116,16 +116,23 @@ i.icon-inactive {
     display: inline-block;
 }
 
-.icon-leaf-big {
+[class^="icon-big-"], [class*=" icon-big-"] {
     display: inline-block;
     width: 18px;
     height: 18px;
     line-height: 14px;
     vertical-align: text-top;
-    background-image: url("../img/glyphicons_001_leaf.png");
     background-size: 18px;
     background-position: 0px 0px;
     background-repeat: no-repeat;
     margin-right: .4em;
 }
+
+.icon-big-leaf {
+    background-image: url("../img/glyphicons_001_leaf.png");
+}
+.icon-big-circle-remove {
+    background-image: url("../img/glyphicons_192_circle_remove.png");
+}
+
 
