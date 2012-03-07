@@ -19,6 +19,14 @@
       $('.modal#jlist-item').modal('show');
     });
 
+    $('.jlist-item').on('click', '.item-checked', function(e) {
+      e.stopPropagation();
+      var retval = api_sync('api/item/checked/' + $(this).attr('data-slug'), 'PUT');
+      if (retval['status'] == 200) {
+        $(this).toggleClass('icon-inactive');
+      }
+    });
+
     // saving an item
     $('#modal-jlist-item-save').on('click', function() {
       var data = {
@@ -31,7 +39,7 @@
       if ($('#id_slug').val() != '') {
         data['slug'] = $('#id_slug').val();
       }
-      if ($('#id_checked:checked').length == 1) {
+      if ($('#id_checked').attr('checked') == 'checked') {
         data['checked'] = true;
       }
 
@@ -59,10 +67,10 @@
           }
           existing_item.find('.item-description').text(description);
           if (retval['data']['_container']['checked'] == true) {
-            existing_item.find('.item-checked').addClass('icon-leaf');
+            existing_item.find('.item-checked').removeClass('icon-inactive');
           }
           else {
-            existing_item.find('.item-checked').removeClass('icon-leaf');
+            existing_item.find('.item-checked').addClass('icon-inactive');
           }
         }
         else {
@@ -80,10 +88,10 @@
           }
           new_item.find('.item-description').text(description);
           if (retval['data']['_container']['checked'] == true) {
-            new_item.find('.item-checked').addClass('icon-leaf');
+            new_item.find('.item-checked').removeClass('icon-inactive');
           }
           else {
-            new_item.find('.item-checked').removeClass('icon-leaf');
+            new_item.find('.item-checked').addClass('icon-inactive');
           }
           $('#jlist-items').append(new_item);
           $('#jlist-items .jlist-item:last').animate({opacity:100, height:'toggle'}, 600);
@@ -108,15 +116,27 @@
       $('#id_description').val(item['description']);
       if (item['checked'] == true ){
         $('#id_checked').attr('checked', 'checked');
+        $('#form-item-checked').removeClass('icon-inactive');
       }
       else {
         $('#id_checked').removeAttr('checked');
+        $('#form-item-checked').addClass('icon-inactive');
       }
 
       $('.modal#jlist-item #add-edit-text').text('Edit');
       $('.modal#jlist-item #item-delete').attr('data-item-slug', slug).show();
 
       $('.modal#jlist-item').modal('show');
+    });
+
+    $('#form-item-checked').on('click', function() {
+      $('#form-item-checked').toggleClass('icon-inactive');
+      if ($('#form-item-checked').hasClass('icon-inactive')) {
+        $('#id_checked').removeAttr('checked');
+      }
+      else {
+        $('#id_checked').attr('checked', 'checked');
+      }
     });
 
     // deleting an item
@@ -151,7 +171,7 @@
   {% for item in jlist_items %}
   <div class="jlist-item item-edit" id="{{ item.id }}" data-item-slug="{{ item.slug }}">
     <h4>
-      <i class="item-checked {% if item.checked %}icon-leaf{% endif %}"></i>
+      <i class="item-checked icon-leaf {% if not item.checked %}icon-inactive{% endif %}" data-slug="{{ item.slug }}"></i>
       <span class="item-name">{{ item.name }}</span>
       <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
     </h4>
@@ -164,7 +184,7 @@
   <!-- an empty one for cloning -->
   <div class="jlist-item item-edit" id="" data-item-slug="" style="display:none;">
     <h4>
-      <i class="item-checked"></i>
+      <i class="item-checked icon-leaf"></i>
       <span class="item-name"></span>
       <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
     </h4>
@@ -192,6 +212,10 @@
       {{ form.jlist }}
 
       {{ form.checked }}
+
+      <div>
+        <i class="icon-leaf" id="form-item-checked"></i>
+      </div>
 
       {{ form.name.label_tag }}
       {{ form.name }}

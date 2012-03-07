@@ -97,6 +97,15 @@ footer p { text-align: center; /* center align it with the container */ }
     box-shadow: inset 1px 1px #ffffff;
     margin-top: -1px;
     padding: 7px 20px 0 20px;
+    cursor: pointer;
+}
+
+.jlist-item .item-description {
+    padding-left: 20px;
+}
+
+i.icon-inactive {
+    opacity: 0.25;
 }
 
 .opac-light {

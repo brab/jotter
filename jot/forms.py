@@ -19,6 +19,9 @@ class jListItemForm(forms.ModelForm):
     slug = forms.CharField(
             required=False,
             widget=forms.HiddenInput())
+    checked = forms.BooleanField(
+            required=False,
+            widget=forms.HiddenInput())
     name = forms.CharField(
             widget=forms.TextInput(attrs={'class':'span4'}))
     description = forms.CharField(

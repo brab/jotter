@@ -59,6 +59,23 @@ class jListItemHandler(BaseHandler):
             return resp.__dict__
 
 
+class jListItemCheckedHandler(BaseHandler):
+    allowed_methods = ('PUT',)
+
+    def update(self, request, slug):
+        try:
+            item = jListItem.objects.get(slug=slug)
+        except:
+            resp = rc.BAD_REQUEST
+            resp.content = 'jListItem not found with slug: %s' % slug
+            return resp.__dict__
+
+        item.checked = not item.checked
+        item.save()
+        resp = rc.ALL_OK
+        return resp.__dict__
+
+
 class jListAdminsHandler(BaseHandler):
 
     def create(self, request):

@@ -6,10 +6,12 @@ from jotter.api.handlers import *
 
 jlist_handler = Resource(jListHandler)
 jlist_item_handler = Resource(jListItemHandler)
+jlist_item_checked_handler = Resource(jListItemCheckedHandler)
 jlist_admins_handler = Resource(jListAdminsHandler)
 
 urlpatterns = patterns('',
         url(r'^item/new', jlist_item_handler),
+        url(r'^item/checked/(?P<slug>[-a-z0-9_]+)', jlist_item_checked_handler),
         url(r'^item/(?P<slug>[-a-z0-9_]+)', jlist_item_handler),
 
         url(r'^jlist/admins', jlist_admins_handler),
