@@ -46,5 +46,6 @@ function api_sync(call, http_method, data) {
 
 $(document).ready(function() {
     setTimeout(function() { window.scrollTo(0, 1) }, 100);
+    $('#site-message .alert').delay(3000).animate({opacity:0}, 800).slideUp('slow');
 });
 

@@ -27,8 +27,14 @@
       <div class="content">
         <div id="site-message">
           {% if messages %}
-          <div> {% for message in messages %} <span {% if messge.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span> {% endfor %} </div>
+          {% for message in messages %}
+          <div class="alert fade in{% if message.tags %} alert-{{ message.tags }}{% endif%}">
+            <a href="#" data-dismiss="alert" class="close">&times;</a>
+            {{ message }}
+          </div>
+          {% endfor %}
           {% endif %}
+
           {% block message %} {% endblock message %}
         </div>
         <div id="header">
