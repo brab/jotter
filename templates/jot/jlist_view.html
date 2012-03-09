@@ -85,7 +85,7 @@
           }
         }
         else {
-          var new_item = $('.jlist-item:first').clone();
+          var new_item = $('.jlist-item:last').clone();
           new_item
             .attr('id', item_id)
             .attr('style', 'display:none;')
@@ -104,8 +104,8 @@
           else {
             new_item.find('.item-checked').addClass('icon-inactive');
           }
-          $('#jlist-items').append(new_item);
-          $('#jlist-items .jlist-item:last').animate({opacity:100, height:'toggle'}, 600);
+          $('#jlist-items').prepend(new_item);
+          new_item.animate({opacity:100, height:'toggle'}, 600);
         }
       }
     });
