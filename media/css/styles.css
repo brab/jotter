@@ -109,6 +109,14 @@ footer p { text-align: center; /* center align it with the container */ }
     padding-left: 25px;
 }
 
+.item-edit {
+    display: inline-block;
+    width: 20px;
+    height: 25px;
+    padding: 4px 30px 4px 12px;
+    margin: -6px -15px 0 0;
+}
+
 i.icon-inactive {
     opacity: 0.25;
 }
@@ -154,5 +162,3 @@ i.icon-inactive {
 .icon-big-circle-remove, .icon-big-circle-remove {
     background-image: url("../img/glyphicons_192_circle_remove.png");
 }
-
-

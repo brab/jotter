@@ -20,6 +20,7 @@
       $('.modal#jlist-item').modal('show');
     });
 
+    // sort the list
     $('#jlist-sort').on('click', function() {
       if ($('#jlist-sort i').hasClass('icon-inactive')) {
         $('.jlist-item').tsort('.item-checked', {attr:'class'});
@@ -28,14 +29,6 @@
         $('.jlist-item').tsort('.item-name');
       }
       $('#jlist-sort i').toggleClass('icon-inactive');
-    });
-
-    $('.jlist-item').on('click', '.item-checked', function(e) {
-      e.stopPropagation();
-      var retval = api_sync('api/item/checked/' + $(this).attr('data-slug'), 'PUT');
-      if (retval['status'] == 200) {
-        $(this).toggleClass('icon-inactive');
-      }
     });
 
     // saving an item
@@ -69,6 +62,8 @@
         if (existing_item.length == 1){
           existing_item
             .attr('data-item-slug', slug);
+          existing_item.find('.item-edit')
+            .attr('data-item-slug', slug);
           existing_item.find('.item-name')
             .text(retval['data']['_container']['name']);
           var description_array = retval['data']['_container']['description'].split(' ');
@@ -89,6 +84,8 @@
           new_item
             .attr('id', item_id)
             .attr('style', 'display:none;')
+            .attr('data-item-slug', slug);
+          new_item.find('.item-edit')
             .attr('data-item-slug', slug);
           new_item.find('.item-name')
             .text(retval['data']['_container']['name']);
@@ -115,8 +112,17 @@
       return false;
     });
 
+    // toggle the flag
+    $('#jlist-items').on('click', '.jlist-item', function() {
+      var retval = api_sync('api/item/checked/' + $(this).attr('data-item-slug'), 'PUT');
+      if (retval['status'] == 200) {
+        $(this).find('.item-checked').toggleClass('icon-inactive');
+      }
+    });
+
     // viewing / editing an item
-    $('#jlist-items').on('click', '.item-edit', function() {
+    $('#jlist-items').on('click', '.item-edit', function(e) {
+      e.stopPropagation();
       var slug = $(this).attr('data-item-slug');
       var retval = api_sync('api/item/' + slug, 'GET');
       var item = retval['data'][0];
@@ -181,11 +187,13 @@
 </div>
 <div id="jlist-items">
   {% for item in jlist_items %}
-  <div class="jlist-item item-edit" id="{{ item.id }}" data-item-slug="{{ item.slug }}">
+  <div class="jlist-item" data-item-slug="{{ item.slug }}">
     <h4>
       <i class="item-checked icon-medium-leaf {% if not item.checked %}icon-inactive{% endif %}" data-slug="{{ item.slug }}"></i>
       <span class="item-name">{{ item.name }}</span>
-      <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
+      <span class="pull-right item-edit" data-item-slug="{{ item.slug }}">
+        <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
+      </span>
     </h4>
     <p class="item-description">
       {{ item.description|truncatewords:"4" }}
@@ -194,11 +202,13 @@
   {% endfor %}
 
   <!-- an empty one for cloning -->
-  <div class="jlist-item item-edit" id="" data-item-slug="" style="display:none;">
+  <div class="jlist-item" id="" data-item-slug="" style="display:none;">
     <h4>
       <i class="item-checked icon-medium-leaf"></i>
       <span class="item-name"></span>
-      <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
+      <span class="pull-right item-edit" data-item-slug="">
+        <i class="item-edit-icon icon-chevron-right opac-light pull-right"></i>
+      </span>
     </h4>
     <p class="item-description">
     </p>
