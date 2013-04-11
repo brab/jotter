@@ -9,3 +9,8 @@ local_settings.py
 prod_settings.py
 dev_db
 
+node_modules
+dist
+.tmp
+.sass-cache
+app/components
