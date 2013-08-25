@@ -1,8 +1,16 @@
 from django.conf.urls import patterns, include, url
+from django.contrib import admin
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from rest_framework import routers
+
+from api.views import GroupViewSet, UserViewSet
+
+
+router_v1 = routers.DefaultRouter()
+router_v1.register(r'groups', GroupViewSet)
+router_v1.register(r'users', UserViewSet)
+
+admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
@@ -12,7 +20,10 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/v1/', include(router_v1.urls)),
+
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^api-auth/',
+        include('rest_framework.urls',
+        namespace='rest_framework')),
 )

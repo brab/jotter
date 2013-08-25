@@ -7,7 +7,7 @@
 *.DS_Store
 local_settings.py
 prod_settings.py
-dev_db
+local_db
 
 node_modules
 dist

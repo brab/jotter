@@ -1,5 +1,5 @@
 node default {
-  group { 'puupet':
+  group { 'puppet':
     ensure => 'present',
   }
 
@@ -33,8 +33,8 @@ node default {
     'git',
     'make',
     'g++',
-    'python-pip',
-    'python-dev',
+    'python3.2-dev',
+    'python3-pip',
     'libncurses5-dev',
     'libevent-dev',
     'nodejs',
@@ -47,12 +47,12 @@ node default {
   package { 'install-packages':
     name    => $packages,
     ensure  => 'installed',
-    require => [Exec['initial_apt_upgrade'], Apt::Ppa['ppa:chris-lea/node.js']],
+    require => [Exec['initial_apt_upgrade'], Apt::Ppa['ppa:chris-lea/node.js'], Package['software-properties-common']],
     before  => Exec['pip-install', 'npm-install-global' ],
   }
 
   exec { 'pip-install':
-    command => '/usr/bin/pip install -r requirements.txt',
+    command => '/usr/bin/pip-3.2 install -r requirements.txt',
     cwd     => '/home/vagrant/app',
   }
 
