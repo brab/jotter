@@ -9,6 +9,9 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+import os
+ANGULAR_ROOT = os.path.realpath(os.path.join('.', '../app'))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -111,6 +114,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    ANGULAR_ROOT,
 )
 
 INSTALLED_APPS = (
