@@ -1,13 +1,17 @@
+'''
+Jotter url paterns
+'''
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
 from rest_framework import routers
 
-from api.views import GroupViewSet, UserViewSet
+from api.views import CheckListViewSet, GroupViewSet, UserViewSet
 
 
 router_v1 = routers.DefaultRouter()
+router_v1.register(r'check-list', CheckListViewSet)
 router_v1.register(r'groups', GroupViewSet)
 router_v1.register(r'users', UserViewSet)
 

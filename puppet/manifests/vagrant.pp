@@ -57,7 +57,7 @@ node default {
   }
 
   exec { 'npm-install-global':
-    command => '/usr/bin/npm install -g grunt-cli@0.1.9 bower@1.0.3 karma@0.8.7 phantomjs@1.9.1-0',
+    command => '/usr/bin/npm install -g grunt-cli@0.1.9 bower@1.2.7 karma@0.8.7 phantomjs@1.9.1-0',
     cwd     => '/home/vagrant/app',
     before  => Exec['npm-install'],
     logoutput => on_failure

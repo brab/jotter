@@ -1,10 +1,9 @@
 'use strict';
 
-angular.module('jotterApp')
-  .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+jotterModule.controller('MainCtrl', ['$scope', function ($scope) {
+  $scope.awesomeThings = [
+    'HTML5 Boilerplate',
+    'AngularJS',
+    'Karma'
+  ];
+}]);
