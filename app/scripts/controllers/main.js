@@ -1,4 +1,4 @@
-'use strict';
+'use strict()';
 
 jotterModule.controller('MainCtrl', ['$scope', function ($scope) {
   $scope.awesomeThings = [

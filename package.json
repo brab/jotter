@@ -28,5 +28,35 @@
   },
   "engines": {
     "node": ">=0.8.0"
+  },
+  "jshintConfig": {
+    "bitwise": true,
+    "browser": true,
+    "camelcase": true,
+    "curly": true,
+    "eqeqeq": true,
+    "forin": true,
+    "indent": 2,
+    "jquery": true,
+    "latedef": true,
+    "plusplus": true,
+    "undef": true,
+    "unused": "vars",
+
+    "globals": {
+      "_": false,
+      "angular": false,
+      "beforeEach": false,
+      "describe": false,
+      "esage": false,
+      "expect": false,
+      "inject": false,
+      "it": false,
+      "jasmine": false,
+      "jotterModule": false,
+      "module": false,
+      "moment": false,
+      "spyOn": false
+    }
   }
 }

@@ -1,1 +1,13 @@
-/* Will be compiled down to a single stylesheet with your sass files */
+@import url(https://fonts.googleapis.com/css?family=Maven+Pro:400,700);
+@import url(../components/font-awesome/css/font-awesome.min.css);
+/* line 5, main.scss */
+body, h1, h2, h3, h4 {
+  font-family: "Maven Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* line 8, main.scss */
+body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+}

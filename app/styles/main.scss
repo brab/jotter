@@ -1,1 +1,12 @@
-@import "compass_twitter_bootstrap";
+@import url(https://fonts.googleapis.com/css?family=Maven+Pro:400,700);
+
+@import "../components/font-awesome/css/font-awesome.min.css";
+
+body, h1, h2, h3, h4 {
+  font-family: "Maven Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+}

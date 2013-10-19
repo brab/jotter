@@ -1,4 +1,4 @@
-'use strict';
+'use strict()';
 
 var jotterModule = angular.module('jotterModule', ['ngRoute'])
   .config(function ($routeProvider) {
