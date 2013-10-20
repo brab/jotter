@@ -1,10 +1,13 @@
-<div class="hero-unit">
-  <h1>'Allo, 'Allo!</h1>
-  <p>You now have</p>
-  <ul>
-    <li>Font Awesome <i class="icon-thumbs-up"></i> </li>
-    <li ng-repeat="thing in awesomeThings">{{thing}}</li>
-  </ul>
-  <p>installed.</p>
-  <h3>Enjoy coding! - Yeoman</h3>
+<h1>Jotter</h1>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">My Lists</h3>
+  </div>
+  <div class="panel-body">
+    <ul class="list-unstyled">
+      <li ng-repeat="checkList in checkLists">
+      {{ checkList.name }}
+      </li>
+    </ul>
+  </div>
 </div>

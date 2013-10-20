@@ -53,7 +53,8 @@
       "inject": false,
       "it": false,
       "jasmine": false,
-      "jotterModule": false,
+      "jotterApp": false,
+      "jotterServices": false,
       "module": false,
       "moment": false,
       "spyOn": false

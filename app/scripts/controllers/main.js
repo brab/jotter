@@ -1,9 +1,6 @@
 'use strict()';
 
-jotterModule.controller('MainCtrl', ['$scope', function ($scope) {
-  $scope.awesomeThings = [
-    'HTML5 Boilerplate',
-    'AngularJS',
-    'Karma'
-  ];
+jotterApp.controller('MainCtrl', ['$scope', 'CheckList',
+function ($scope, CheckList) {
+  $scope.checkLists = CheckList.query();
 }]);
