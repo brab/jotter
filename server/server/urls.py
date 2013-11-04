@@ -11,7 +11,7 @@ from api.views import CheckListViewSet, GroupViewSet, UserViewSet
 
 
 router_v1 = routers.DefaultRouter()
-router_v1.register(r'check-list', CheckListViewSet)
+router_v1.register(r'check-lists', CheckListViewSet)
 router_v1.register(r'groups', GroupViewSet)
 router_v1.register(r'users', UserViewSet)
 

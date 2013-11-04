@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'guardian',
     'rest_framework',
     'south',
 
@@ -179,3 +180,11 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend', # this is default
+        'guardian.backends.ObjectPermissionBackend',
+        )
+
+ANONYMOUS_USER_ID = -1
+ANONYMOUS_DEFAULT_USERNAME_VALUE = '!'
