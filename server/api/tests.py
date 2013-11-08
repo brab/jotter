@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
+from guardian.shortcuts import assign_perm
 from rest_framework.test import APIClient
 
 from api.models import CheckList
@@ -28,28 +29,43 @@ class CheckListAPITest(TestCase):
                 )
         self.user.set_password('password')
         self.user.save()
+        self.user1 = User.objects.create(
+                username='test1',
+                password='password',
+                )
+        self.user1.set_password('password')
+        self.user1.save()
         self.check_list = CheckList.objects.create(
                 owner=self.user,
                 title='Test List',
                 )
-        content_type = ContentType.objects.get_for_model(CheckList)
-        perm = Permission.objects.get(
-                content_type=content_type,
-                codename='add_checklist',
+        CheckList.objects.create(
+                owner=self.user1,
+                title='Test List 1',
                 )
-        self.user.user_permissions.add(perm)
 
-    def test_GET_returns_all_instances(self):
+        assign_perm('api.add_checklist', self.user)
+        assign_perm('api.view_checklist', self.user, self.check_list)
+
+    def test_GET_authentication_required(self):
+        response = self.client.get('/api/v1/check-lists/', )
+        self.assertEqual(response.status_code, 401)
+
+    def test_GET_returns_allowed_instances(self):
         """
         GET to the endpoint returns instances
 
-        - that the user has permission to access
+        - that the user has permission to view
         """
         self.client.login(username='test', password='password', )
         response = self.client.get('/api/v1/check-lists/', )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0].get('title'), 'Test List')
+
+    def test_POST_authentication_required(self):
+        response = self.client.post('/api/v1/check-lists/', )
+        self.assertEqual(response.status_code, 401)
 
     def test_POST_creates_instance(self):
         """
