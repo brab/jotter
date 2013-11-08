@@ -14,7 +14,5 @@ class CheckList(models.Model):
 
     class Meta:
         permissions = (
-                ('change_obj_checklist', 'Change Check List'),
-                ('delete_obj_checklist', 'Delete Check List'),
-                ('view_obj_checklist', 'View Check List'),
+                ('view_checklist', 'View Check List'),
                 )

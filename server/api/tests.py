@@ -75,11 +75,11 @@ class CheckListAPITest(TestCase):
         check_list = check_lists[0]
 
         self.assertTrue(self.user.has_perm(
-            'api.change_obj_checklist',
+            'api.change_checklist',
             check_list))
         self.assertTrue(self.user.has_perm(
-            'api.delete_obj_checklist',
+            'api.delete_checklist',
             check_list))
         self.assertTrue(self.user.has_perm(
-            'api.view_obj_checklist',
+            'api.view_checklist',
             check_list))
