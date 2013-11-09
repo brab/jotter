@@ -29,19 +29,20 @@ node default {
   }
   
   $packages = [
-    'git-core',
-    'git',
-    'make',
-    'g++',
-    'python3.2-dev',
-    'python3-pip',
-    'libncurses5-dev',
-    'libevent-dev',
-    'nodejs',
-    'ruby-compass',
     'curl',
-    'nfs-kernel-server',
+    'g++',
+    'git',
+    'git-core',
+    'libevent-dev',
+    'libncurses5-dev',
+    'make',
     'nfs-common'
+    'nfs-kernel-server',
+    'nodejs',
+    'phantomjs',
+    'python3-pip',
+    'python3.2-dev',
+    'ruby-compass',
   ]
 
   package { 'install-packages':

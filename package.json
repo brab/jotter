@@ -46,6 +46,7 @@
     "globals": {
       "_": false,
       "angular": false,
+      "afterEach": false,
       "beforeEach": false,
       "describe": false,
       "esage": false,
