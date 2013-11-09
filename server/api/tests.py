@@ -61,6 +61,7 @@ class CheckListAPITest(TestCase):
         response = self.client.get('/api/v1/check-lists/', )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0].get('id'), self.check_list.id)
         self.assertEqual(response.data[0].get('title'), 'Test List')
 
     def test_POST_authentication_required(self):
