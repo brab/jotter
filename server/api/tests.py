@@ -76,12 +76,10 @@ class CheckListAPITest(TestCase):
                 '/api/v1/check-lists/',
                 {
                     'title': 'My List',
-                    'owner': '%d' % self.user.id,
                 },
             )
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 201, response.data)
         self.assertEqual(response.data.get('title'), 'My List')
-        self.assertEqual(response.data.get('owner'), self.user.id)
 
         check_lists = CheckList.objects.filter(
                 title='My List',

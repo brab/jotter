@@ -22,6 +22,12 @@ class CheckListViewSet(viewsets.ModelViewSet):
     permission_classes = (DjangoObjectPermissions, )
     serializer_class = CheckListSerializer
 
+    def pre_save(self, obj):
+        """
+        Actions to perform before saving a CheckList
+        """
+        obj.owner = self.request.user
+
     def post_save(self, obj, created=False):
         """
         Actions to perform immediately after saving a CheckList
