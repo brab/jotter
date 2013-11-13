@@ -14,7 +14,7 @@ from rest_framework.test import APIClient
 from api.models import CheckList
 
 
-class CheckListAPITest(TestCase):
+class CheckListTest(TestCase):
     """
     Unit tests for the CheckList API
     """
@@ -98,3 +98,98 @@ class CheckListAPITest(TestCase):
         self.assertTrue(self.user.has_perm(
             'api.view_checklist',
             check_list))
+
+
+class AuthenticationTest(TestCase):
+    """
+    Test the authentication API
+    """
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create(
+                username='test',
+                password='password',
+                )
+        self.user.set_password('password')
+        self.user.save()
+
+    def test_DELETE_requires_authentication(self):
+        """
+        DELETE requires an existing session
+        """
+        response = self.client.delete('/api/v1/sessions/', )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue('session' in response.data.get('detail', ''))
+
+    def test_DELETE_deletes_session(self):
+        """
+        DELETE deletes the current session
+
+        logs out the current user
+        """
+        self.client.login(username='test', password='password', )
+
+    def test_POST_requires_parameters(self):
+        """
+        POST requires parameters
+
+        - password
+        - username
+        """
+        response = self.client.post(
+                '/api/v1/sessions/',
+                {
+                    'password': 'password',
+                },
+            )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue('username' in response.data.get('detail', ''))
+
+        response = self.client.post(
+                '/api/v1/sessions/',
+                {
+                    'username': 'test',
+                },
+            )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue('password' in response.data.get('detail', ''))
+
+    def test_POST_checks_credentials(self):
+        """
+        POST requires correct credentials
+        """
+        response = self.client.post(
+                '/api/v1/sessions/',
+                {
+                    'username': 'test',
+                    'password': 'notMyPassword',
+                },
+            )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue('Invalid' in response.data.get('detail'))
+
+        response = self.client.post(
+                '/api/v1/sessions/',
+                {
+                    'username': 'notMyUsername',
+                    'password': 'password',
+                },
+            )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue('Invalid' in response.data.get('detail'))
+
+    def test_POST_creates_session(self):
+        """
+        POST to the endpoint authenticates a user and creates a session
+        """
+        response = self.client.post(
+                '/api/v1/sessions/',
+                {
+                    'username': 'test',
+                    'password': 'password',
+                },
+            )
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue('Authentication' in response.data.get('detail', ''))
+        cookie = response.cookies.popitem()
+        self.assertEqual('sessionid', cookie[0])

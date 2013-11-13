@@ -1,6 +1,7 @@
 """
 API Endpoint ViewSets
 """
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group, User
 from django.utils.decorators import method_decorator
 from guardian.decorators import permission_required_or_403
@@ -56,6 +57,77 @@ class GroupViewSet(viewsets.ModelViewSet):
     ViewSet for the Group model
     '''
     model = Group
+
+
+class SessionViewSet(viewsets.ViewSet):
+    """
+    Session handler view
+    """
+    permission_classes = []
+
+    def create(self, request):
+        """
+        Create a new session
+
+        effectively logs in a user
+        """
+        required_params = ['password', 'username', ]
+        for param in required_params:
+            if param not in request.DATA:
+                return Response(
+                        status=400,
+                        data={
+                            'detail': 'Parameter required: %s' % param,
+                            },
+                        )
+
+        username = request.DATA.get('username', '')
+        password = request.DATA.get('password', '')
+        user = authenticate(username=username, password=password, )
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return Response(
+                        status=201,
+                        data={
+                            'detail': 'Authentication successful',
+                            },
+                        )
+            else:
+                return Response(
+                        status=400,
+                        data={
+                            'detail': 'Inactive user',
+                            },
+                        )
+        else:
+            return Response(
+                    status=400,
+                    data={
+                        'detail': 'Invalid username or password',
+                        },
+                    )
+    def delete(self, request):
+        """
+        Delete a user's session
+
+        effectively logs out the current user
+        """
+        if request.user.is_authenticated():
+            logout(request)
+            return Response(
+                    status=204,
+                    data={
+                        'detail': 'User logged out',
+                        },
+                    )
+        else:
+            return Response(
+                    status=400,
+                    data={
+                        'detail': 'No session found',
+                        },
+                    )
 
 
 class UserViewSet(viewsets.ModelViewSet):
