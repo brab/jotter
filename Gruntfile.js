@@ -1,9 +1,5 @@
 /* globals require:false */
 'use strict()';
-var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
-var mountFolder = function (connect, dir) {
-  return connect.static(require('path').resolve(dir));
-};
 
 module.exports = function (grunt) {
   // load all grunt tasks
@@ -12,7 +8,8 @@ module.exports = function (grunt) {
   // configurable paths
   var yeomanConfig = {
     app: 'app',
-    dist: 'dist'
+    dist: 'dist',
+    tmp: '.tmp'
   };
 
   try {
@@ -24,49 +21,19 @@ module.exports = function (grunt) {
     watch: {
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-        tasks: ['compass']
+        tasks: ['compass:server']
       },
-      //livereload: {
-        //files: [
-          //'<%= yeoman.app %>/{,*/}*.html',
-          //'{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-          //'{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
-          //'<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-        //],
-        //tasks: ['livereload']
-      //}
-    },
-    connect: {
-      options: {
-        port: 9000,
-        // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost'
+      html2js: {
+        files: ['<%= yeoman.app %>/templates/**/*.html'],
+        tasks: ['htmlmin', 'html2js']
       },
-      livereload: {
-        options: {
-          middleware: function (connect) {
-            return [
-              lrSnippet,
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, yeomanConfig.app)
-            ];
-          }
-        }
-      },
-      test: {
-        options: {
-          middleware: function (connect) {
-            return [
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, 'test')
-            ];
-          }
-        }
-      }
-    },
-    open: {
-      server: {
-        url: 'http://localhost:<%= connect.options.port %>'
+      karma: {
+        files: [
+          '<%= yeoman.app %>/scripts/**/*.js',
+          '<%= yeoman.app %>/views/**/*.html',
+          'test/spec/**/*.js'
+        ],
+        tasks: ['karma:unit']
       }
     },
     clean: {
@@ -93,6 +60,8 @@ module.exports = function (grunt) {
     },
     karma: {
       unit: {
+        autowatch: false,
+        background: true,
         configFile: 'karma.conf.js',
         singleRun: true
       }
@@ -160,23 +129,27 @@ module.exports = function (grunt) {
     htmlmin: {
       dist: {
         options: {
-          /*removeCommentsFromCDATA: true,
           // https://github.com/yeoman/grunt-usemin/issues/44
-          //collapseWhitespace: true,
-          collapseBooleanAttributes: true,
-          removeAttributeQuotes: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeOptionalTags: true*/
+          collapseWhitespace: true,
         },
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>',
-          src: ['*.html', 'views/*.html'],
-          dest: '<%= yeoman.dist %>'
+          src: [
+            '*.html',
+            'templates/**/*.html',
+            '!index.html'
+          ],
+          dest: '<%= yeoman.tmp %>'
         }]
       }
+    },
+    html2js: {
+      options: {
+        module: 'templates',
+        base: '<%= yeoman.tmp %>'
+      },
+      '<%= yeoman.app %>/scripts/templates.js': [ '.tmp/templates/**/*.html' ]
     },
     cdnify: {
       dist: {
@@ -229,6 +202,36 @@ module.exports = function (grunt) {
           ]
         }]
       }
+    },
+    shell: {
+      options: {
+        stdout: true,
+        stderr: true,
+        failOnErr: true
+      },
+      runserver: {
+        command: function () {
+          return './manage.py runserver 192.168.33.10:8000';
+        },
+        options: {
+          execOptions: {
+            cwd: 'server'
+          },
+        }
+      }
+    },
+    parallel: {
+      run: {
+        options: {
+          force: true,
+          grunt: true,
+          stream: true
+        },
+        tasks: [
+          'simple-watch',
+          'shell:runserver'
+        ]
+      }
     }
   });
 
@@ -237,9 +240,6 @@ module.exports = function (grunt) {
   grunt.registerTask('server', [
     'clean:server',
     'compass:server',
-    //'livereload-start',
-    //'connect:livereload',
-    //'open',
     'watch'
   ]);
 
@@ -268,5 +268,5 @@ module.exports = function (grunt) {
     'usemin'
   ]);
 
-  grunt.registerTask('default', ['build']);
+  grunt.registerTask('default', ['parallel:run']);
 };
