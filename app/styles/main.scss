@@ -2,6 +2,12 @@
 
 @import "../components/font-awesome/css/font-awesome.min.css";
 
+$gray_dark: #333333;
+$gray_light: #4c4c4c;
+$primary_dark: #8cd1d8;
+$primary: #b2e1e5;
+$primary_light: #d8f0f2;
+
 body, h1, h2, h3, h4 {
   font-family: "Maven Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -11,4 +17,12 @@ body {
 }
 strong {
   font-weight: 700;
+}
+
+h1 {
+  background-color: $primary;
+  margin-top: 0;
+  padding-bottom: 10px;
+  padding-top: 5px;
+  text-align: center;
 }

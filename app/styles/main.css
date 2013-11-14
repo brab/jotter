@@ -1,12 +1,26 @@
 @import url(https://fonts.googleapis.com/css?family=Maven+Pro:400,700);
 @import url(../components/font-awesome/css/font-awesome.min.css);
-/* line 5, main.scss */
+/* line 11, main.scss */
 body, h1, h2, h3, h4 {
   font-family: "Maven Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-/* line 8, main.scss */
+/* line 14, main.scss */
 body {
   font-size: 16px;
   font-weight: 400;
+}
+
+/* line 18, main.scss */
+strong {
+  font-weight: 700;
+}
+
+/* line 22, main.scss */
+h1 {
+  background-color: #b2e1e5;
+  margin-top: 0;
+  padding-bottom: 10px;
+  padding-top: 5px;
+  text-align: center;
 }
