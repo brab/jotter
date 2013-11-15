@@ -15,3 +15,4 @@ dist
 .sass-cache
 .vagrant
 app/components
+app/scripts/templates.js

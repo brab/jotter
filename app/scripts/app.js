@@ -13,6 +13,10 @@ var jotterApp = angular.module('jotterApp', ['jotterServices', 'ngRoute'])
         templateUrl: 'static/views/checkLists.html',
         controller: 'CheckListsCtrl'
       })
+      .when('/login', {
+        templateUrl: 'static/views/login.html',
+        controller: 'LoginCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
