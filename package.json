@@ -59,6 +59,7 @@
       "it": false,
       "jasmine": false,
       "jotterApp": false,
+      "jotterDirectives": false,
       "jotterServices": false,
       "module": false,
       "moment": false,

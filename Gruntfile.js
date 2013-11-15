@@ -146,7 +146,7 @@ module.exports = function (grunt) {
     },
     html2js: {
       options: {
-        module: 'templates',
+        module: 'jotterTemplates',
         base: '<%= yeoman.tmp %>'
       },
       '<%= yeoman.app %>/scripts/templates.js': [ '.tmp/templates/**/*.html' ]

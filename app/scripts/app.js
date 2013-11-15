@@ -1,8 +1,10 @@
 'use strict()';
 
+var jotterDirectives = angular.module('jotterDirectives', []);
 var jotterServices = angular.module('jotterServices', ['ngResource']);
 
-var jotterApp = angular.module('jotterApp', ['jotterServices', 'ngRoute'])
+var jotterApp = angular.module('jotterApp',
+    ['jotterDirectives', 'jotterServices', 'jotterTemplates', 'ngRoute'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

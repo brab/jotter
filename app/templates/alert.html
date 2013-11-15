@@ -1,0 +1,8 @@
+<div class="row" id="alert">
+  <div
+    class="alert fade in {{ alertStatus }} col-md-12 col-lg-6 col-lg-offset-3"
+    ng-show="visible">
+    <button class="close" type="button" aria-hidden="true" ng-click="dismiss()">&times;</button>
+    <strong>{{ title }}</strong>&nbsp;{{ message }}
+  </div>
+</div>
