@@ -1,8 +1,8 @@
 <h1>Jotter</h1>
 <div class="container">
   <div class="row">
-    <div class="col-md-12 col-lg-12">
-      <form role="form">
+    <div class="col-md-12 col-lg-offset-4 col-lg-4">
+      <form role="form" ng-submit="login()">
         <div class="form-group">
           <input
             class="form-control input-lg"
@@ -20,7 +20,7 @@
             ng-model="password">
         </div>
 
-        <button class="btn btn-default btn-block btn-lg" ng-click="login()">Log In</button>
+        <button class="btn btn-default btn-block btn-lg" type="submit" ng-click="login()">Log In</button>
       </form>
     </div>
   </div>
