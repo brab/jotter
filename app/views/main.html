@@ -1,11 +1,13 @@
-<h1>Jotter</h1>
-<div>
-  <jtr-alert></jtr-alert>
-  <h3 class="panel-title">Lists</h3>
-  <ul class="list-unstyled">
-    <li ng-repeat="checkList in checkLists">
-    {{ checkList.title }}
-    </li>
-  </ul>
-  <hr>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 col-lg-8 col-lg-offset-2">
+      <h3 class="panel-title">Lists</h3>
+      <ul class="list-unstyled">
+        <li ng-repeat="checkList in checkLists">
+        {{ checkList.title }}
+        </li>
+      </ul>
+      <hr>
+    </div>
+  </div>
 </div>

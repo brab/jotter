@@ -28,7 +28,10 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div id="main-content" class="ng-view"></div>
+    <div>
+      <jtr-header></jtr-header>
+      <div id="main-content" class="ng-view"></div>
+    </div>
 
     <script src="static/components/jquery/jquery.min.js"></script>
     <script src="static/components/angular/angular.js"></script>
@@ -47,6 +50,7 @@
     <script src="static/scripts/controllers/login.js"></script>
 
     <script src="static/scripts/directives/alert.js"></script>
+    <script src="static/scripts/directives/header.js"></script>
 
     <script src="static/scripts/services/checkList.js"></script>
     <script src="static/scripts/services/session.js"></script>

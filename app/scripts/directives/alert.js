@@ -1,8 +1,9 @@
 'use strict()';
 
-jotterDirectives.directive('jtrAlert', [function () {
+jotterDirectives.directive('jtrAlert', ['$timeout', function ($timeout) {
   // Alerts are triggered by an event on the scope
   //
+  // $rootScope.$broadcast('alert', args);
   // args:
   //  status  <string> info|success|warning|danger
   //  title   <string>
@@ -25,6 +26,10 @@ jotterDirectives.directive('jtrAlert', [function () {
         scope.title = args.title;
         scope.visible = true;
         scope.$apply();
+
+        $timeout(function () {
+          scope.dismiss();
+        }, 6500);
       });
 
       // scope methods
