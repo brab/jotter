@@ -6,6 +6,14 @@ function ($location, $scope, Session) {
   $scope.password = '';
   $scope.username = '';
 
+  Session.getUser({
+    onSuccess: function (user) {
+      if (user.isAuthenticated) {
+        $location.path('/#/');
+      }
+    }
+  });
+
   $scope.login = function () {
     Session.create(
       {
@@ -13,7 +21,14 @@ function ($location, $scope, Session) {
         username: $scope.username
       },
       function (response) { // success
-        $location.path('/');
+        $scope.$root.$broadcast(
+          'alert',
+          {
+            status: 'success',
+            title: 'Welcome Back!'
+          }
+        );
+        $location.path('/#/');
       }
     );
   };

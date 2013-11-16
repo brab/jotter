@@ -25,3 +25,8 @@ h1 {
   padding-top: 5px;
   text-align: center;
 }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000330}}
+h1 a, h1 a:hover {
+  color: white;
+  text-decoration: none;
+}

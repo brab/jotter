@@ -91,6 +91,8 @@ class SessionViewSet(viewsets.ViewSet):
                         status=201,
                         data={
                             'detail': 'Authentication successful',
+                            'isAuthenticated': request.user.is_authenticated(),
+                            'username': request.user.username,
                             },
                         )
             else:
@@ -119,6 +121,8 @@ class SessionViewSet(viewsets.ViewSet):
                     status=204,
                     data={
                         'detail': 'User logged out',
+                        'isAuthenticated': request.user.is_authenticated(),
+                        'username': request.user.username,
                         },
                     )
         else:
@@ -128,6 +132,19 @@ class SessionViewSet(viewsets.ViewSet):
                         'detail': 'No session found',
                         },
                     )
+
+    def list(self, request):
+        """
+        Return session info
+        """
+        return Response(
+                status=200,
+                data={
+                    'detail': 'Session found',
+                    'isAuthenticated': request.user.is_authenticated(),
+                    'username': request.user.username,
+                    },
+                )
 
 
 class UserViewSet(viewsets.ModelViewSet):

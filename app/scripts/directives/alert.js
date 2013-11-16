@@ -25,7 +25,6 @@ jotterDirectives.directive('jtrAlert', ['$timeout', function ($timeout) {
         scope.message = args.message;
         scope.title = args.title;
         scope.visible = true;
-        scope.$apply();
 
         $timeout(function () {
           scope.dismiss();

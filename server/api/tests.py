@@ -100,7 +100,7 @@ class CheckListTest(TestCase):
             check_list))
 
 
-class AuthenticationTest(TestCase):
+class SessionTest(TestCase):
     """
     Test the authentication API
     """
@@ -112,6 +112,23 @@ class AuthenticationTest(TestCase):
                 )
         self.user.set_password('password')
         self.user.save()
+
+    def test_GET_returns_non_authenticated(self):
+        """
+        Return non authenticated user's session info
+        """
+        response = self.client.get('/api/v1/sessions/', )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get('isAuthenticated'), False)
+
+    def test_GET_returns_authenticated(self):
+        """
+        Return authenticated user's session info
+        """
+        self.client.login(username='test', password='password', )
+        response = self.client.get('/api/v1/sessions/', )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get('isAuthenticated'), True)
 
     def test_DELETE_requires_authentication(self):
         """
@@ -193,3 +210,4 @@ class AuthenticationTest(TestCase):
         self.assertTrue('Authentication' in response.data.get('detail', ''))
         cookie = response.cookies.popitem()
         self.assertEqual('sessionid', cookie[0])
+        self.assertEqual(response.data.get('isAuthenticated'), True)
