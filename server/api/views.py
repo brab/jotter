@@ -7,11 +7,21 @@ from django.utils.decorators import method_decorator
 from guardian.decorators import permission_required_or_403
 from guardian.shortcuts import assign_perm, get_objects_for_user
 from rest_framework import viewsets
+from rest_framework.filters import DjangoObjectPermissionsFilter
 from rest_framework.permissions import DjangoObjectPermissions
 from rest_framework.response import Response
 
-from api.models import CheckList
-from api.serializers import CheckListSerializer
+from api.models import CheckList, CheckListItem
+from api.permissions import JotterObjectPermissions
+from api.serializers import CheckListSerializer, CheckListItemSerializer
+
+
+class CheckListItemViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for the CheckListItem model
+    """
+    model = CheckListItem
+    serializer_class = CheckListItemSerializer
 
 
 class CheckListViewSet(viewsets.ModelViewSet):
@@ -19,8 +29,9 @@ class CheckListViewSet(viewsets.ModelViewSet):
     ViewSet for the CheckList model
     """
     allowed_methods = ['GET', 'POST', ]
+    filter_backends = (DjangoObjectPermissionsFilter, )
     model = CheckList
-    permission_classes = (DjangoObjectPermissions, )
+    permission_classes = (JotterObjectPermissions, )
     serializer_class = CheckListSerializer
 
     def pre_save(self, obj):
@@ -37,19 +48,6 @@ class CheckListViewSet(viewsets.ModelViewSet):
             assign_perm('api.change_checklist', obj.owner, obj)
             assign_perm('api.delete_checklist', obj.owner, obj)
             assign_perm('api.view_checklist', obj.owner, obj)
-
-    def list(self, request):
-        """
-        Override the default list() method
-
-        filter queryset by owner
-        """
-        check_lists = get_objects_for_user(
-                request.user,
-                ['api.view_checklist', ],
-                )
-        serializer = CheckListSerializer(check_lists, many=True, )
-        return Response(serializer.data)
 
 
 class GroupViewSet(viewsets.ModelViewSet):

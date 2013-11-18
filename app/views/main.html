@@ -1,13 +1,12 @@
-<div class="container">
-  <div class="row">
-    <div class="lists col-md-12 col-lg-8 col-lg-offset-2" ng-show="user.isAuthenticated">
-      <h3 class="panel-title">Lists</h3>
-      <ul class="list-unstyled">
-        <li ng-repeat="checkList in checkLists">
-        {{ checkList.title }}
-        </li>
-      </ul>
-      <hr>
+<div class="row">
+  <div class="lists col-md-12 col-lg-8 col-lg-offset-2" ng-show="user.isAuthenticated">
+    <h2>Lists</h2>
+    <div class="row lists">
+      <div class="col-md-12 col-lg-6" ng-repeat="checkList in checkLists">
+        <div>{{ checkList.title }}</div>
+        <div ng-repeat="item in checkList.check_list_items">{{ item.title }}</div>
+      </div>
     </div>
+    <hr>
   </div>
 </div>

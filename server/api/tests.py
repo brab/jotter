@@ -12,6 +12,20 @@ from guardian.shortcuts import assign_perm
 from rest_framework.test import APIClient
 
 from api.models import CheckList
+from lib import increment_slug
+
+
+def login(client, username, password):
+    return client.post(
+            '/api/v1/sessions/',
+            {
+                'password': password,
+                'username': username,
+            },
+        )
+
+def logout(client):
+    return client.delete('/api/v1/sessions/', )
 
 
 class CheckListTest(TestCase):
@@ -39,17 +53,22 @@ class CheckListTest(TestCase):
                 owner=self.user,
                 title='Test List',
                 )
-        CheckList.objects.create(
+        self.check_list_1 = CheckList.objects.create(
                 owner=self.user1,
                 title='Test List 1',
                 )
 
         assign_perm('api.add_checklist', self.user)
+        assign_perm('api.view_checklist', self.user)
         assign_perm('api.view_checklist', self.user, self.check_list)
 
     def test_GET_authentication_required(self):
         response = self.client.get('/api/v1/check-lists/', )
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
+
+        response = self.client.get('/api/v1/check-lists/%d/' % (
+            self.check_list.id, ), )
+        self.assertEqual(response.status_code, 403)
 
     def test_GET_returns_allowed_instances(self):
         """
@@ -57,16 +76,38 @@ class CheckListTest(TestCase):
 
         - that the user has permission to view
         """
-        self.client.login(username='test', password='password', )
+        login(self.client, username='test', password='password', )
         response = self.client.get('/api/v1/check-lists/', )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0].get('id'), self.check_list.id)
-        self.assertEqual(response.data[0].get('title'), 'Test List')
+        self.assertEqual(response.data[0].get('title'), self.check_list.title)
+
+    def test_GET_instance_requires_permission(self):
+        """
+        GET with an id requires permission to view
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/check-lists/%d/' % (
+            self.check_list_1.id,
+            ), )
+        self.assertEqual(response.status_code, 404)
+
+    def test_GET_instance(self):
+        """
+        GET with an id returns specified instance
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/check-lists/%d/' % (
+            self.check_list.id,
+            ), )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get('id'), self.check_list.id)
+        self.assertEqual(response.data.get('title'), self.check_list.title)
 
     def test_POST_authentication_required(self):
         response = self.client.post('/api/v1/check-lists/', )
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
 
     def test_POST_creates_instance(self):
         """
@@ -144,7 +185,15 @@ class SessionTest(TestCase):
 
         logs out the current user
         """
-        self.client.login(username='test', password='password', )
+        self.client.post(
+                '/api/v1/sessions/',
+                {
+                    'username': 'test',
+                    'password': 'password',
+                },
+            )
+        response = self.client.delete('/api/v1/sessions/', )
+        self.assertEqual(response.status_code, 204)
 
     def test_POST_requires_parameters(self):
         """
@@ -211,3 +260,28 @@ class SessionTest(TestCase):
         cookie = response.cookies.popitem()
         self.assertEqual('sessionid', cookie[0])
         self.assertEqual(response.data.get('isAuthenticated'), True)
+
+
+class SlugTest(TestCase):
+    """
+    Test slug lib function
+    """
+    def test_first_increment_slug(self):
+        """
+        First increment on a slug should append '-1' to the end
+        """
+        slug = 'hello-world'
+        new_slug = increment_slug(slug)
+        self.assertEqual(new_slug, '%s-1' % slug)
+
+    def test_increment_slug(self):
+        """
+        Incrementing a slug should increment the number at the end
+        """
+        slug = 'hello-world-1'
+        new_slug = increment_slug(slug)
+        self.assertEqual(new_slug, 'hello-world-2')
+
+        slug = 'hello-world-10'
+        new_slug = increment_slug(slug)
+        self.assertEqual(new_slug, 'hello-world-11')

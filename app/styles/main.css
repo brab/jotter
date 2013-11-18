@@ -30,3 +30,9 @@ h1 a, h1 a:hover {
   color: white;
   text-decoration: none;
 }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000336}}
+h2 {
+  color: #250d0d;
+  margin-top: 10px;
+}
