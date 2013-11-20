@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group, User
 from django.utils.decorators import method_decorator
 from guardian.decorators import permission_required_or_403
-from guardian.shortcuts import assign_perm, get_objects_for_user
+from guardian.shortcuts import assign_perm, get_objects_for_user, get_perms
 from rest_framework import viewsets
 from rest_framework.filters import DjangoObjectPermissionsFilter
 from rest_framework.permissions import DjangoObjectPermissions
@@ -22,6 +22,68 @@ class CheckListItemViewSet(viewsets.ModelViewSet):
     """
     model = CheckListItem
     serializer_class = CheckListItemSerializer
+
+    def create(self, request, *args, **kw):
+        if not request.user.is_authenticated():
+            return Response(
+                    data={
+                        'detail': 'Authentication required',
+                        },
+                    status=403,
+                    )
+
+        check_list = CheckList.objects.get(id=request.DATA.get('check_list'))
+        perms = get_perms(
+                user_or_group=request.user,
+                obj=check_list,
+                )
+        if 'change_checklist' not in perms:
+            return Response(
+                    data={
+                        'detail': 'Permission denied',
+                        },
+                    status=403,
+                    )
+
+        return super(CheckListItemViewSet, self).create(request, *args, **kw)
+
+    def list(self, request):
+        return Response(
+                data={
+                    'detail': 'Action not permitted',
+                    },
+                status=403,
+                )
+
+    def retrieve(self, request, pk=None):
+        if not request.user.is_authenticated():
+            return Response(
+                    data={
+                        'detail': 'Authentication required',
+                        },
+                    status=403,
+                    )
+        check_list_item = CheckListItem.objects.get(id=pk)
+
+        perms = get_perms(
+                user_or_group=request.user,
+                obj=check_list_item.check_list,
+                )
+
+        if 'view_checklist' not in perms:
+            return Response(
+                    data={
+                        'detail': 'Permission denied',
+                        },
+                    status=403,
+                    )
+
+        serializer = self.serializer_class(check_list_item)
+
+        return Response(
+                data=serializer.data,
+                status=200,
+                )
 
 
 class CheckListViewSet(viewsets.ModelViewSet):

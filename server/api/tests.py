@@ -11,7 +11,7 @@ from django.test import TestCase
 from guardian.shortcuts import assign_perm
 from rest_framework.test import APIClient
 
-from api.models import CheckList
+from api.models import CheckList, CheckListItem
 from lib import increment_slug
 
 
@@ -58,6 +58,17 @@ class CheckListTest(TestCase):
                 title='Test List 1',
                 )
 
+        CheckListItem.objects.create(
+                check_list=self.check_list,
+                title='Item 1',
+                )
+        CheckListItem.objects.create(
+                check_list=self.check_list,
+                title='Item 2',
+                description='things',
+                checked=True,
+                )
+
         assign_perm('api.add_checklist', self.user)
         assign_perm('api.view_checklist', self.user)
         assign_perm('api.view_checklist', self.user, self.check_list)
@@ -82,6 +93,7 @@ class CheckListTest(TestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0].get('id'), self.check_list.id)
         self.assertEqual(response.data[0].get('title'), self.check_list.title)
+        self.assertEqual(len(response.data[0].get('check_list_items')), 2)
 
     def test_GET_instance_requires_permission(self):
         """
@@ -104,6 +116,7 @@ class CheckListTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get('id'), self.check_list.id)
         self.assertEqual(response.data.get('title'), self.check_list.title)
+        self.assertEqual(len(response.data.get('check_list_items')), 2)
 
     def test_POST_authentication_required(self):
         response = self.client.post('/api/v1/check-lists/', )
@@ -139,6 +152,153 @@ class CheckListTest(TestCase):
         self.assertTrue(self.user.has_perm(
             'api.view_checklist',
             check_list))
+
+
+class CheckListItemTest(TestCase):
+    """
+    Unit tests for the CheckListItem API
+    """
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create(
+                username='test',
+                password='password',
+                )
+        self.user.set_password('password')
+        self.user.save()
+        self.user1 = User.objects.create(
+                username='test1',
+                password='password',
+                )
+        self.user1.set_password('password')
+        self.user1.save()
+        self.check_list = CheckList.objects.create(
+                owner=self.user,
+                title='Test List',
+                )
+        self.check_list_1 = CheckList.objects.create(
+                owner=self.user1,
+                title='Test List 1',
+                )
+
+        self.check_list_item = CheckListItem.objects.create(
+                check_list=self.check_list,
+                title='Item 1',
+                )
+        self.check_list_item_1 = CheckListItem.objects.create(
+                check_list=self.check_list_1,
+                title='Item 2',
+                description='things',
+                checked=True,
+                )
+
+        assign_perm('api.add_checklist', self.user)
+        assign_perm('api.change_checklist', self.user)
+        assign_perm('api.view_checklist', self.user)
+        assign_perm('api.change_checklist', self.user, self.check_list)
+        assign_perm('api.view_checklist', self.user, self.check_list)
+        assign_perm('api.add_checklistitem', self.user)
+        assign_perm('api.change_checklistitem', self.user)
+
+        assign_perm('api.add_checklist', self.user1)
+        assign_perm('api.change_checklist', self.user1)
+        assign_perm('api.view_checklist', self.user1)
+        assign_perm('api.add_checklistitem', self.user1)
+        assign_perm('api.change_checklistitem', self.user1)
+
+    def test_GET_list_not_allowed(self):
+        """
+        Listing all CheckListItems is not allowed
+        """
+        response = self.client.get('/api/v1/check-list-items/', )
+        self.assertEqual(response.status_code, 403)
+
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/check-list-items/', )
+        self.assertEqual(response.status_code, 403)
+
+    def test_GET_authentication_required(self):
+        """
+        User must be authenticated to retrieve a CheckListItem
+        """
+        response = self.client.get('/api/v1/check-list-items/%d/' % (
+            self.check_list_item.id, ), )
+        self.assertEqual(response.status_code, 403)
+
+    def test_GET_returns_allowed_instance(self):
+        """
+        Return permitted check_list_item
+
+        Only instances that the user has view permission for the related
+        check_list are returned
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/check-list-items/%d/' % (
+            self.check_list_item.id, ), )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data.get('title') == self.check_list_item.title)
+        self.assertTrue(response.data.get('description') \
+                == self.check_list_item.description)
+        self.assertTrue(response.data.get('checked') \
+                == self.check_list_item.checked)
+
+    def test_GET_return_403_if_not_permitted(self):
+        """
+        Return 403 on not permitted instances
+
+        Only instances that the user has view permission for the related
+        check_list are returned
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/check-list-items/%d/' % (
+            self.check_list_item_1.id, ), )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_authentication_required(self):
+        """
+        User must be authenticated to create a CheckListItem
+        """
+        response = self.client.post(
+                '/api/v1/check-list-items/',
+                { },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_authorization_required(self):
+        """
+        User must have permission to create a CheckListItem
+
+        - 'edit-checklist' permission
+        """
+        login(self.client, username='test1', password='password', )
+        response = self.client.post(
+                '/api/v1/check-list-items/',
+                {
+                    'check_list': '1',
+                    'title': 'Item 1',
+                },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_creates_check_list_item(self):
+        """
+        Create a new CheckListItem
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.post(
+                '/api/v1/check-list-items/',
+                {
+                    'check_list': '1',
+                    'checked': False,
+                    'description': 'more info',
+                    'title': 'Item 1',
+                },
+                )
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data.get('check_list'), 1)
+        self.assertEqual(response.data.get('checked'), False)
+        self.assertEqual(response.data.get('description'), 'more info')
+        self.assertEqual(response.data.get('title'), 'Item 1')
 
 
 class SessionTest(TestCase):

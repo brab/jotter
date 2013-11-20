@@ -1,12 +1,13 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
 from api.models import CheckList, CheckListItem
 
 
 class CheckListItemSerializer(ModelSerializer):
+    check_list = PrimaryKeyRelatedField()
     class Meta:
         model = CheckListItem
-        fields = ('checked', 'description', 'id', 'title', )
+        fields = ('checked', 'check_list', 'description', 'id', 'title', )
 
 
 class CheckListSerializer(ModelSerializer):
