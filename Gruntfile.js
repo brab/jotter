@@ -23,6 +23,10 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         tasks: ['compass:server']
       },
+      less: {
+        files: ['<%= yeoman.app %>/styles/*.less'],
+        tasks: ['less:server']
+      },
       html2js: {
         files: ['<%= yeoman.app %>/templates/**/*.html'],
         tasks: ['htmlmin', 'html2js']
@@ -81,6 +85,22 @@ module.exports = function (grunt) {
         options: {
           debugInfo: true
         }
+      }
+    },
+    less: {
+      options: {
+        compile: true
+      },
+      dist: {
+        options: {
+          compress: true
+        },
+        src: ['<%= yeoman.app %>/styles/bootstrap-jotter.less'],
+        dest: '<%= yeoman.dist %>/styles/bootstrap-jotter.min.css'
+      },
+      server: {
+        src: ['<%= yeoman.app %>/styles/bootstrap-jotter.less'],
+        dest: '<%= yeoman.app %>/styles/bootstrap-jotter.css'
       }
     },
     concat: {
