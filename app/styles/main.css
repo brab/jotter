@@ -36,3 +36,18 @@ h2 {
   color: #250d0d;
   margin-top: 10px;
 }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000339}}
+h2 a, h2 a:hover {
+  color: #250d0d;
+  text-decoration: none;
+}
+
+/*CHECK LISTS*/
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000347}}
+.checkLists .checkList {
+  border-bottom: 1px solid #732625;
+  padding-bottom: 15px;
+  padding-top: 15px;
+}
+
+/*END CHECK LISTS*/

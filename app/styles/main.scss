@@ -36,4 +36,18 @@ h1 {
 h2 {
   color: $primary_dark;
   margin-top: 10px;
+  a, a:hover {
+    color: $primary_dark;
+    text-decoration: none;
+  }
 }
+
+/*CHECK LISTS*/
+.checkLists {
+  .checkList {
+    border-bottom: 1px solid $primary_light;
+    padding-bottom: 15px;
+    padding-top: 15px;
+  }
+}
+/*END CHECK LISTS*/

@@ -1,3 +1,16 @@
-<div>
-  <h1>Check Lists</h1>
+<div class="row">
+  <div class="lists col-md-12 col-lg-8 col-lg-offset-2">
+    <div class="row checkLists">
+      <div class="col-md-12 col-lg-6 col-lg-offset-6">
+        <span class="pull-right">
+          <a href="" ng-click="">
+            +
+          </a>
+        </span>
+      </div>
+      <div class="checkList col-md-12 col-lg-6" ng-repeat="checkList in checkLists | limitTo:2" ng-click="gotoList(list)">
+        {{ checkList.title }}
+      </div>
+    </div>
+  </div>
 </div>

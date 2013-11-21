@@ -1,10 +1,19 @@
 <div class="row">
   <div class="lists col-md-12 col-lg-8 col-lg-offset-2" ng-show="user.isAuthenticated">
-    <h2>Lists</h2>
+    <h2>
+      <a href="/#/lists">
+        Lists
+      </a>
+    </h2>
     <div class="row lists">
-      <div class="col-md-12 col-lg-6" ng-repeat="checkList in checkLists">
-        <div>{{ checkList.title }}</div>
-        <div ng-repeat="item in checkList.check_list_items">{{ item.title }}</div>
+      <div class="col-md-12 col-lg-6" ng-repeat="checkList in checkLists | limitTo:2" ng-click="gotoList(list)">
+        <strong>{{ checkList.title }}</strong>
+        <div ng-repeat="item in checkList.check_list_items | limitTo:3">
+          {{ item.title }}
+          <div ng-show="item.description">
+            {{ item.description }}
+          </div>
+        </div>
       </div>
     </div>
     <hr>
