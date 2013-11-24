@@ -8,11 +8,7 @@ $primary: #4c1a19;
 $primary_light: #732625;
 $white: #ffffff;
 
-body, h1, h2, h3, h4 {
-  font-family: "Maven Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
 body {
-  font-size: 16px;
   font-weight: 400;
 }
 strong {
@@ -45,9 +41,13 @@ h2 {
 /*CHECK LISTS*/
 .checkLists {
   .checkList {
-    border-bottom: 1px solid $primary_light;
+    /*border-bottom: 1px solid $primary_light;*/
     padding-bottom: 15px;
     padding-top: 15px;
+
+    .checkListTitle {
+      padding-left: 3px;
+    }
   }
 }
 /*END CHECK LISTS*/

@@ -10,4 +10,9 @@ function ($scope, CheckList, Session) {
   });
 
   $scope.checkLists = CheckList.query();
+
+  $scope.getNumChecked = function (checkList) {
+    if (angular.isUndefined(checkList)) { return 0; }
+    return _.size(_.where(checkList.check_list_items,  { checked: true }));
+  };
 }]);

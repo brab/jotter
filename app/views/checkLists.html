@@ -9,7 +9,10 @@
         </span>
       </div>
       <div class="checkList col-md-12 col-lg-6" ng-repeat="checkList in checkLists | limitTo:2" ng-click="gotoList(list)">
-        {{ checkList.title }}
+        <span class="checkListTitle">
+          <a href="">{{ checkList.title }}</a>
+        </span>
+        <small class="text-muted">({{ getNumChecked(checkList) }} checked)</small>
       </div>
     </div>
   </div>
