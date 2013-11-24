@@ -39,11 +39,10 @@ h2 a, h2 a:hover {
 /*CHECK LISTS*/
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000343}}
 .checkLists .checkList {
-  /*border-bottom: 1px solid $primary_light;*/
-  padding-bottom: 15px;
-  padding-top: 15px;
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000348}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000347}}
 .checkLists .checkList .checkListTitle {
   padding-left: 3px;
 }

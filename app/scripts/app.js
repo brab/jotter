@@ -4,7 +4,7 @@ var jotterDirectives = angular.module('jotterDirectives', []);
 var jotterServices = angular.module('jotterServices', ['ngResource']);
 
 var jotterApp = angular.module('jotterApp',
-    ['jotterDirectives', 'jotterServices', 'jotterTemplates', 'ngRoute'])
+    ['jotterDirectives', 'jotterServices', 'jotterTemplates', 'ngAnimate', 'ngRoute'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -22,4 +22,9 @@ var jotterApp = angular.module('jotterApp',
       .otherwise({
         redirectTo: '/'
       });
+  })
+  
+  .config(function ($httpProvider) {
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
   });
