@@ -2,7 +2,7 @@
 
 jotterServices.factory('CheckList', ['$resource',
 function ($resource) {
-  return $resource('/api/v1/check-lists\\/:id',
+  return $resource('/api/v1/check-lists/:id',
     { id: '@id' },
     {
       query: {

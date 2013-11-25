@@ -67,7 +67,7 @@ module.exports = function (grunt) {
         autowatch: false,
         background: true,
         configFile: 'karma.conf.js',
-        singleRun: true
+        singleRun: false,
       }
     },
     compass: {

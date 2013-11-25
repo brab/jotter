@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="list col-md-12 col-lg-8 col-lg-offset-2">
+    <div class="row">
+      <div class="col-md-12 col-lg-12">
+        <h3>{{ checkList.title }}</h3>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 col-lg-12">
+        <form class="form-inline" role="form">
+          <div class="form-group col-lg-5">
+            <label class="sr-only">Search</label>
+            <div ng-class="{'input-group': itemSearch}">
+              <input class="form-control" type="text" placeholder="search" ng-model="itemSearch" />
+              <span class="input-group-btn" ng-show="itemSearch">
+                <button
+                  class="btn btn-default"
+                  type="button"
+                  ng-click="itemSearch = '';"
+                  >
+                  <i class="fa fa-times"></i>
+                </button>
+              </span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row" ng-repeat="item in checkList.check_list_items | filter:itemSearch">
+      <div class="col-md-12 col-lg-12">
+        {{ item.title }}
+      </div>
+    </div>
+  </div>
+</div>

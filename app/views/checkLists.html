@@ -7,28 +7,30 @@
             <i class="fa fa-plus"></i>
           </a>
         </span>
-        <div class="form-group col-md-10 col-md-offset-1" ng-show="showNewCheckList">
-          <div class="input-group">
-            <input
-              class="form-control"
-              type="text"
-              placeholder="New List"
-              ng-model="newCheckListTitle" />
-            <span class="input-group-btn">
-              <button
-                class="btn btn-default"
-                type="button"
-                ng-click="showNewCheckList = false">
-                <i class="fa fa-times"></i>
-              </button>
-              <button
-                class="btn btn-default"
-                type="button"
-                ng-click="saveNewCheckList(); showNewCheckList = false;">
-                <i class="fa fa-check"></i>
-              </button>
-            </span>
-          </div>
+        <div class="col-md-10 col-md-offset-1" ng-show="showNewCheckList">
+          <form ng-submit="saveNewCheckList()">
+            <div class="input-group">
+              <input
+                class="form-control"
+                type="text"
+                placeholder="New List"
+                ng-model="newCheckListTitle" />
+              <span class="input-group-btn">
+                <button
+                  class="btn btn-default"
+                  type="button"
+                  ng-click="showNewCheckList = false; newCheckListTitle = '';">
+                  <i class="fa fa-times"></i>
+                </button>
+                <button
+                  class="btn btn-default"
+                  type="button"
+                  ng-click="saveNewCheckList(); showNewCheckList = false;">
+                  <i class="fa fa-check"></i>
+                </button>
+              </span>
+            </div>
+          </form>
         </div>
       </div>
       <div class="clearfix"></div>

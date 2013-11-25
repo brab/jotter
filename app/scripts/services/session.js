@@ -22,7 +22,7 @@ function ($resource) {
   };
   var currentUser = User();
 
-  var sessionResource = $resource('/api/v1/sessions\\/',
+  var sessionResource = $resource('/api/v1/sessions',
     {},
     {
       create: { method: 'POST' },

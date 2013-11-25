@@ -28,8 +28,17 @@ function ($location, $scope, CheckList, Session) {
 
   $scope.saveNewCheckList = function () {
     var newCheckList = new CheckList({ title: $scope.newCheckListTitle });
-    newCheckList.$save();
-    $scope.checkLists.unshift(newCheckList);
-    $scope.newCheckListTitle = '';
+    var successFn = function () {
+      $scope.checkLists.unshift(newCheckList);
+      $scope.newCheckListTitle = '';
+    };
+    var errorFn = function () {
+      $scope.$root.$broadcast('alert', {
+        message: "and we can't save " + $scope.newCheckListTitle + " right now",
+        status: 'danger',
+        title: "Something's wrong"
+      });
+    };
+    newCheckList.$save(successFn, errorFn);
   };
 }]);

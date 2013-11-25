@@ -33,7 +33,7 @@ describe('Service: CheckList', function () {
 
   describe('query()', function () {
     it('should make a GET request to the api', function () {
-      $httpBackend.expectGET('/api/v1/check-lists\\')
+      $httpBackend.expectGET('/api/v1/check-lists')
         .respond(200, checkLists);
 
       CheckList.query();
@@ -44,7 +44,7 @@ describe('Service: CheckList', function () {
 
   describe('get()', function () {
     it('should make a GET request to the api', function () {
-      $httpBackend.expectGET('/api/v1/check-lists\\/cl0001')
+      $httpBackend.expectGET('/api/v1/check-lists/cl0001')
         .respond(200, checkLists[0]);
 
       CheckList.get({ id: 'cl0001' });
@@ -55,7 +55,7 @@ describe('Service: CheckList', function () {
 
   describe('save()', function () {
     it('should make a POST request to the api', function () {
-      $httpBackend.expectPOST('/api/v1/check-lists\\')
+      $httpBackend.expectPOST('/api/v1/check-lists')
         .respond(200, checkLists[0]);
 
       resource = CheckList.save({ title: 'Test List' });
