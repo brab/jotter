@@ -53,4 +53,10 @@ function ($location, $routeParams, $scope, CheckList, CheckListItem, Session) {
       saveNewCheckListItem();
     }
   };
+
+  $scope.toggleCheckListItemChecked = function (checkListItem) {
+    checkListItem.checked = !checkListItem.checked;
+    checkListItem = new CheckListItem(checkListItem);
+    checkListItem.$update();
+  };
 }]);

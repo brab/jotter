@@ -5,11 +5,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group, User
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
-from guardian.decorators import permission_required_or_403
-from guardian.shortcuts import assign_perm, get_objects_for_user, get_perms
+from guardian.shortcuts import assign_perm, get_perms
 from rest_framework import viewsets
 from rest_framework.filters import DjangoObjectPermissionsFilter
-from rest_framework.permissions import DjangoObjectPermissions
 from rest_framework.response import Response
 
 from api.models import CheckList, CheckListItem

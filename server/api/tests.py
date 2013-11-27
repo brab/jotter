@@ -3,9 +3,7 @@ API package tests
 """
 from pdb import set_trace
 
-from django.contrib.auth.models import Permission, User
-from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from guardian.shortcuts import assign_perm

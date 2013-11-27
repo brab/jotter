@@ -6,6 +6,8 @@ from slugify import slugify
 from django.contrib.auth.models import User
 from django.db import models
 
+from lib import increment_slug
+
 
 class CheckList(models.Model):
     """
@@ -46,5 +48,5 @@ class CheckListItem(models.Model):
             related_name='check_list_items',
             )
     title = models.CharField(max_length=64)
-    description = models.CharField(max_length=256)
+    description = models.CharField(max_length=256, null=True, blank=True)
     checked = models.BooleanField(default=False)
