@@ -4,6 +4,7 @@ API Endpoint ViewSets
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group, User
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
 from guardian.decorators import permission_required_or_403
 from guardian.shortcuts import assign_perm, get_objects_for_user, get_perms
 from rest_framework import viewsets
@@ -125,6 +126,7 @@ class SessionViewSet(viewsets.ViewSet):
     """
     permission_classes = []
 
+    @method_decorator(ensure_csrf_cookie)
     def create(self, request):
         """
         Create a new session

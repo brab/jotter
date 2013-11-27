@@ -27,7 +27,7 @@ describe('Service: Session', function () {
 
   describe('delete()', function() {
     it('should make a DELETE request to the api', function () {
-      $httpBackend.expectDELETE('/api/v1/sessions\\')
+      $httpBackend.expectDELETE('/api/v1/sessions')
         .respond(204);
 
       Session.delete();
@@ -38,7 +38,7 @@ describe('Service: Session', function () {
 
   describe('post()', function () {
     it('should make a POST request to the api', function () {
-      $httpBackend.expectPOST('/api/v1/sessions\\')
+      $httpBackend.expectPOST('/api/v1/sessions')
         .respond(201);
 
       Session.create({

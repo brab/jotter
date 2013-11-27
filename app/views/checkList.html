@@ -8,11 +8,16 @@
 
     <div class="row">
       <div class="col-md-12 col-lg-12">
-        <form class="form-inline" role="form">
+        <form class="form-inline" role="form" name="formCheckListSearch">
           <div class="form-group col-lg-5">
             <label class="sr-only">Search</label>
             <div ng-class="{'input-group': itemSearch}">
-              <input class="form-control" type="text" placeholder="search" ng-model="itemSearch" />
+              <input
+                class="form-control"
+                type="text"
+                placeholder="search"
+                tabindex="10"
+                ng-model="itemSearch" />
               <span class="input-group-btn" ng-show="itemSearch">
                 <button
                   class="btn btn-default"
@@ -28,9 +33,57 @@
       </div>
     </div>
 
-    <div class="row" ng-repeat="item in checkList.check_list_items | filter:itemSearch">
+    <div class="row well well-sm" ng-show="showNewCheckListItemForm">
       <div class="col-md-12 col-lg-12">
-        {{ item.title }}
+        <form role="form" name="formNewCheckList">
+          <div class="form-group col-lg-5">
+            <label class="sr-only">Title</label>
+            <input
+              class="form-control"
+              type="text"
+              placeholder="title"
+              tabindex="20"
+              ng-model="checkListItemEdit.title" />
+          </div>
+
+          <div class="form-group col-lg-5">
+            <label class="sr-only">Description</label>
+            <textarea
+              class="form-control"
+              rows="2"
+              placeholder="description"
+              tabindex="30"
+              ng-model="checkListItemEdit.description"></textarea>
+          </div>
+
+          <div class="form-group col-lg-5">
+            <div class="btn-group pull-right">
+              <button class="btn btn-default" ng-click="showNewCheckListItemForm = false;"> <i class="fa fa-times text-danger"></i> </button>
+              <button class="btn btn-default" ng-click="saveCheckListItem(); showNewCheckListItemForm = false;"> <i class="fa fa-check text-success"></i> </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 col-lg-6 col-lg-offset-6">
+        <span class="pull-right" ng-hide="showNewCheckListItemForm">
+          <a href="" ng-click="showNewCheckListItemForm = true;">
+            <i class="fa fa-plus"></i>
+          </a>
+        </span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 col-lg-12">
+        <div class="list-group">
+          <div class="list-group-item" ng-repeat="item in checkList.check_list_items | filter:itemSearch">
+            <h4 class="list-group-item-heading">{{ item.title }}</h4>
+            <p class="list-group-item-text text-muted" ng-show="item.description">{{ item.description }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

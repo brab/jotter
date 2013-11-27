@@ -1,8 +1,10 @@
 'use strict()';
 
 jotterApp.controller('CheckListCtrl',
-['$location', '$routeParams', '$scope', 'CheckList', 'Session',
-function ($location, $routeParams, $scope, CheckList, Session) {
+['$location', '$routeParams', '$scope', 'CheckList', 'CheckListItem', 'Session',
+function ($location, $routeParams, $scope, CheckList, CheckListItem, Session) {
+  $scope.newCheckListItem = {};
+
   Session.getUser({
     onSuccess: function (user) {
       $scope.user = user;
@@ -20,4 +22,35 @@ function ($location, $routeParams, $scope, CheckList, Session) {
 
   $scope.checkList = CheckList.get({ id: checkListId });
 
+  var saveNewCheckListItem = function () {
+    var newCheckListItem = new CheckListItem({
+      // jshint camelcase: false
+      check_list: $scope.checkList.id,
+      checked: false,
+      description: $scope.checkListItemEdit.description,
+      title: $scope.checkListItemEdit.title
+    });
+    var successFn = function () {
+      // jshint camelcase: false
+      $scope.checkList.check_list_items.push(newCheckListItem);
+      $scope.checkListItemEdit.description = '';
+      $scope.checkListItemEdit.title = '';
+    };
+    var errorFn = function () {
+      $scope.$root.$broadcast('alert', {
+        message: "and we can't save " + $scope.checkListItemEdit.title + " right now",
+        status: 'danger',
+        title: "Something's wrong"
+      });
+    };
+    newCheckListItem.$save(successFn, errorFn);
+  };
+
+  $scope.saveCheckListItem = function () {
+    if (angular.isDefined($scope.checkListItemEdit.id)) {
+      $scope.checkListItemEdit.$update();
+    } else {
+      saveNewCheckListItem();
+    }
+  };
 }]);
