@@ -3,7 +3,7 @@
 jotterApp.controller('CheckListCtrl',
 ['$location', '$routeParams', '$scope', 'CheckList', 'CheckListItem', 'Session',
 function ($location, $routeParams, $scope, CheckList, CheckListItem, Session) {
-  $scope.newCheckListItem = {};
+  $scope.checkListItemEdit = {};
 
   Session.getUser({
     onSuccess: function (user) {
