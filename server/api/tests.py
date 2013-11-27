@@ -15,7 +15,7 @@ from lib import increment_slug
 
 def login(client, username, password):
     return client.post(
-            '/api/v1/sessions/',
+            '/api/v1/sessions',
             {
                 'password': password,
                 'username': username,
@@ -23,7 +23,7 @@ def login(client, username, password):
         )
 
 def logout(client):
-    return client.delete('/api/v1/sessions/', )
+    return client.delete('/api/v1/sessions', )
 
 
 class CheckListTest(TestCase):
@@ -72,10 +72,10 @@ class CheckListTest(TestCase):
         assign_perm('api.view_checklist', self.user, self.check_list)
 
     def test_GET_authentication_required(self):
-        response = self.client.get('/api/v1/check-lists/', )
+        response = self.client.get('/api/v1/check-lists', )
         self.assertEqual(response.status_code, 403)
 
-        response = self.client.get('/api/v1/check-lists/%d/' % (
+        response = self.client.get('/api/v1/check-lists/%d' % (
             self.check_list.id, ), )
         self.assertEqual(response.status_code, 403)
 
@@ -86,7 +86,7 @@ class CheckListTest(TestCase):
         - that the user has permission to view
         """
         login(self.client, username='test', password='password', )
-        response = self.client.get('/api/v1/check-lists/', )
+        response = self.client.get('/api/v1/check-lists', )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0].get('id'), self.check_list.id)
@@ -98,7 +98,7 @@ class CheckListTest(TestCase):
         GET with an id requires permission to view
         """
         login(self.client, username='test', password='password', )
-        response = self.client.get('/api/v1/check-lists/%d/' % (
+        response = self.client.get('/api/v1/check-lists/%d' % (
             self.check_list_1.id,
             ), )
         self.assertEqual(response.status_code, 404)
@@ -108,7 +108,7 @@ class CheckListTest(TestCase):
         GET with an id returns specified instance
         """
         login(self.client, username='test', password='password', )
-        response = self.client.get('/api/v1/check-lists/%d/' % (
+        response = self.client.get('/api/v1/check-lists/%d' % (
             self.check_list.id,
             ), )
         self.assertEqual(response.status_code, 200)
@@ -117,7 +117,7 @@ class CheckListTest(TestCase):
         self.assertEqual(len(response.data.get('check_list_items')), 2)
 
     def test_POST_authentication_required(self):
-        response = self.client.post('/api/v1/check-lists/', )
+        response = self.client.post('/api/v1/check-lists', )
         self.assertEqual(response.status_code, 403)
 
     def test_POST_creates_instance(self):
@@ -126,7 +126,7 @@ class CheckListTest(TestCase):
         """
         self.client.login(username='test', password='password', )
         response = self.client.post(
-                '/api/v1/check-lists/',
+                '/api/v1/check-lists',
                 {
                     'title': 'My List',
                 },
@@ -208,18 +208,18 @@ class CheckListItemTest(TestCase):
         """
         Listing all CheckListItems is not allowed
         """
-        response = self.client.get('/api/v1/check-list-items/', )
+        response = self.client.get('/api/v1/check-list-items', )
         self.assertEqual(response.status_code, 403)
 
         login(self.client, username='test', password='password', )
-        response = self.client.get('/api/v1/check-list-items/', )
+        response = self.client.get('/api/v1/check-list-items', )
         self.assertEqual(response.status_code, 403)
 
     def test_GET_authentication_required(self):
         """
         User must be authenticated to retrieve a CheckListItem
         """
-        response = self.client.get('/api/v1/check-list-items/%d/' % (
+        response = self.client.get('/api/v1/check-list-items/%d' % (
             self.check_list_item.id, ), )
         self.assertEqual(response.status_code, 403)
 
@@ -231,7 +231,7 @@ class CheckListItemTest(TestCase):
         check_list are returned
         """
         login(self.client, username='test', password='password', )
-        response = self.client.get('/api/v1/check-list-items/%d/' % (
+        response = self.client.get('/api/v1/check-list-items/%d' % (
             self.check_list_item.id, ), )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.data.get('title') == self.check_list_item.title)
@@ -248,7 +248,7 @@ class CheckListItemTest(TestCase):
         check_list are returned
         """
         login(self.client, username='test', password='password', )
-        response = self.client.get('/api/v1/check-list-items/%d/' % (
+        response = self.client.get('/api/v1/check-list-items/%d' % (
             self.check_list_item_1.id, ), )
         self.assertEqual(response.status_code, 403)
 
@@ -257,7 +257,7 @@ class CheckListItemTest(TestCase):
         User must be authenticated to create a CheckListItem
         """
         response = self.client.post(
-                '/api/v1/check-list-items/',
+                '/api/v1/check-list-items',
                 { },
                 )
         self.assertEqual(response.status_code, 403)
@@ -270,7 +270,7 @@ class CheckListItemTest(TestCase):
         """
         login(self.client, username='test1', password='password', )
         response = self.client.post(
-                '/api/v1/check-list-items/',
+                '/api/v1/check-list-items',
                 {
                     'check_list': '1',
                     'title': 'Item 1',
@@ -284,7 +284,7 @@ class CheckListItemTest(TestCase):
         """
         login(self.client, username='test', password='password', )
         response = self.client.post(
-                '/api/v1/check-list-items/',
+                '/api/v1/check-list-items',
                 {
                     'check_list': '1',
                     'checked': False,
@@ -316,7 +316,7 @@ class SessionTest(TestCase):
         """
         Return non authenticated user's session info
         """
-        response = self.client.get('/api/v1/sessions/', )
+        response = self.client.get('/api/v1/sessions', )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get('isAuthenticated'), False)
 
@@ -325,7 +325,7 @@ class SessionTest(TestCase):
         Return authenticated user's session info
         """
         self.client.login(username='test', password='password', )
-        response = self.client.get('/api/v1/sessions/', )
+        response = self.client.get('/api/v1/sessions', )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get('isAuthenticated'), True)
 
@@ -333,7 +333,7 @@ class SessionTest(TestCase):
         """
         DELETE requires an existing session
         """
-        response = self.client.delete('/api/v1/sessions/', )
+        response = self.client.delete('/api/v1/sessions', )
         self.assertEqual(response.status_code, 400)
         self.assertTrue('session' in response.data.get('detail', ''))
 
@@ -344,13 +344,13 @@ class SessionTest(TestCase):
         logs out the current user
         """
         self.client.post(
-                '/api/v1/sessions/',
+                '/api/v1/sessions',
                 {
                     'username': 'test',
                     'password': 'password',
                 },
             )
-        response = self.client.delete('/api/v1/sessions/', )
+        response = self.client.delete('/api/v1/sessions', )
         self.assertEqual(response.status_code, 204)
 
     def test_POST_requires_parameters(self):
@@ -361,7 +361,7 @@ class SessionTest(TestCase):
         - username
         """
         response = self.client.post(
-                '/api/v1/sessions/',
+                '/api/v1/sessions',
                 {
                     'password': 'password',
                 },
@@ -370,7 +370,7 @@ class SessionTest(TestCase):
         self.assertTrue('username' in response.data.get('detail', ''))
 
         response = self.client.post(
-                '/api/v1/sessions/',
+                '/api/v1/sessions',
                 {
                     'username': 'test',
                 },
@@ -383,7 +383,7 @@ class SessionTest(TestCase):
         POST requires correct credentials
         """
         response = self.client.post(
-                '/api/v1/sessions/',
+                '/api/v1/sessions',
                 {
                     'username': 'test',
                     'password': 'notMyPassword',
@@ -393,7 +393,7 @@ class SessionTest(TestCase):
         self.assertTrue('Invalid' in response.data.get('detail'))
 
         response = self.client.post(
-                '/api/v1/sessions/',
+                '/api/v1/sessions',
                 {
                     'username': 'notMyUsername',
                     'password': 'password',
@@ -407,7 +407,7 @@ class SessionTest(TestCase):
         POST to the endpoint authenticates a user and creates a session
         """
         response = self.client.post(
-                '/api/v1/sessions/',
+                '/api/v1/sessions',
                 {
                     'username': 'test',
                     'password': 'password',
@@ -415,8 +415,8 @@ class SessionTest(TestCase):
             )
         self.assertEqual(response.status_code, 201)
         self.assertTrue('Authentication' in response.data.get('detail', ''))
-        cookie = response.cookies.popitem()
-        self.assertEqual('sessionid', cookie[0])
+        self.assertTrue('csrftoken' in response.cookies)
+        self.assertTrue('sessionid' in response.cookies)
         self.assertEqual(response.data.get('isAuthenticated'), True)
 
 
