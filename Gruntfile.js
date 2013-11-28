@@ -51,7 +51,7 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      server: '.tmp'
+      server: '<%= yeoman.tmp %>'
     },
     jshint: {
       options: {
@@ -63,6 +63,12 @@ module.exports = function (grunt) {
       ]
     },
     karma: {
+      build: {
+        autowatch: false,
+        background: false,
+        configFile: 'karma.conf.js',
+        singleRun: true,
+      },
       unit: {
         autowatch: false,
         background: true,
@@ -73,7 +79,7 @@ module.exports = function (grunt) {
     compass: {
       options: {
         sassDir: '<%= yeoman.app %>/styles',
-        cssDir: 'app/styles',
+        cssDir: '<%= yeoman.app %>/styles',
         imagesDir: '<%= yeoman.app %>/images',
         javascriptsDir: '<%= yeoman.app %>/scripts',
         fontsDir: '<%= yeoman.app %>/styles/fonts',
@@ -96,7 +102,7 @@ module.exports = function (grunt) {
           compress: true
         },
         src: ['<%= yeoman.app %>/styles/bootstrap-jotter.less'],
-        dest: '<%= yeoman.dist %>/styles/bootstrap-jotter.min.css'
+        dest: '<%= yeoman.dist %>/styles/bootstrap-jotter.css'
       },
       server: {
         src: ['<%= yeoman.app %>/styles/bootstrap-jotter.less'],
@@ -106,9 +112,11 @@ module.exports = function (grunt) {
     concat: {
       dist: {
         files: {
-          '<%= yeoman.dist %>/scripts/scripts.js': [
-            '.tmp/scripts/{,*/}*.js',
-            '<%= yeoman.app %>/scripts/{,*/}*.js'
+          '<%= yeoman.tmp %>/scripts/scripts.js': [
+            '<%= yeoman.app %>/scripts/app.js',
+            '<%= yeoman.app %>/scripts/controllers/*.js',
+            '<%= yeoman.app %>/scripts/directives/*.js',
+            '<%= yeoman.app %>/scripts/services/*.js',
           ]
         }
       }
@@ -120,8 +128,8 @@ module.exports = function (grunt) {
       }
     },
     usemin: {
-      html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+      html: ['<%= yeoman.dist %>/**/*.html'],
+      css: ['<%= yeoman.dist %>/**/*.css'],
       options: {
         dirs: ['<%= yeoman.dist %>']
       }
@@ -169,12 +177,7 @@ module.exports = function (grunt) {
         module: 'jotterTemplates',
         base: '<%= yeoman.tmp %>'
       },
-      '<%= yeoman.app %>/scripts/templates.js': [ '.tmp/templates/**/*.html' ]
-    },
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
-      }
+      '<%= yeoman.app %>/scripts/templates.js': [ '<%= yeoman.tmp %>/templates/**/*.html' ]
     },
     ngmin: {
       dist: {
@@ -190,8 +193,11 @@ module.exports = function (grunt) {
       dist: {
         files: {
           '<%= yeoman.dist %>/scripts/scripts.js': [
-            '<%= yeoman.dist %>/scripts/scripts.js'
+            '<%=yeoman.tmp %>/scripts/scripts.js'
           ],
+          '<%= yeoman.dist %>/scripts/templates.js': [
+            '<%= yeoman.dist %>/scripts/templates.js'
+          ]
         }
       }
     },
@@ -199,9 +205,9 @@ module.exports = function (grunt) {
       dist: {
         files: {
           src: [
-            '<%= yeoman.dist %>/scripts/{,*/}*.js',
-            '<%= yeoman.dist %>/styles/{,*/}*.css',
-            '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}',
+            '<%= yeoman.dist %>/scripts/**/*.js',
+            '<%= yeoman.dist %>/styles/**/*.css',
+            '<%= yeoman.dist %>/images/**/*.{png,jpg,jpeg,gif,webp}',
             '<%= yeoman.dist %>/styles/fonts/*'
           ]
         }
@@ -215,10 +221,16 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
-            '*.{ico,txt}',
-            '.htaccess',
+            '*.{ico,txt,html}',
+            'scripts/templates.js',
             'components/**/*',
-            'images/{,*/}*.{gif,webp}'
+            'images/{,*/}*.{png,jpg,gif,webp}',
+            'views/**/*',
+            'components/**/*.{js,css,png,gif,jpg}',
+            '!components/**/test?/**/*',
+            '!components/**/docs/**/*',
+            '!components/**/*.html',
+            '!components/bootstrap/*.css'
           ]
         }]
       }
@@ -266,24 +278,23 @@ module.exports = function (grunt) {
   grunt.registerTask('test', [
     'clean:server',
     'compass',
-    'connect:test',
-    'karma'
+    'less',
+    'karma:build'
   ]);
 
   grunt.registerTask('build', [
     'clean:dist',
-    'jshint',
     'test',
     'compass:dist',
+    'less:dist',
     'useminPrepare',
+    'concat',
     'imagemin',
     'cssmin',
     'htmlmin',
-    'concat',
-    'copy',
-    'cdnify',
+    'copy:dist',
     'ngmin',
-    'uglify',
+    'uglify:dist',
     'rev',
     'usemin'
   ]);

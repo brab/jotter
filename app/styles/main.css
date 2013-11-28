@@ -1,16 +1,16 @@
 @import url(https://fonts.googleapis.com/css?family=Maven+Pro:400,700);
 @import url(../components/font-awesome/css/font-awesome.min.css);
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000311}}
+/* line 11, main.scss */
 body {
   font-weight: 400;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000314}}
+/* line 14, main.scss */
 strong {
   font-weight: 700;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000318}}
+/* line 18, main.scss */
 h1 {
   background-color: #250d0d;
   color: white;
@@ -19,30 +19,30 @@ h1 {
   padding-top: 5px;
   text-align: center;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000326}}
+/* line 26, main.scss */
 h1 a, h1 a:hover {
   color: white;
   text-decoration: none;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000332}}
+/* line 32, main.scss */
 h2 {
   color: #250d0d;
   margin-top: 10px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000335}}
+/* line 35, main.scss */
 h2 a, h2 a:hover {
   color: #250d0d;
   text-decoration: none;
 }
 
 /*CHECK LISTS*/
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000343}}
+/* line 43, main.scss */
 .checkLists .checkList {
   padding-bottom: 10px;
   padding-top: 10px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000347}}
+/* line 47, main.scss */
 .checkLists .checkList .checkListTitle {
   padding-left: 3px;
 }
