@@ -48,7 +48,8 @@ function ($location, $routeParams, $scope, CheckList, CheckListItem, Session) {
 
   $scope.saveCheckListItem = function () {
     if (angular.isDefined($scope.checkListItemEdit.id)) {
-      $scope.checkListItemEdit.$update();
+      var checkListItem = new CheckListItem($scope.checkListItemEdit);
+      checkListItem.$update();
     } else {
       saveNewCheckListItem();
     }

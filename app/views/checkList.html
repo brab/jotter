@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" jtr-check-list-items>
   <div class="list col-md-12 col-lg-8 col-lg-offset-2">
     <div class="row">
       <div class="col-md-12 col-lg-12">
@@ -33,13 +33,14 @@
       </div>
     </div>
 
-    <div class="row" ng-show="showNewCheckListItemForm">
+    <div class="row" ng-show="showCheckListItemEditForm">
       <div class="col-md-12 col-lg-5 col-lg-offset-7 well well-sm">
         <form role="form" name="formNewCheckList">
           <div class="form-group col-md-12">
             <label class="sr-only">Title</label>
             <input
               class="form-control"
+              id="checkListItemEditTitle"
               type="text"
               placeholder="title"
               tabindex="20"
@@ -58,8 +59,8 @@
 
           <div class="form-group col-lg-5">
             <div class="btn-group pull-right">
-              <button class="btn btn-default" ng-click="showNewCheckListItemForm = false;"> <i class="fa fa-times text-danger"></i> </button>
-              <button class="btn btn-default" ng-click="saveCheckListItem(); showNewCheckListItemForm = false;"> <i class="fa fa-check text-success"></i> </button>
+              <button class="btn btn-default" ng-click="cancelCheckListItemEdit()"> <i class="fa fa-times text-danger"></i> </button>
+              <button class="btn btn-default" ng-click="saveCheckListItem(); showCheckListItemEditForm = false;"> <i class="fa fa-check text-success"></i> </button>
             </div>
           </div>
 
@@ -70,8 +71,8 @@
 
     <div class="row">
       <div class="col-md-12 col-lg-6 col-lg-offset-6">
-        <span class="pull-right" ng-hide="showNewCheckListItemForm">
-          <a href="" ng-click="showNewCheckListItemForm = true;">
+        <span class="pull-right" ng-hide="showCheckListItemEditForm">
+          <a href="" ng-click="newCheckListItem()">
             <i class="fa fa-plus"></i>
           </a>
         </span>
@@ -84,13 +85,28 @@
           <div
             class="list-group-item"
             ng-repeat="item in checkList.check_list_items | filter:itemSearch"
-            ng-click="toggleCheckListItemChecked(item)">
-            <span class="pull-right">
-              <i class="fa fa-check text-success" ng-show="item.checked"></i>
-              <i class="fa fa-circle-o text-muted" ng-hide="item.checked"></i>
-            </span>
-            <h4 class="list-group-item-heading">{{ item.title }}</h4>
-            <p class="list-group-item-text text-muted" ng-show="item.description">{{ item.description }}</p>
+            ng-swipe-left="showCheckListItemTools(item)"
+            ng-swipe-right="hideCheckListItemTools(item)"
+            >
+            <div class="row">
+              <div
+                ng-class="{'col-xs-8 col-md-11': item.showTools, 'col-xs-12': !item.showTools}"
+                ng-click="toggleCheckListItemChecked(item)">
+                <span class="pull-right">
+                  <i class="fa fa-check text-success" ng-show="item.checked"></i>
+                  <i class="fa fa-circle-o text-muted" ng-hide="item.checked"></i>
+                </span>
+                <h4 class="list-group-item-heading">{{ item.title }}</h4>
+                <p class="list-group-item-text text-muted" ng-show="item.description">{{ item.description }}</p>
+              </div>
+              <div class="col-xs-4 col-md-1" ng-show="item.showTools">
+                <span class="pull-right">
+                  <a href="" ng-click="editCheckListItem(item)"><i class="fa fa-edit"></i></a>
+                  &nbsp;
+                  <i class="fa fa-trash-o"></i>
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

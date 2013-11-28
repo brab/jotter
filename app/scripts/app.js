@@ -4,7 +4,7 @@ var jotterDirectives = angular.module('jotterDirectives', []);
 var jotterServices = angular.module('jotterServices', ['ngResource']);
 
 var jotterApp = angular.module('jotterApp',
-    ['jotterDirectives', 'jotterServices', 'jotterTemplates', 'ngAnimate', 'ngRoute'])
+    ['jotterDirectives', 'jotterServices', 'jotterTemplates', 'ngAnimate', 'ngRoute', 'ngTouch'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
