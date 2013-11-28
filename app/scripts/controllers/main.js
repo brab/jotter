@@ -1,7 +1,7 @@
 'use strict()';
 
-jotterApp.controller('MainCtrl', ['$scope', 'CheckList', 'Session',
-function ($scope, CheckList, Session) {
+jotterApp.controller('MainCtrl', ['$location', '$scope', 'CheckList', 'Session',
+function ($location, $scope, CheckList, Session) {
   Session.getUser({
     onSuccess: function (user) {
       $scope.user = user;
@@ -9,4 +9,8 @@ function ($scope, CheckList, Session) {
   });
 
   $scope.checkLists = CheckList.query();
+
+  $scope.gotoCheckList = function (checkList) {
+    $location.path('/lists/' + checkList.id);
+  };
 }]);

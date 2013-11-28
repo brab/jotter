@@ -6,13 +6,10 @@
       </a>
     </h2>
     <div class="row lists">
-      <div class="col-md-12 col-lg-6" ng-repeat="checkList in checkLists | limitTo:2" ng-click="gotoList(list)">
+      <div class="col-md-12 col-lg-6" ng-repeat="checkList in checkLists | limitTo:2" ng-click="gotoCheckList(checkList)">
         <strong>{{ checkList.title }}</strong>
-        <div ng-repeat="item in checkList.check_list_items | limitTo:3">
+        <div ng-repeat="item in checkList.check_list_items | orderBy:'-id' | limitTo:3">
           {{ item.title }}
-          <div ng-show="item.description">
-            {{ item.description }}
-          </div>
         </div>
       </div>
     </div>
