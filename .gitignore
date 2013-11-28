@@ -10,7 +10,6 @@ prod_settings.py
 local_db
 
 node_modules
-dist
 .tmp
 .sass-cache
 .vagrant
