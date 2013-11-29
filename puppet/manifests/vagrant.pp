@@ -36,12 +36,11 @@ node default {
     'libevent-dev',
     'libncurses5-dev',
     'make',
-    'nfs-common'
+    'nfs-common',
     'nfs-kernel-server',
     'nodejs',
     'phantomjs',
-    'python3-pip',
-    'python3.2-dev',
+    'python3.3-dev',
     'ruby-compass',
   ]
 
@@ -52,23 +51,41 @@ node default {
     before  => Exec['pip-install', 'npm-install-global' ],
   }
 
+  exec { 'wget-get-pip':
+    command => '/usr/bin/wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py',
+    cwd     => '/home/vagrant',
+  }
+
+  exec { 'install-pip':
+    command => '/usr/bin/python3.3 get-pip.py',
+    cwd     => '/home/vagrant',
+    require => [Package['install-packages'], Exec['wget-get-pip']],
+    before  => Exec['pip-install'],
+  }
+
   exec { 'pip-install':
-    command => '/usr/bin/pip-3.2 install -r requirements.txt',
+    command => '/usr/local/bin/pip-3.3 install -r requirements.txt',
     cwd     => '/home/vagrant/app',
+  }
+
+  exec { 'gem-install':
+    command   => '/usr/bin/gem install foreman',
+    cwd       => '/home/vagrant/app',
+    logoutput => on_failure,
   }
 
   exec { 'npm-install-global':
     command => '/usr/bin/npm install -g grunt-cli@0.1.9 bower@1.2.7 karma@0.8.7 phantomjs@1.9.1-0',
     cwd     => '/home/vagrant/app',
     before  => Exec['npm-install'],
-    logoutput => on_failure
+    logoutput => on_failure,
   }
 
   exec { 'npm-install':
     command => '/usr/bin/npm install',
     cwd     => '/home/vagrant/app',
     require => [Exec['npm-install-global']],
-    logoutput => on_failure
+    logoutput => on_failure,
   }
 
   exec { 'bower-install':
