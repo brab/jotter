@@ -3,6 +3,8 @@ Markdown==2.3.1
 South==0.8.2
 dj-database-url==0.2.2
 
+werkzeug==0.9.4
+six==1.4.1
 # dj-static==0.0.5
 # pdanny's fork for Python 3
 git+https://github.com/pydanny/dj-static.git@switch-to-staticserve
@@ -14,6 +16,4 @@ gunicorn==18.0
 ipython==1.1.0
 # psycopg2==2.5.1
 python-slugify==0.0.6
-six==1.4.1
 static3==0.5
-werkzeug==0.9.4
