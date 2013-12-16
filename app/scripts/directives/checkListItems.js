@@ -10,6 +10,7 @@ jotterDirectives.directive('jtrCheckListItems',
       scope.cancelCheckListItemEdit = function () {
         scope.checkListItemEdit = {};
         scope.showCheckListItemEditForm = false;
+        scope.$root.$broadcast('checkList:refresh');
       };
 
       scope.editCheckListItem = function (checkListItem) {

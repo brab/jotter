@@ -20,6 +20,9 @@ function ($location, $routeParams, $scope, CheckList, CheckListItem, Session) {
     $location.$path('/#/lists');
   }
 
+  $scope.$on('checkList:refresh', function () {
+    $scope.checkList = CheckList.get({ id: checkListId });
+  });
   $scope.checkList = CheckList.get({ id: checkListId });
 
   var saveNewCheckListItem = function () {
