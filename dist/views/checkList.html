@@ -59,8 +59,18 @@
 
           <div class="form-group col-lg-5">
             <div class="btn-group pull-right">
-              <button class="btn btn-default" ng-click="cancelCheckListItemEdit()"> <i class="fa fa-times text-danger"></i> </button>
-              <button class="btn btn-default" ng-click="saveCheckListItem(); showCheckListItemEditForm = false;"> <i class="fa fa-check text-success"></i> </button>
+              <button
+                class="btn btn-default"
+                type="button"
+                ng-click="cancelCheckListItemEdit()">
+                <i class="fa fa-times text-danger"></i>
+              </button>
+              <button
+                class="btn btn-default"
+                type="button"
+                ng-click="saveCheckListItem(); showCheckListItemEditForm = false;">
+                <i class="fa fa-check text-success"></i>
+              </button>
             </div>
           </div>
 
@@ -97,6 +107,7 @@
             >
             <div class="row">
               <div
+                class="cursor-pointer"
                 ng-class="{'col-xs-8 col-md-11': item.showTools, 'col-xs-12': !item.showTools}"
                 ng-click="toggleCheckListItemChecked(item)">
                 <span class="pull-right">
