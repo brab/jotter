@@ -190,3 +190,12 @@ AUTHENTICATION_BACKENDS = (
 
 ANONYMOUS_USER_ID = -1
 ANONYMOUS_DEFAULT_USERNAME_VALUE = '!'
+
+SITE_NAME = os.getenv('SITE_NAME', 'local')
+try:
+    if SITE_NAME == 'local':
+        from server.local_settings import *
+    elif SITE_NAME == 'prod':
+        from server.prod_settings import *
+except Exception as e:
+    print(e)

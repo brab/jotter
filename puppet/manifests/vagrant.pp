@@ -40,6 +40,8 @@ node default {
     'nfs-kernel-server',
     'nodejs',
     'phantomjs',
+    'postgresql',
+    'postgresql-server-dev-9.1',
     'python3.3-dev',
     'ruby-compass',
   ]

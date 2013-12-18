@@ -6,7 +6,6 @@
 *.psd
 *.DS_Store
 local_settings.py
-prod_settings.py
 local_db
 
 node_modules
