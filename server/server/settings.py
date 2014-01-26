@@ -1,10 +1,12 @@
-# Django settings for server project.
+"""
+Django settings for server project.
+"""
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Ben Rabinovitch', 'ben@jotter.ca'),
 )
 
 MANAGERS = ADMINS
@@ -14,13 +16,18 @@ ANGULAR_ROOT = os.path.realpath(os.path.join('.', '../app'))
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'local_db',                      # Or path to database file if using sqlite3.
+        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # Or path to database file if using sqlite3.
+        'NAME': 'jotter',
         # The following settings are not used with sqlite3:
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'USER': 'jotter',
+        'PASSWORD': 'xoeNgee6',
+        # Empty for localhost through domain sockets
+        # or '127.0.0.1' for localhost through TCP.
+        'HOST': 'localhost',
+        # Set to empty string for default.
+        'PORT': '',
     }
 }
 
@@ -114,7 +121,8 @@ ROOT_URLCONF = 'server.urls'
 WSGI_APPLICATION = 'server.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates"
+    # or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     ANGULAR_ROOT,
@@ -190,12 +198,3 @@ AUTHENTICATION_BACKENDS = (
 
 ANONYMOUS_USER_ID = -1
 ANONYMOUS_DEFAULT_USERNAME_VALUE = '!'
-
-SITE_NAME = os.getenv('SITE_NAME', 'local')
-try:
-    if SITE_NAME == 'local':
-        from server.local_settings import *
-    elif SITE_NAME == 'prod':
-        from server.prod_settings import *
-except Exception as e:
-    print(e)
