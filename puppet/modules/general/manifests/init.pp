@@ -1,4 +1,4 @@
-node default {
+class general {
   group { 'puppet':
     ensure => 'present',
   }
@@ -24,6 +24,7 @@ node default {
     require => Exec['initial_apt_update'],
   }
 
+  class { 'apt': }
   apt::ppa { "ppa:chris-lea/node.js":
     require => Package['software-properties-common'],
   }
@@ -66,35 +67,51 @@ node default {
   }
 
   exec { 'pip-install':
-    command => '/usr/local/bin/pip-3.3 install -r requirements.txt',
-    cwd     => '/home/vagrant/app',
+    command => '/usr/local/bin/pip3.3 install -r requirements.txt',
+    cwd     => $codedir,
+    logoutput => on_failure,
   }
 
   exec { 'gem-install':
     command   => '/usr/bin/gem install foreman',
-    cwd       => '/home/vagrant/app',
+    cwd       => $codedir,
     logoutput => on_failure,
   }
 
   exec { 'npm-install-global':
     command => '/usr/bin/npm install -g grunt-cli@0.1.9 bower@1.2.7 karma@0.8.7 phantomjs@1.9.1-0',
-    cwd     => '/home/vagrant/app',
+    cwd     => $codedir,
     before  => Exec['npm-install'],
     logoutput => on_failure,
   }
 
   exec { 'npm-install':
     command => '/usr/bin/npm install',
-    cwd     => '/home/vagrant/app',
-    require => [Exec['npm-install-global']],
+    cwd     => $codedir,
     logoutput => on_failure,
   }
 
   exec { 'bower-install':
     command => '/usr/bin/bower install --allow-root',
-    cwd     => '/home/vagrant/app',
+    cwd     => $codedir,
     require => [Exec['npm-install']],
     onlyif  => [ "/usr/bin/bower list | tail -n +2" ],
     logoutput => on_failure,
+  }
+
+  class { 'postgresql::server': }
+  postgresql::server::role { 'jotter':
+    password_hash => postgresql_password('jotter', 'xoeNgee6'),
+    require       => Package['install-packages'],
+  } ->
+  postgresql::server::database { 'jotter':
+    owner => 'jotter',
+    require       => Package['install-packages'],
+  } ->
+  postgresql::server::database_grant { 'jotter':
+    privilege => 'ALL',
+    db        => 'jotter',
+    role      => 'jotter',
+    require       => Package['install-packages'],
   }
 }

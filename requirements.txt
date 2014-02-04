@@ -1,10 +1,11 @@
+Werkzeug==0.9.4
+six==1.4.1
+
 Django==1.5.2
 Markdown==2.3.1
 South==0.8.2
 dj-database-url==0.2.2
 
-Werkzeug==0.9.4
-six==1.4.1
 # dj-static==0.0.5
 # pdanny's fork for Python 3
 git+https://github.com/pydanny/dj-static.git@switch-to-staticserve

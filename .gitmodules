@@ -1,3 +1,0 @@
-[submodule "puppet/modules/apt"]
-	path = puppet/modules/apt
-	url = https://github.com/evolvingweb/puppet-apt
