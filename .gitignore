@@ -6,6 +6,11 @@
 *.psd
 *.DS_Store
 local_settings.py
-prod_settings.py
-dev_db
+local_db
 
+node_modules
+.tmp
+.sass-cache
+.vagrant
+app/components
+app/scripts/templates.js

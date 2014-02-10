@@ -1,0 +1,56 @@
+@import url(https://fonts.googleapis.com/css?family=Maven+Pro:400,700);
+
+@import "../components/font-awesome/css/font-awesome.min.css";
+
+$gray_dark: #000000;
+$primary_dark: #250d0d;
+$primary: #4c1a19;
+$primary_light: #732625;
+$white: #ffffff;
+
+body {
+  font-weight: 400;
+}
+strong {
+  font-weight: 700;
+}
+
+h1 {
+  background-color: $primary_dark;
+  color: $white;
+  margin-top: 0;
+  padding-bottom: 10px;
+  padding-top: 5px;
+  text-align: center;
+
+  a, a:hover {
+    color: $white;
+    text-decoration: none;
+  }
+}
+
+h2 {
+  color: $primary_dark;
+  margin-top: 10px;
+  a, a:hover {
+    color: $primary_dark;
+    text-decoration: none;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/*CHECK LISTS*/
+.checkLists {
+  .checkList {
+    padding-bottom: 10px;
+    padding-top: 10px;
+
+    .checkListTitle {
+      padding-left: 3px;
+    }
+  }
+}
+/*END CHECK LISTS*/

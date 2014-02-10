@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="lists col-md-12 col-lg-8 col-lg-offset-2">
+    <div class="row checkLists">
+      <div class="col-md-12 col-lg-6 col-lg-offset-6">
+        <span class="pull-right" ng-hide="showNewCheckList">
+          <a href="" ng-click="showNewCheckList = true;">
+            <i class="fa fa-plus"></i>
+          </a>
+        </span>
+        <div class="col-md-10 col-md-offset-1" ng-show="showNewCheckList">
+          <form ng-submit="saveNewCheckList()">
+            <div class="input-group">
+              <input
+                class="form-control"
+                type="text"
+                placeholder="New List"
+                ng-model="newCheckListTitle" />
+              <span class="input-group-btn">
+                <button
+                  class="btn btn-default"
+                  type="button"
+                  ng-click="showNewCheckList = false; newCheckListTitle = '';">
+                  <i class="fa fa-times text-danger"></i>
+                </button>
+                <button
+                  class="btn btn-default"
+                  type="button"
+                  ng-click="saveNewCheckList(); showNewCheckList = false;">
+                  <i class="fa fa-check text-success"></i>
+                </button>
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div
+        class="checkList col-md-12 col-lg-6"
+        ng-repeat="checkList in checkLists"
+        ng-click="gotoList(checkList)">
+        <span class="checkListTitle">
+          <a ng-href="/#/lists/{{ checkList.id }}">{{ checkList.title }}</a>
+        </span>
+        <small class="text-muted">({{ getNumChecked(checkList) }} checked)</small>
+      </div>
+    </div>
+  </div>
+</div>
