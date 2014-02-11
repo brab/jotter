@@ -18,8 +18,9 @@ class prod_server {
   ]
 
   package { 'install-packages-prod':
-    name   => $packages_prod,
-    ensure => 'installed'
+    name    => $packages_prod,
+    ensure  => 'installed',
+    require => File['python-symlink'],
   }
 
   file { 'jotter/.ssh':
@@ -75,6 +76,7 @@ class prod_server {
     cwd     => '/var/www',
     command => '/usr/bin/git clone git@github.com:brab/jotter.git',
     user    => 'jotter',
+    creates => '/var/www/jotter/',
     require => Package['install-packages'],
     before  => [
       Exec['pip-install'],
@@ -83,5 +85,26 @@ class prod_server {
       Exec['npm-install'],
       Exec['bower-install'],
     ]
+  }
+
+  file { 'wsgi-conf':
+    path    => '/etc/apache2/sites-available/jotter',
+    ensure  => link,
+    target  => '/var/www/jotter/server/server/wsgi.conf',
+    require => [Exec['clone-repo'], Package['install-packages-prod'],],
+  }
+
+  exec { 'apache-disable-default':
+    command => '/usr/sbin/a2dissite 000-default',
+  }
+
+  exec { 'apache-enable-jotter':
+    command => '/usr/sbin/a2ensite jotter',
+    require => File['wsgi-conf'],
+  }
+
+  exec { 'apache-reload':
+    command => '/usr/sbin/service apache2 reload',
+    require => [Exec['apache-enable-jotter'], Exec['apache-disable-default'],],
   }
 }

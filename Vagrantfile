@@ -33,6 +33,7 @@ Vagrant.configure("2") do |config|
     prod.vm.box = "quantal64"
     prod.vm.box_url = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
     prod.vm.network "private_network", ip: "192.168.33.11"
+    #prod.vm.network "public_network"
     prod.vm.host_name = "prod"
 
     prod.vm.provider "virtualbox" do |vb|

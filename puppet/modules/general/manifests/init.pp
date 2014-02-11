@@ -44,6 +44,8 @@ class general {
     'postgresql',
     'postgresql-server-dev-9.1',
     'python3.3-dev',
+    'libpython3.3',
+    'libpython3.3-dev',
     'ruby-compass',
   ]
 
@@ -52,6 +54,20 @@ class general {
     ensure  => 'installed',
     require => [Exec['initial_apt_upgrade'], Apt::Ppa['ppa:chris-lea/node.js'], Package['software-properties-common']],
     before  => Exec['pip-install', 'npm-install-global' ],
+  }
+
+  file { 'python-symlink':
+    path    => '/usr/bin/python3',
+    ensure  => link,
+    target  => '/usr/bin/python3.3',
+    require => Package['install-packages'],
+  }
+
+  file { 'python-so-symlink':
+    path    => '/usr/lib/libpython3.3m.so.1',
+    ensure  => link,
+    target  => '/usr/lib/x86_64-linux-gnu/libpython3.3m.so.1.0',
+    require => Package['install-packages'],
   }
 
   exec { 'wget-get-pip':
@@ -66,8 +82,13 @@ class general {
     before  => Exec['pip-install'],
   }
 
+  exec { 'pip-install-0':
+    command => '/usr/local/bin/pip3.3 install -r requirements0.txt',
+    cwd     => $codedir,
+    logoutput => on_failure,
+  } ->
   exec { 'pip-install':
-    command => '/usr/local/bin/pip3.3 install -r requirements.txt',
+    command => '/usr/local/bin/pip3.3 install -r requirements1.txt',
     cwd     => $codedir,
     logoutput => on_failure,
   }
