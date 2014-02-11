@@ -79,7 +79,7 @@ class prod_server {
     creates => '/var/www/jotter/',
     require => Package['install-packages'],
     before  => [
-      Exec['pip-install'],
+      Exec['pip-install-0'],
       Exec['gem-install'], 
       Exec['npm-install-global'],
       Exec['npm-install'],

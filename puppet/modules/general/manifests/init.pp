@@ -53,7 +53,7 @@ class general {
     name    => $packages,
     ensure  => 'installed',
     require => [Exec['initial_apt_upgrade'], Apt::Ppa['ppa:chris-lea/node.js'], Package['software-properties-common']],
-    before  => Exec['pip-install', 'npm-install-global' ],
+    before  => Exec['pip-install-0', 'npm-install-global' ],
   }
 
   file { 'python-symlink':
@@ -79,16 +79,16 @@ class general {
     command => '/usr/bin/python3.3 get-pip.py',
     cwd     => '/home/vagrant',
     require => [Package['install-packages'], Exec['wget-get-pip']],
-    before  => Exec['pip-install'],
+    before  => Exec['pip-install-0'],
   }
 
   exec { 'pip-install-0':
-    command => '/usr/local/bin/pip3.3 install -r requirements0.txt',
+    command => '/usr/local/bin/pip3.3 install -r requirements-0.txt',
     cwd     => $codedir,
     logoutput => on_failure,
   } ->
   exec { 'pip-install':
-    command => '/usr/local/bin/pip3.3 install -r requirements1.txt',
+    command => '/usr/local/bin/pip3.3 install -r requirements-1.txt',
     cwd     => $codedir,
     logoutput => on_failure,
   }
