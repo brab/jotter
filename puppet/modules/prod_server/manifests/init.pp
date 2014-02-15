@@ -14,12 +14,16 @@ class prod_server {
 
   $packages_prod = [
     'apache2',
-    'libapache2-mod-wsgi-py3',
+    'apache2-dev',
+    #'libapache2-mod-wsgi-py3',
   ]
 
-  package { 'install-packages-prod':
-    name    => $packages_prod,
+  package { $packages_prod:
     ensure  => 'installed',
+    before  => [
+      File['wsgi-conf'],
+      Exec['wget-mod-wsgi'],
+    ],
     require => File['python-symlink'],
   }
 
@@ -73,12 +77,13 @@ class prod_server {
   }
 
   exec { 'clone-repo':
-    cwd     => '/var/www',
-    command => '/usr/bin/git clone git@github.com:brab/jotter.git',
-    user    => 'jotter',
-    creates => '/var/www/jotter/',
-    require => Package['install-packages'],
-    before  => [
+    cwd      => '/var/www',
+    command  => '/usr/bin/git clone git@github.com:brab/jotter.git',
+    user     => 'jotter',
+    creates  => '/var/www/jotter/',
+    #require => Package['install-packages'],
+    require  => File['python-symlink'],
+    before   => [
       Exec['pip-install-0'],
       Exec['gem-install'], 
       Exec['npm-install-global'],
@@ -87,11 +92,40 @@ class prod_server {
     ]
   }
 
+  exec { 'wget-mod-wsgi':
+    command => '/usr/bin/wget https://modwsgi.googlecode.com/files/mod_wsgi-3.4.tar.gz',
+    cwd     => '/home/vagrant',
+  } ->
+  exec { 'mod-wsgi-unpack':
+    command => '/bin/tar xzvf mod_wsgi-3.4.tar.gz',
+    cwd     => '/home/vagrant',
+  } ->
+  exec { 'mod-wsgi-configure':
+    command => '/home/vagrant/mod_wsgi-3.4/configure --with-python=/usr/bin/python3.3',
+    cwd     => '/home/vagrant/mod_wsgi-3.4',
+  } ->
+  exec { 'mod-wsgi-make-install':
+    command => '/usr/bin/make && make install',
+    cwd     => '/home/vagrant/mod_wsgi-3.4',
+    before  => [
+      Exec['apache-restart'],
+      File['wsgi-conf'],
+    ],
+  } ->
+  file { 'mod-wsgi-clean-directory':
+    path   => '/home/vagrant/mod_wsgi-3.4',
+    ensure => absent,
+  } ->
+  file { 'mod-wsgi-clean-tar':
+    path   => '/home/vagrant/mod_wsgi-3.4.tar.gz',
+    ensure => absent,
+  }
+
   file { 'wsgi-conf':
-    path    => '/etc/apache2/sites-available/jotter',
+    path    => '/etc/apache2/sites-available/jotter.conf',
     ensure  => link,
     target  => '/var/www/jotter/server/server/wsgi.conf',
-    require => [Exec['clone-repo'], Package['install-packages-prod'],],
+    require => Exec['clone-repo'],
   }
 
   exec { 'apache-disable-default':
@@ -99,12 +133,16 @@ class prod_server {
   }
 
   exec { 'apache-enable-jotter':
-    command => '/usr/sbin/a2ensite jotter',
-    require => File['wsgi-conf'],
+    command   => '/usr/sbin/a2ensite jotter',
+    require   => File['wsgi-conf'],
+    logoutput => on_failure,
   }
 
-  exec { 'apache-reload':
-    command => '/usr/sbin/service apache2 reload',
-    require => [Exec['apache-enable-jotter'], Exec['apache-disable-default'],],
+  exec { 'apache-restart':
+    command => '/usr/sbin/service apache2 restart',
+    require => [
+      Exec['apache-enable-jotter'],
+      Exec['apache-disable-default'],
+    ],
   }
 }

@@ -49,25 +49,29 @@ class general {
     'ruby-compass',
   ]
 
-  package { 'install-packages':
-    name    => $packages,
+  package { $packages:
     ensure  => 'installed',
     require => [Exec['initial_apt_upgrade'], Apt::Ppa['ppa:chris-lea/node.js'], Package['software-properties-common']],
-    before  => Exec['pip-install-0', 'npm-install-global' ],
+    before  => [
+      Exec['pip-install-0'],
+      Exec['npm-install-global'],
+      File['python-symlink'],
+      File['python-so-symlink'],
+      Exec['install-pip'],
+      Postgresql::Server::Role['jotter'],
+    ],
   }
 
   file { 'python-symlink':
-    path    => '/usr/bin/python3',
-    ensure  => link,
-    target  => '/usr/bin/python3.3',
-    require => Package['install-packages'],
+    path   => '/usr/bin/python3',
+    ensure => link,
+    target => '/usr/bin/python3.3',
   }
 
   file { 'python-so-symlink':
-    path    => '/usr/lib/libpython3.3m.so.1',
-    ensure  => link,
-    target  => '/usr/lib/x86_64-linux-gnu/libpython3.3m.so.1.0',
-    require => Package['install-packages'],
+    path   => '/usr/lib/libpython3.3m.so.1',
+    ensure => link,
+    target => '/usr/lib/x86_64-linux-gnu/libpython3.3m.so.1.0',
   }
 
   exec { 'wget-get-pip':
@@ -78,19 +82,23 @@ class general {
   exec { 'install-pip':
     command => '/usr/bin/python3.3 get-pip.py',
     cwd     => '/home/vagrant',
-    require => [Package['install-packages'], Exec['wget-get-pip']],
+    require => Exec['wget-get-pip'],
     before  => Exec['pip-install-0'],
   }
 
   exec { 'pip-install-0':
-    command => '/usr/local/bin/pip3.3 install -r requirements-0.txt',
-    cwd     => $codedir,
+    command   => '/usr/local/bin/pip3.3 install -r requirements-0.txt',
+    cwd       => $codedir,
     logoutput => on_failure,
   } ->
   exec { 'pip-install':
-    command => '/usr/local/bin/pip3.3 install -r requirements-1.txt',
-    cwd     => $codedir,
+    command   => '/usr/local/bin/pip3.3 install -r requirements-1.txt',
+    cwd       => $codedir,
     logoutput => on_failure,
+  } ->
+  file { 'pip-clean-installer':
+    path   => '/home/vagrant/get-pip.py',
+    ensure => absent,
   }
 
   exec { 'gem-install':
@@ -100,39 +108,36 @@ class general {
   }
 
   exec { 'npm-install-global':
-    command => '/usr/bin/npm install -g grunt-cli@0.1.9 bower@1.2.7 karma@0.8.7 phantomjs@1.9.1-0',
-    cwd     => $codedir,
-    before  => Exec['npm-install'],
+    command   => '/usr/bin/npm install -g grunt-cli@0.1.9 bower@1.2.7 karma@0.8.7 phantomjs@1.9.1-0',
+    cwd       => $codedir,
+    before    => Exec['npm-install'],
     logoutput => on_failure,
   }
 
   exec { 'npm-install':
-    command => '/usr/bin/npm install',
-    cwd     => $codedir,
+    command   => '/usr/bin/npm install',
+    cwd       => $codedir,
     logoutput => on_failure,
   }
 
   exec { 'bower-install':
-    command => '/usr/bin/bower install --allow-root',
-    cwd     => $codedir,
-    require => [Exec['npm-install']],
-    onlyif  => [ "/usr/bin/bower list | tail -n +2" ],
+    command   => '/usr/bin/bower install --allow-root',
+    cwd       => $codedir,
+    require   => [Exec['npm-install']],
+    onlyif    => [ "/usr/bin/bower list | tail -n +2" ],
     logoutput => on_failure,
   }
 
   class { 'postgresql::server': }
   postgresql::server::role { 'jotter':
     password_hash => postgresql_password('jotter', 'xoeNgee6'),
-    require       => Package['install-packages'],
   } ->
   postgresql::server::database { 'jotter':
     owner => 'jotter',
-    require       => Package['install-packages'],
   } ->
   postgresql::server::database_grant { 'jotter':
     privilege => 'ALL',
     db        => 'jotter',
     role      => 'jotter',
-    require       => Package['install-packages'],
   }
 }
