@@ -4,8 +4,7 @@ South==0.8.2
 dj-database-url==0.2.2
 
 # dj-static==0.0.5
-# pdanny's fork for Python 3
-# git+https://github.com/pydanny/dj-static.git@switch-to-staticserve
+# from repo - contains latest updates
 git+https://github.com/kennethreitz/dj-static.git
 
 django-filter==0.7

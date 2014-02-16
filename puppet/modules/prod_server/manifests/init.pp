@@ -75,6 +75,12 @@ class prod_server {
     before => Exec['clone-repo'],
   }
 
+  file { 'environment-variables':
+    path    => '/etc/environment',
+    content => inline_template('SITE=prod'),
+    before  => Exec['apache-restart'],
+  }
+
   exec { 'clone-repo':
     cwd      => '/var/www',
     command  => '/usr/bin/git clone git@github.com:brab/jotter.git',
