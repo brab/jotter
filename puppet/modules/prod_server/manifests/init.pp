@@ -21,7 +21,6 @@ class prod_server {
   package { $packages_prod:
     ensure  => 'installed',
     before  => [
-      File['wsgi-conf'],
       Exec['wget-mod-wsgi'],
     ],
     require => File['python-symlink'],
@@ -107,25 +106,13 @@ class prod_server {
   exec { 'mod-wsgi-make-install':
     command => '/usr/bin/make && make install',
     cwd     => '/home/vagrant/mod_wsgi-3.4',
-    before  => [
-      Exec['apache-restart'],
-      File['wsgi-conf'],
-    ],
   } ->
-  file { 'mod-wsgi-clean-directory':
-    path   => '/home/vagrant/mod_wsgi-3.4',
-    ensure => absent,
-  } ->
-  file { 'mod-wsgi-clean-tar':
-    path   => '/home/vagrant/mod_wsgi-3.4.tar.gz',
-    ensure => absent,
-  }
-
-  file { 'wsgi-conf':
+  file { 'wsgi-jotter-conf':
     path    => '/etc/apache2/sites-available/jotter.conf',
     ensure  => link,
     target  => '/var/www/jotter/server/server/wsgi.conf',
     require => Exec['clone-repo'],
+    before  => Exec['apache-enable-jotter'],
   }
 
   exec { 'apache-disable-default':
@@ -134,7 +121,6 @@ class prod_server {
 
   exec { 'apache-enable-jotter':
     command   => '/usr/sbin/a2ensite jotter',
-    require   => File['wsgi-conf'],
     logoutput => on_failure,
   }
 
@@ -144,5 +130,6 @@ class prod_server {
       Exec['apache-enable-jotter'],
       Exec['apache-disable-default'],
     ],
+    subscribe => File['wsgi-jotter-conf'],
   }
 }
