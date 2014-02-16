@@ -13,7 +13,10 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 """
-import os
+import os, sys
+prod_path = '/var/www/jotter/server'
+if prod_path not in sys.path:
+    sys.path.append(prod_path)
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # if running multiple sites in the same mod_wsgi process. To fix this, use
