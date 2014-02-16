@@ -139,5 +139,14 @@ class general {
     privilege => 'ALL',
     db        => 'jotter',
     role      => 'jotter',
+  } ->
+  exec { 'initialize-database':
+    command => '/usr/bin/python3 server/manage.py syncdb --noinput',
+    cwd     => $codedir,
+    require => Exec['pip-install'],
+  } ->
+  exec { 'migrate-database':
+    command => '/usr/bin/python3 server/manage.py migrate',
+    cwd     => $codedir,
   }
 }
