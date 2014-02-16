@@ -12,7 +12,8 @@ ADMINS = (
 MANAGERS = ADMINS
 
 import os
-ANGULAR_ROOT = os.path.realpath(os.path.join('.', '../app'))
+PROJECT_PATH = os.path.dirname(__file__)
+ANGULAR_ROOT = os.path.realpath(os.path.join(PROJECT_PATH, '../../app'))
 
 DATABASES = {
     'default': {
