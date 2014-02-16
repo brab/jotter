@@ -47,6 +47,7 @@ class general {
     'libpython3.3',
     'libpython3.3-dev',
     'ruby-compass',
+    'vim',
   ]
 
   package { $packages:
