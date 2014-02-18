@@ -1,6 +1,9 @@
 """
 API Endpoint ViewSets
 """
+import os, subprocess
+
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group, User
 from django.utils.decorators import method_decorator
@@ -204,6 +207,44 @@ class SessionViewSet(viewsets.ViewSet):
                     'isAuthenticated': request.user.is_authenticated(),
                     'username': request.user.username,
                     },
+                )
+
+
+class UpdateCodebaseViewSet(viewsets.ViewSet):
+    """
+    Update the project's codebase
+    """
+    permission_classes = []
+    def create(self, request):
+        """
+        Handle a POST request and run the update script
+        """
+        jotter_root = os.path.realpath(os.path.join(
+            settings.PROJECT_PATH,
+            '../../',
+            ))
+        subprocess.Popen(
+                '/usr/bin/sudo {jotter_root}/bin/update.sh'.format(
+                    jotter_root=jotter_root,
+                    ),
+                shell=True,
+                )
+
+        # Touch the wsgi file to restart the process
+        try:
+            os.utime('{jotter_root}/server/server/wsgi.py'.format(
+                jotter_root=jotter_root,
+                ),
+                None,
+                )
+        except:
+            pass
+
+        return Response(
+                data={
+                    'detail': 'Codebase updated',
+                    },
+                status=200,
                 )
 
 
