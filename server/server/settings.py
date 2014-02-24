@@ -201,6 +201,6 @@ ANONYMOUS_USER_ID = -1
 ANONYMOUS_DEFAULT_USERNAME_VALUE = '!'
 
 try:
-    from prod_settings import *
+    from server.prod_settings import *
 except ImportError:
     pass
