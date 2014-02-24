@@ -13,13 +13,7 @@ MANAGERS = ADMINS
 
 import os
 PROJECT_PATH = os.path.dirname(__file__)
-SITE = os.environ.get('SITE', 'local')
-if SITE == 'local':
-    ANGULAR_ROOT = os.path.realpath(os.path.join(PROJECT_PATH, '../../app'))
-elif SITE == 'prod':
-    ANGULAR_ROOT = os.path.realpath(os.path.join(PROJECT_PATH, '../../dist'))
-else:
-    ANGULAR_ROOT = ''
+ANGULAR_ROOT = os.path.realpath(os.path.join(PROJECT_PATH, '../../app'))
 
 DATABASES = {
     'default': {
@@ -205,3 +199,8 @@ AUTHENTICATION_BACKENDS = (
 
 ANONYMOUS_USER_ID = -1
 ANONYMOUS_DEFAULT_USERNAME_VALUE = '!'
+
+try:
+    from prod_settings import *
+except ImportError:
+    pass
