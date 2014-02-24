@@ -15,6 +15,11 @@ import os
 PROJECT_PATH = os.path.dirname(__file__)
 ANGULAR_ROOT = os.path.realpath(os.path.join(PROJECT_PATH, '../../app'))
 
+try:
+    from server.prod_settings import ANGULAR_ROOT
+except ImportError:
+    pass
+
 DATABASES = {
     'default': {
         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -199,8 +204,3 @@ AUTHENTICATION_BACKENDS = (
 
 ANONYMOUS_USER_ID = -1
 ANONYMOUS_DEFAULT_USERNAME_VALUE = '!'
-
-try:
-    from server.prod_settings import *
-except ImportError:
-    pass
