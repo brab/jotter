@@ -109,6 +109,10 @@ class prod_server {
     command => '/home/vagrant/mod_wsgi-3.4/configure --with-python=/usr/bin/python3.3',
     cwd     => '/home/vagrant/mod_wsgi-3.4',
   } ->
+  exec { 'mod-wsgi-sed-makefile':
+    command => '/bin/sed -i "s/-lpython3.3/-lpython3.3m/" /home/vagrant/mod_wsgi-3.4/Makefile',
+    cwd     => '/home/vagrant/mod_wsgi-3.4',
+  } ->
   exec { 'mod-wsgi-make-install':
     command => '/usr/bin/make && make install',
     cwd     => '/home/vagrant/mod_wsgi-3.4',

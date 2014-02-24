@@ -11,6 +11,6 @@ local_db
 node_modules
 .tmp
 .sass-cache
-.vagrant
+.vagrant*
 app/components
 app/scripts/templates.js
