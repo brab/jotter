@@ -114,6 +114,7 @@ module.exports = function (grunt) {
         files: {
           '<%= yeoman.tmp %>/scripts/scripts.js': [
             '<%= yeoman.app %>/scripts/app.js',
+            '<%= yeoman.app %>/scripts/templates.js',
             '<%= yeoman.app %>/scripts/controllers/*.js',
             '<%= yeoman.app %>/scripts/directives/*.js',
             '<%= yeoman.app %>/scripts/services/*.js',
@@ -129,7 +130,7 @@ module.exports = function (grunt) {
     },
     usemin: {
       html: ['<%= yeoman.dist %>/**/*.html'],
-      css: ['<%= yeoman.dist %>/**/*.css'],
+      css: ['<%= yeoman.dist %>/styles/*.css'],
       options: {
         dirs: ['<%= yeoman.dist %>']
       }
@@ -148,8 +149,10 @@ module.exports = function (grunt) {
       dist: {
         files: {
           '<%= yeoman.dist %>/styles/main.css': [
-            '.tmp/styles/{,*/}*.css',
-            '<%= yeoman.app %>/styles/{,*/}*.css'
+            '<%= yeoman.app %>/styles/main.css'
+          ],
+          '<%= yeoman.dist %>/styles/bootstrap-jotter.css': [
+            '<%= yeoman.app %>/styles/bootstrap-jotter.css'
           ]
         }
       }
@@ -194,9 +197,6 @@ module.exports = function (grunt) {
         files: {
           '<%= yeoman.dist %>/scripts/scripts.js': [
             '<%=yeoman.tmp %>/scripts/scripts.js'
-          ],
-          '<%= yeoman.dist %>/scripts/templates.js': [
-            '<%= yeoman.dist %>/scripts/templates.js'
           ]
         }
       }
@@ -206,9 +206,9 @@ module.exports = function (grunt) {
         files: {
           src: [
             '<%= yeoman.dist %>/scripts/**/*.js',
-            '<%= yeoman.dist %>/styles/**/*.css',
-            '<%= yeoman.dist %>/images/**/*.{png,jpg,jpeg,gif,webp}',
-            '<%= yeoman.dist %>/styles/fonts/*'
+            '<%= yeoman.dist %>/styles/*.css',
+            '<%= yeoman.dist %>/styles/fonts/*',
+            '<%= yeoman.dist %>/images/**/*.{png,jpg,jpeg,gif,webp}'
           ]
         }
       }
@@ -222,7 +222,6 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>',
           src: [
             '*.{ico,txt,html}',
-            'scripts/templates.js',
             'components/**/*',
             'images/{,*/}*.{png,jpg,gif,webp}',
             'views/**/*',
@@ -287,11 +286,12 @@ module.exports = function (grunt) {
     'test',
     'compass:dist',
     'less:dist',
+    'htmlmin:dist',
+    'html2js',
     'useminPrepare',
     'concat',
     'imagemin',
     'cssmin',
-    'htmlmin',
     'copy:dist',
     'ngmin',
     'uglify:dist',
