@@ -5,6 +5,7 @@ from pdb import set_trace
 
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.test.utils import override_settings
 
 from guardian.shortcuts import assign_perm
 from rest_framework.test import APIClient
@@ -443,3 +444,21 @@ class SlugTest(TestCase):
         slug = 'hello-world-10'
         new_slug = increment_slug(slug)
         self.assertEqual(new_slug, 'hello-world-11')
+
+
+@override_settings(TESTING=True)
+class UpdateCodebaseTest(TestCase):
+    """
+    Test codebase update API
+    """
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_POST_updates_codebase(self):
+        """
+        POST to endpoint runs external update script
+        """
+        response = self.client.post(
+                '/api/v1/update',
+                )
+        self.assertEqual(response.status_code, 200)

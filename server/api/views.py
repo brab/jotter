@@ -223,12 +223,25 @@ class UpdateCodebaseViewSet(viewsets.ViewSet):
             settings.PROJECT_PATH,
             '../../',
             ))
-        subprocess.Popen(
-                '/usr/bin/sudo {jotter_root}/bin/update.sh'.format(
-                    jotter_root=jotter_root,
-                    ),
-                shell=True,
-                )
+        if settings.TESTING:
+            result = 0
+        else:
+            process = subprocess.Popen(
+                    '/usr/bin/sudo {jotter_root}/bin/update.sh'.format(
+                        jotter_root=jotter_root,
+                        ),
+                    shell=True,
+                    )
+            result = process.wait()
+
+        if result != 0:
+            return Response(
+                    data={
+                        'detail': 'Update script error response: {exit_code}' \
+                                .format(exit_code=result),
+                        },
+                    status=400,
+                    )
 
         # Touch the wsgi file to restart the process
         try:
