@@ -132,6 +132,7 @@ class general {
   class { 'postgresql::server': }
   postgresql::server::role { 'jotter':
     password_hash => postgresql_password('jotter', 'xoeNgee6'),
+    createdb      => true,
   } ->
   postgresql::server::database { 'jotter':
     owner => 'jotter',
