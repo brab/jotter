@@ -15,7 +15,8 @@ from rest_framework.response import Response
 
 from api.models import CheckList, CheckListItem
 from api.permissions import JotterObjectPermissions
-from api.serializers import CheckListSerializer, CheckListItemSerializer
+from api.serializers import CheckListSerializer, CheckListItemSerializer, \
+        UserSerializer
 
 
 class CheckListItemViewSet(viewsets.ModelViewSet):
@@ -115,9 +116,9 @@ class CheckListViewSet(viewsets.ModelViewSet):
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    '''
+    """
     ViewSet for the Group model
-    '''
+    """
     model = Group
 
 
@@ -262,7 +263,20 @@ class UpdateCodebaseViewSet(viewsets.ViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    '''
+    """
     ViewSet for the User model
-    '''
+    """
+    allowed_methods = ['GET', 'POST', ]
     model = User
+    serializer_class = UserSerializer
+
+    def post_save(self, obj, created=False):
+        """
+        Actions to perform immediately after saving a User
+        """
+        if created:
+            assign_perm('api.add_checklist', obj)
+            assign_perm('api.change_checklist', obj)
+            assign_perm('api.view_checklist', obj)
+            assign_perm('api.add_checklistitem', obj)
+            assign_perm('api.change_checklistitem', obj)
