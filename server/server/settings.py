@@ -4,6 +4,7 @@ Django settings for server project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+TESTING = False
 
 ADMINS = (
     ('Ben Rabinovitch', 'ben@jotter.ca'),
