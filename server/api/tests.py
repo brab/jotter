@@ -1,7 +1,7 @@
 """
 API package tests
 """
-from pdb import set_trace
+from ipdb import set_trace
 
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -267,7 +267,7 @@ class CheckListItemTest(TestCase):
         """
         User must have permission to create a CheckListItem
 
-        - 'edit-checklist' permission
+        - 'add-checklist' permission
         """
         login(self.client, username='test1', password='password', )
         response = self.client.post(
@@ -462,3 +462,105 @@ class UpdateCodebaseTest(TestCase):
                 '/api/v1/update',
                 )
         self.assertEqual(response.status_code, 200)
+
+
+class UserTest(TestCase):
+    """
+    Unit tests for the User API
+    """
+    def setUp(self):
+        """
+        Test suite set up method
+        """
+        self.client = APIClient()
+        self.user = User.objects.create(
+                email="test@jotter.ca",
+                username='test',
+                password='password',
+                )
+        self.user.set_password('password')
+        self.user.save()
+        self.user1 = User.objects.create(
+                email="test1@jotter.ca",
+                username='test1',
+                password='password',
+                )
+        self.user1.set_password('password')
+        self.user1.save()
+
+        assign_perm('auth.add_user', self.user)
+        assign_perm('auth.change_user', self.user)
+
+    def test_GET_returns_list_of_users(self):
+        """
+        All users listed
+
+        list values should be well-formed
+        """
+        response = self.client.get('/api/v1/users', )
+        self.assertEqual(response.status_code, 200)
+        # there should be 1 more than created in the setup method
+        # -> an unusable user is always added to the system
+        self.assertEqual(len(response.data), 3)
+        user_dict = response.data[0]
+        self.assertTrue('email' in user_dict)
+        self.assertTrue('username' in user_dict)
+        self.assertTrue('password' in user_dict)
+
+    def test_POST_authentication_required(self):
+        """
+        User must be authenticated to create a User
+        """
+        response = self.client.post(
+                '/api/v1/users',
+                { },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_authorization_required(self):
+        """
+        User must have permission to create a User
+
+        - 'add-user' permission
+        """
+        login(self.client, username='test1', password='password', )
+        response = self.client.post(
+                '/api/v1/users',
+                {
+                    'username': 'peterpan',
+                    'email': 'ppan@jotter.ca',
+                    'password': 'peterpass',
+                    },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_creates_user(self):
+        """
+        Creates a new User
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.post(
+                '/api/v1/users',
+                {
+                    'username': 'peterpan',
+                    'email': 'ppan@jotter.ca',
+                    'password': 'peterpass',
+                    },
+                )
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue('email' in response.data)
+        self.assertEqual(response.data.get('email'), 'ppan@jotter.ca')
+        self.assertTrue('username' in response.data)
+        self.assertEqual(response.data.get('username'), 'peterpan')
+        self.assertTrue('password' in response.data)
+        self.assertNotEqual(response.data.get('password'), 'peterpass')
+
+        try:
+            user = User.objects.get(
+                    username='peterpan',
+                    email='ppan@jotter.ca',
+                    )
+        except User.DoesNotExist:
+            self.fail('User object not found')
+        else:
+            self.assertTrue(user.check_password('peterpass'))
