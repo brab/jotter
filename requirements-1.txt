@@ -11,7 +11,7 @@ django-filter==0.7
 django-guardian==1.1.1
 djangorestframework==2.3.8
 gunicorn==18.0
-ipython==1.1.0
+ipython==1.2.1
 psycopg2==2.5.1
 python-slugify==0.0.6
 static3==0.5
