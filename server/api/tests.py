@@ -273,7 +273,7 @@ class CheckListItemTest(TestCase):
         response = self.client.post(
                 '/api/v1/check-list-items',
                 {
-                    'check_list': '1',
+                    'check_list': self.check_list.id,
                     'title': 'Item 1',
                 },
                 )
@@ -287,14 +287,14 @@ class CheckListItemTest(TestCase):
         response = self.client.post(
                 '/api/v1/check-list-items',
                 {
-                    'check_list': '1',
+                    'check_list': self.check_list.id,
                     'checked': False,
                     'description': 'more info',
                     'title': 'Item 1',
                 },
                 )
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.data.get('check_list'), 1)
+        self.assertEqual(response.data.get('check_list'), self.check_list.id)
         self.assertEqual(response.data.get('checked'), False)
         self.assertEqual(response.data.get('description'), 'more info')
         self.assertEqual(response.data.get('title'), 'Item 1')
