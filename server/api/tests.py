@@ -27,6 +27,109 @@ def logout(client):
     return client.delete('/api/v1/sessions', )
 
 
+class CheckListPermissionsTest(TestCase):
+    """
+    Unit tests for the CheckListPermissions API
+    """
+    def setUp(self):
+        """
+        Test suite set up method
+        """
+        self.client = APIClient()
+        self.user = User.objects.create(
+                username='test',
+                password='password',
+                )
+        self.user.set_password('password')
+        self.user.save()
+        self.user1 = User.objects.create(
+                username='test1',
+                password='password',
+                )
+        self.user1.set_password('password')
+        self.user1.save()
+        self.check_list = CheckList.objects.create(
+                owner=self.user,
+                title='Test List',
+                )
+
+        assign_perm('api.view_checklist', self.user)
+        assign_perm('api.view_checklist', self.user, self.check_list)
+        assign_perm('api.change_checklist', self.user, self.check_list)
+
+    def test_PUT_authentication_required(self):
+        """
+        Authentication is required
+        """
+        response = self.client.put('/api/v1/check-list-permissions/' \
+                '{check_list_id}'.format(check_list_id=self.check_list.id, ),
+                {
+                    'user': self.user1.id,
+                    },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_PUT_authorization_required(self):
+        """
+        Authorization is required
+        """
+        login(self.client, username='test1', password='password', )
+        response = self.client.put('/api/v1/check-list-permissions/' \
+                '{check_list_id}'.format(check_list_id=self.check_list.id, ),
+                {
+                    'user': self.user1.id,
+                    },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_PUT_toggles_user_permissions(self):
+        """
+        Toggle the permissions set for a given user
+        """
+        login(self.client, username='test', password='password', )
+        # add permissions
+        response = self.client.put(
+                '/api/v1/check-list-permissions/{check_list_id}'.format(
+                    check_list_id=self.check_list.id,
+                    ),
+                {
+                    'user': self.user1.id,
+                    },
+                )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data.get('change_checklist'))
+        self.assertTrue(self.user1.has_perm(
+            'api.change_checklist',
+            self.check_list,
+            ))
+        self.assertTrue(response.data.get('view_checklist'))
+        self.assertTrue(self.user1.has_perm(
+            'api.view_checklist',
+            self.check_list,
+            ))
+
+        # remove permissions
+        response = self.client.put(
+                '/api/v1/check-list-permissions/{check_list_id}'.format(
+                    check_list_id=self.check_list.id,
+                    ),
+                {
+                    'user': self.user1.id,
+                    },
+                )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.data.get('change_checklist'))
+        self.assertFalse(self.user1.has_perm(
+            'api.change_checklist',
+            self.check_list,
+            ))
+        self.assertFalse(response.data.get('view_checklist'))
+        self.assertFalse(self.user1.has_perm(
+            'api.view_checklist',
+            self.check_list,
+            ))
+
+
 class CheckListTest(TestCase):
     """
     Unit tests for the CheckList API
@@ -73,6 +176,9 @@ class CheckListTest(TestCase):
         assign_perm('api.view_checklist', self.user, self.check_list)
 
     def test_GET_authentication_required(self):
+        """
+        Authentication is required
+        """
         response = self.client.get('/api/v1/check-lists', )
         self.assertEqual(response.status_code, 403)
 

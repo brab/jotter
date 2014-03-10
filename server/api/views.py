@@ -6,9 +6,10 @@ import os, subprocess
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group, User
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
-from guardian.shortcuts import assign_perm, get_perms
+from guardian.shortcuts import assign_perm, get_perms, remove_perm
 from rest_framework import viewsets
 from rest_framework.filters import DjangoObjectPermissionsFilter
 from rest_framework.response import Response
@@ -89,6 +90,67 @@ class CheckListItemViewSet(viewsets.ModelViewSet):
                 )
 
 
+class CheckListPermissionsViewSet(viewsets.ViewSet):
+    """
+    Handle CheckList object-level permissions
+    """
+    permission_classes = []
+
+    def update(self, request, pk):
+        """
+        Add or remove permissions
+        """
+        if not request.user.is_authenticated():
+            return Response(
+                    status=403,
+                    data={
+                        'detail': 'Authentication required',
+                        },
+                    )
+        required_params = ['user', ]
+        for param in required_params:
+            if param not in request.DATA:
+                return Response(
+                        status=400,
+                        data={
+                            'detail': 'Parameter required {param}'.format(
+                                param=param,
+                                ),
+                            },
+                        )
+        check_list = get_object_or_404(CheckList, id=pk)
+        if not request.user.has_perm('api.change_checklist', check_list):
+            return Response(
+                    status=403,
+                    data={
+                        'detail': 'Permission denied',
+                        },
+                    )
+        user = get_object_or_404(User, id=request.DATA.get('user'), )
+
+        if user.has_perm('api.change_checklist', check_list):
+            remove_perm('api.view_checklist', user, check_list)
+            remove_perm('api.change_checklist', user, check_list)
+        else:
+            assign_perm('api.view_checklist', user, check_list)
+            assign_perm('api.change_checklist', user, check_list)
+
+        return Response(
+                status=200,
+                data={
+                    'change_checklist': user.has_perm(
+                        'api.change_checklist',
+                        check_list
+                        ),
+                    'detail': 'Permissions updated',
+                    'view_checklist': user.has_perm(
+                        'api.view_checklist',
+                        check_list
+                        ),
+                    },
+                )
+
+
 class CheckListViewSet(viewsets.ModelViewSet):
     """
     ViewSet for the CheckList model
@@ -141,7 +203,9 @@ class SessionViewSet(viewsets.ViewSet):
                 return Response(
                         status=400,
                         data={
-                            'detail': 'Parameter required: %s' % param,
+                            'detail': 'Parameter required {param}'.format(
+                                param=param,
+                                ),
                             },
                         )
 

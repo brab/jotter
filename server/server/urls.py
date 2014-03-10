@@ -7,12 +7,18 @@ from django.views.generic import TemplateView
 
 from rest_framework import routers
 
-from api.views import CheckListViewSet, CheckListItemViewSet, GroupViewSet, \
-        SessionViewSet, UpdateCodebaseViewSet, UserViewSet
+from api.views import CheckListViewSet, CheckListPermissionsViewSet, \
+        CheckListItemViewSet, GroupViewSet, SessionViewSet, \
+        UpdateCodebaseViewSet, UserViewSet
 
 
 router_v1 = routers.DefaultRouter(trailing_slash=False)
 router_v1.register(r'check-lists', CheckListViewSet)
+router_v1.register(
+        r'check-list-permissions',
+        CheckListPermissionsViewSet,
+        base_name='check_list_permissions',
+        )
 router_v1.register(r'check-list-items', CheckListItemViewSet)
 router_v1.register(r'groups', GroupViewSet)
 router_v1.register(r'sessions', SessionViewSet, base_name='sessions')
