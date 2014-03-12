@@ -57,6 +57,52 @@ class CheckListPermissionsTest(TestCase):
         assign_perm('api.view_checklist', self.user, self.check_list)
         assign_perm('api.change_checklist', self.user, self.check_list)
 
+    def test_GET_authentication_required(self):
+        """
+        Authentication is required
+        """
+        response = self.client.get('/api/v1/check-list-permissions/' \
+                '{check_list_id}'.format(check_list_id=self.check_list.id, ),
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_GET_authorization_required(self):
+        """
+        Authorization is required
+        """
+        login(self.client, username='test1', password='password', )
+        response = self.client.get('/api/v1/check-list-permissions/' \
+                '{check_list_id}'.format(check_list_id=self.check_list.id, ),
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_GET_returns_list_of_users(self):
+        """
+        Endpoint returns like of users with any permission(s)
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get(
+                '/api/v1/check-list-permissions/{check_list_id}'.format(
+                    check_list_id=self.check_list.id,
+                    ),
+                )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.data), list)
+        self.assertEqual(len(response.data), 1)
+
+        # add permissions for a second user
+        assign_perm('api.view_checklist', self.user1, self.check_list)
+        assign_perm('api.change_checklist', self.user1, self.check_list)
+
+        response = self.client.get(
+                '/api/v1/check-list-permissions/{check_list_id}'.format(
+                    check_list_id=self.check_list.id,
+                    ),
+                )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response.data), list)
+        self.assertEqual(len(response.data), 2)
+
     def test_PUT_authentication_required(self):
         """
         Authentication is required

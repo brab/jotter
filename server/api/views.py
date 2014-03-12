@@ -9,9 +9,11 @@ from django.contrib.auth.models import Group, User
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
-from guardian.shortcuts import assign_perm, get_perms, remove_perm
+from guardian.shortcuts import assign_perm, get_perms, get_users_with_perms, \
+        remove_perm
 from rest_framework import viewsets
 from rest_framework.filters import DjangoObjectPermissionsFilter
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
 from api.models import CheckList, CheckListItem
@@ -95,6 +97,32 @@ class CheckListPermissionsViewSet(viewsets.ViewSet):
     Handle CheckList object-level permissions
     """
     permission_classes = []
+
+    def retrieve(self, request, pk):
+        """
+        Return a list of Users with permissions on given CheckList
+        """
+        if not request.user.is_authenticated():
+            return Response(
+                    status=403,
+                    data={
+                        'detail': 'Authentication required',
+                        },
+                    )
+
+        check_list = get_object_or_404(CheckList, id=pk)
+
+        if not request.user.has_perm('api.change_checklist', check_list):
+            return Response(
+                    status=403,
+                    data={
+                        'detail': 'Permission denied',
+                        },
+                    )
+
+        users = get_users_with_perms(check_list)
+        serializer = UserSerializer(users, many=True, )
+        return Response(serializer.data)
 
     def update(self, request, pk):
         """
