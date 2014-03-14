@@ -1,14 +1,18 @@
 'use strict()';
 
 jotterApp.controller('CheckListCtrl',
-['$location', '$routeParams', '$scope', 'CheckList', 'CheckListItem', 'Session',
-function ($location, $routeParams, $scope, CheckList, CheckListItem, Session) {
+['$location', '$routeParams', '$scope', 'CheckList', 'CheckListItem', 'Session', 'User',
+function ($location, $routeParams, $scope, CheckList, CheckListItem, Session, User) {
   $scope.checkListItemEdit = {};
 
   Session.getUser({
     onSuccess: function (user) {
       $scope.user = user;
     }
+  });
+
+  User.query(function (users) {
+    $scope.users = _.reject(users, function (user) { return user.username === '!'; });
   });
 
   var checkListId = $routeParams.id;

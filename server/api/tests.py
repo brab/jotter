@@ -128,6 +128,21 @@ class CheckListPermissionsTest(TestCase):
                 )
         self.assertEqual(response.status_code, 403)
 
+    def test_PUT_toggle_owner_permissions(self):
+        """
+        Cannot change owner permissions
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.put(
+                '/api/v1/check-list-permissions/{check_list_id}'.format(
+                    check_list_id=self.check_list.id,
+                    ),
+                {
+                    'user': self.user.id,
+                    },
+                )
+        self.assertEqual(response.status_code, 400)
+
     def test_PUT_toggles_user_permissions(self):
         """
         Toggle the permissions set for a given user

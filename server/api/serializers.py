@@ -26,7 +26,7 @@ class CheckListSerializer(ModelSerializer):
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'username', 'password', )
+        fields = ('id', 'email', 'username', 'password', )
         write_only_fields = ('password', )
 
     def restore_object(self, attrs, instance=None):

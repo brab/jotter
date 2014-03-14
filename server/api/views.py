@@ -155,6 +155,13 @@ class CheckListPermissionsViewSet(viewsets.ViewSet):
                         },
                     )
         user = get_object_or_404(User, id=request.DATA.get('user'), )
+        if user.id == check_list.owner.id:
+            return Response(
+                    status=400,
+                    data={
+                        'detail': "Owner permissions can't be changed",
+                        },
+                    )
 
         if user.has_perm('api.change_checklist', check_list):
             remove_perm('api.view_checklist', user, check_list)

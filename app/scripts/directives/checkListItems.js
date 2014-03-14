@@ -16,7 +16,7 @@ jotterDirectives.directive('jtrCheckListItems',
       scope.editCheckListItem = function (checkListItem) {
         scope.checkListItemEdit = checkListItem;
         scope.showCheckListItemEditForm = true;
-        checkListItem.showTools = false;
+        scope.hideCheckListItemTools(checkListItem);
       };
 
       scope.newCheckListItem = function () {
