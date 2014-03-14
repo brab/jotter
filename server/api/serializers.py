@@ -20,7 +20,8 @@ class CheckListSerializer(ModelSerializer):
 
     class Meta:
         model = CheckList
-        fields = ('check_list_items', 'id', 'title', )
+        fields = ('check_list_items', 'id', 'title', 'owner', )
+        read_only_fields = ('owner', )
 
 
 class UserSerializer(ModelSerializer):

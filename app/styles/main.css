@@ -54,3 +54,39 @@ h2 a, h2 a:hover {
 }
 
 /*END CHECK LISTS*/
+/*https://github.com/ivaynberg/select2/pull/1717*/
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000360}}
+.form-control .select2-choice {
+  border: 0;
+  border-radius: 2px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000365}}
+.form-control .select2-choice .select2-arrow {
+  border-radius: 0 2px 2px 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000369}}
+.form-control.select2-container {
+  height: auto !important;
+  padding: 0px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000374}}
+.form-control.select2-container.select2-dropdown-open {
+  border-color: #5897FB;
+  border-radius: 3px 3px 0 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000379}}
+.form-control .select2-container.select2-dropdown-open .select2-choices {
+  border-radius: 3px 3px 0 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/vagrant\/app\/app\/styles\/main\.scss}line{font-family:\0000383}}
+.form-control.select2-container .select2-choices {
+  border: 0 !important;
+  border-radius: 3px;
+}
+
+/*END https://github.com/ivaynberg/select2/pull/1717*/

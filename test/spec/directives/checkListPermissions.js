@@ -48,12 +48,12 @@ describe('Directive: jtrCheckListPermissions', function() {
     expect($scope.showCheckListPermissionsEditForm).toBeDefined();
     expect($scope.checkListPermissions).toBeDefined();
     expect($scope.checkListPermissionsSelect2Options).toBeDefined();
-    expect($scope.cancelCheckListPermissionsEdit).toBeDefined();
+    expect($scope.closeCheckListPermissionsEdit).toBeDefined();
     expect($scope.editCheckListPermissions).toBeDefined();
     expect($scope.toggleCheckListPermission).toBeDefined();
   });
 
-  describe('cancelCheckListPermissionsEdit()', function() {
+  describe('closeCheckListPermissionsEdit()', function() {
     it('should set showCheckListPermissionsEditForm to false', function() {
       compileElement();
 
@@ -62,7 +62,7 @@ describe('Directive: jtrCheckListPermissions', function() {
       $scope.showCheckListPermissionsEditForm = true;
       expect($scope.showCheckListPermissionsEditForm).toBeTruthy();
 
-      $scope.cancelCheckListPermissionsEdit();
+      $scope.closeCheckListPermissionsEdit();
       expect($scope.showCheckListPermissionsEditForm).toBeFalsy();
     });
   });

@@ -27,9 +27,10 @@ jotterDirectives.directive('jtrCheckListPermissions',
               if(angular.isDefined(user)) {
                 user.hasPermissions = true;
               }
+              if(user.id === scope.checkList.owner) {
+                user.locked = true;
+              }
             });
-            var owner = _.findWhere(scope.users, { username: scope.user.username });
-            owner.locked = true;
             $timeout(function() {
               element.find('#checkListPermissionsEditUsers')
                 .select2(scope.checkListPermissionsSelect2Options)
@@ -41,7 +42,7 @@ jotterDirectives.directive('jtrCheckListPermissions',
         );
       };
 
-      scope.cancelCheckListPermissionsEdit = function() {
+      scope.closeCheckListPermissionsEdit = function() {
         scope.showCheckListPermissionsEditForm = false;
       };
 
