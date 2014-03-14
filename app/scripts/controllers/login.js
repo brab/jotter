@@ -29,6 +29,16 @@ function ($location, $scope, Session) {
           }
         );
         $location.path('/#/');
+      },
+      function (response) { // error
+        $scope.$root.$broadcast(
+          'alert',
+          {
+            status: 'danger',
+            title: 'Try Again',
+            message: response.data.detail
+          }
+        );
       }
     );
   };
