@@ -1,13 +1,13 @@
 <div class="row" jtr-check-list-items jtr-check-list-permissions>
-  <div class="list col-md-12 col-lg-8 col-lg-offset-2">
+  <div class="list col-sm-12 col-lg-8 col-lg-offset-2">
     <div class="row">
-      <div class="col-md-12 col-lg-12">
+      <div class="col-sm-12 col-lg-12">
         <h3>{{ checkList.title }}</h3>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12 col-lg-12">
+      <div class="col-sm-12 col-lg-12">
         <form class="form-inline" role="form" name="formCheckListSearch">
           <div class="form-group col-lg-5">
             <label class="sr-only">Search</label>
@@ -34,12 +34,12 @@
     </div>
 
     <div class="row" ng-show="showCheckListItemEditForm">
-      <div class="col-md-12 col-lg-5 col-lg-offset-7 well well-sm">
+      <div class="col-sm-12 col-lg-5 col-lg-offset-7 well well-sm">
         <p>
         Create or edit, change is good
         </p>
         <form role="form" name="formEditCheckList" ng-submit="saveCheckListItem(); showCheckListItemEditForm = false;">
-          <div class="form-group col-md-12">
+          <div class="form-group col-sm-12">
             <label class="sr-only">Title</label>
             <input
               class="form-control"
@@ -50,7 +50,7 @@
               ng-model="checkListItemEdit.title" />
           </div>
 
-          <div class="form-group col-md-12">
+          <div class="form-group col-sm-12">
             <label class="sr-only">Description</label>
             <textarea
               class="form-control"
@@ -60,7 +60,7 @@
               ng-model="checkListItemEdit.description"></textarea>
           </div>
 
-          <div class="form-group col-lg-5">
+          <div class="form-group col-sm-12">
             <div class="btn-group pull-right">
               <button
                 class="btn btn-default"
@@ -83,14 +83,14 @@
     </div>
 
     <div class="row" ng-show="showCheckListPermissionsEditForm">
-      <div class="col-md-12 col-lg-5 col-lg-offset-7 well well-sm">
+      <div class="col-sm-12 col-lg-5 col-lg-offset-7 well well-sm">
         <p>
         Share this list, sharing is good
         </p>
         <form role="form" name="formEditCheckListPermissions" ng-submit="saveCheckListPermissions(); showCheckListPermissionsEditForm = false;">
-          <div class="form-group col-md-12">
+          <div class="form-group col-sm-12">
             <label class="sr-only">Users</label>
-            <select class="col-sm-12"
+            <select class="form-control"
                     id="checkListPermissionsEditUsers"
                     multiple
                     ui-select2="checkListPermissionsSelect2Options"
@@ -106,19 +106,12 @@
             </select>
           </div>
 
-          <div class="form-group col-lg-5">
+          <div class="form-group col-sm-12">
             <div class="btn-group pull-right">
-              <button
-                class="btn btn-default"
-                type="button"
-                ng-click="cancelCheckListPermissionsEdit()">
-                <i class="fa fa-times text-danger"></i>
-              </button>
-              <button
-                class="btn btn-default"
-                type="button"
-                ng-click="saveCheckListPermissions(); showCheckListPermissionsEditForm = false;">
-                <i class="fa fa-check text-success"></i>
+              <button class="btn btn-default"
+                      type="button"
+                      ng-click="closeCheckListPermissionsEdit()">
+                done
               </button>
             </div>
           </div>
@@ -129,7 +122,7 @@
     </div>
 
     <div class="row">
-      <div class="col-md-12 col-lg-6 col-lg-offset-6">
+      <div class="col-sm-12 col-lg-6 col-lg-offset-6">
         <div class="btn-group pull-right">
           <button class="btn btn-default" type="button" ng-click="editCheckListPermissions()"><i class="fa fa-share-square-o"></i></button>
           <button class="btn btn-default" type="button" ng-click="newCheckListItem()"><i class="fa fa-plus"></i></button>
@@ -138,7 +131,7 @@
     </div>
 
     <div class="row">
-      <div class="col-md-12 col-lg-12">
+      <div class="col-sm-12 col-lg-12">
         <div class="list-group">
           <div class="list-group-item well well-sm" ng-hide="checkList.check_list_items">
             <p>
