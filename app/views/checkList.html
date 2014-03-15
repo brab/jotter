@@ -19,12 +19,17 @@
                 tabindex="10"
                 ng-model="itemSearch" />
               <span class="input-group-btn" ng-show="itemSearch">
-                <button
-                  class="btn btn-default"
-                  type="button"
-                  ng-click="itemSearch = '';"
-                  >
+                <button class="btn btn-default"
+                        type="button"
+                        ng-click="itemSearch = ''"
+                        >
                   <i class="fa fa-times"></i>
+                </button>
+                <button class="btn btn-default"
+                        type="button"
+                        ng-click="checkListItemEdit.title=itemSearch;saveCheckListItem()"
+                        >
+                  <i class="fa fa-plus"></i>
                 </button>
               </span>
             </div>
