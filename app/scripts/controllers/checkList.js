@@ -33,7 +33,7 @@ function ($location, $routeParams, $scope, CheckList, CheckListItem, Session, Us
     var newCheckListItem = new CheckListItem({
       // jshint camelcase: false
       check_list: $scope.checkList.id,
-      checked: false,
+      checked: true,
       description: $scope.checkListItemEdit.description,
       title: $scope.checkListItemEdit.title
     });
