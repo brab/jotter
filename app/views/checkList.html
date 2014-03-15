@@ -147,7 +147,7 @@
           </div>
           <div
             class="list-group-item"
-            ng-repeat="item in checkList.check_list_items | filter:itemSearch | orderBy:'title'"
+            ng-repeat="item in checkList.check_list_items | filter:itemSearch | orderBy:['-checked', 'title']"
             ng-swipe-left="showCheckListItemTools(item)"
             ng-swipe-right="hideCheckListItemTools(item)"
             >
