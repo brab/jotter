@@ -199,7 +199,8 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION_BACKENDS = (
-        'django.contrib.auth.backends.ModelBackend', # this is default
+        #'django.contrib.auth.backends.ModelBackend', # this is default
+        'server.auth_backends.CaseInsensitiveModelBackend',
         'guardian.backends.ObjectPermissionBackend',
         )
 

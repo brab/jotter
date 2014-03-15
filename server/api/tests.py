@@ -587,6 +587,23 @@ class SessionTest(TestCase):
         self.assertTrue('sessionid' in response.cookies)
         self.assertEqual(response.data.get('isAuthenticated'), True)
 
+    def test_POST_username_is_case_insensitive(self):
+        """
+        Usernames are lowercase'd before authenticating
+        """
+        response = self.client.post(
+                '/api/v1/sessions',
+                {
+                    'username': 'Test',
+                    'password': 'password',
+                    },
+                )
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue('Authentication' in response.data.get('detail', ''))
+        self.assertTrue('csrftoken' in response.cookies)
+        self.assertTrue('sessionid' in response.cookies)
+        self.assertEqual(response.data.get('isAuthenticated'), True)
+
 
 class SlugTest(TestCase):
     """
