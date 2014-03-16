@@ -1,21 +1,64 @@
 <div class="row">
   <div class="lists col-md-12 col-lg-8 col-lg-offset-2" ng-show="user.isAuthenticated">
-    <h2>
-      <a href="/#/lists">
+    <div class="panel panel-default">
+      <div class="panel-heading"
+           ng-init="checkListsLimit=2"
+           >
+        <i class="fa fa-chevron-right"
+           ng-click="checkListsLimit=10000"
+           ng-show="checkListsLimit==2"
+           ></i>
+        <i class="fa fa-chevron-down"
+           ng-click="checkListsLimit=2"
+           ng-show="checkListsLimit==10000"
+           ></i>
         Lists
-      </a>
-    </h2>
-    <div class="row lists">
-      <div
-        class="col-md-12 col-lg-6 cursor-pointer"
-        ng-repeat="checkList in checkLists | limitTo:2"
-        ng-click="gotoCheckList(checkList)">
-        <strong>{{ checkList.title }}</strong>
-        <div ng-repeat="item in checkList.check_list_items | orderBy:'-id' | limitTo:3">
-          {{ item.title }}
+        <small class="text-muted"
+               kg-show="checkLists.length > 2">
+          ({{ checkLists.length }} total)
+        </small>
+        <div class="btn-group pull-right">
+          <button class="btn btn-default btn-xs"
+                  type="button"
+                  ng-click="showCheckListEdit = true;"
+                  >
+            <i class="fa fa-plus"></i>
+          </button>
         </div>
       </div>
+      <div class="panel-body" ng-show="showCheckListEdit">
+        <form ng-submit="saveNewCheckList()">
+          <div class="input-group">
+            <input
+              class="form-control"
+              type="text"
+              placeholder="List Name"
+              ng-model="checkListEdit.title" />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-default"
+                type="button"
+                ng-click="showCheckListEdit = false; checkListEdit.title = '';">
+                <i class="fa fa-times text-danger"></i>
+              </button>
+              <button
+                class="btn btn-default"
+                type="button"
+                ng-click="saveCheckList(); showCheckListEdit = false;">
+                <i class="fa fa-check text-success"></i>
+              </button>
+            </span>
+          </div>
+        </form>
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item cursor-pointer"
+            ng-repeat="checkList in checkLists | limitTo:checkListsLimit"
+            ng-click="gotoCheckList(checkList)">
+          <strong>{{ checkList.title }}</strong>
+          <small class="text-muted pull-right">({{ getNumChecked(checkList) }} checked)</small>
+        </li>
+      </ul>
     </div>
-    <hr>
   </div>
 </div>
