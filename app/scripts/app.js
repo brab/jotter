@@ -11,10 +11,6 @@ var jotterApp = angular.module('jotterApp',
         templateUrl: 'static/views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/lists', {
-        templateUrl: 'static/views/checkLists.html',
-        controller: 'CheckListsCtrl'
-      })
       .when('/lists/:id', {
         templateUrl: 'static/views/checkList.html',
         controller: 'CheckListCtrl'

@@ -43,19 +43,6 @@ h2 {
   cursor: pointer;
 }
 
-/*CHECK LISTS*/
-.checkLists {
-  .checkList {
-    padding-bottom: 10px;
-    padding-top: 10px;
-
-    .checkListTitle {
-      padding-left: 3px;
-    }
-  }
-}
-/*END CHECK LISTS*/
-
 /*https://github.com/ivaynberg/select2/pull/1717*/
 .form-control .select2-choice {
   border: 0;
