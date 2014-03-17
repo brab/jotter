@@ -30,6 +30,13 @@ jotterDirectives.directive('jtrCheckListItems',
       scope.showCheckListItemTools = function (checkListItem) {
         checkListItem.showTools = true;
       };
+
+      scope.quickSaveCheckListItem = function() {
+        scope.checkListItemEdit = {};
+        scope.checkListItemEdit.title = angular.copy(scope.itemSearch);
+        scope.itemSearch = '';
+        scope.saveCheckListItem();
+      };
     }
   };
 }]);
