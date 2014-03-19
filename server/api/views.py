@@ -98,6 +98,14 @@ class CheckListPermissionsViewSet(viewsets.ViewSet):
     """
     permission_classes = []
 
+    def list(self, request):
+        return Response(
+                data={
+                    'detail': 'Action not permitted',
+                    },
+                status=403,
+                )
+
     def retrieve(self, request, pk):
         """
         Return a list of Users with permissions on given CheckList
