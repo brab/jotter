@@ -10,7 +10,7 @@ from django.test.utils import override_settings
 from guardian.shortcuts import assign_perm
 from rest_framework.test import APIClient
 
-from api.models import CheckList, CheckListItem
+from api.models import Budget, BudgetCategory, CheckList, CheckListItem
 from lib import increment_slug
 
 
@@ -25,6 +25,273 @@ def login(client, username, password):
 
 def logout(client):
     return client.delete('/api/v1/sessions', )
+
+
+class BudgetTest(TestCase):
+    """
+    Unit tests for the Buget API
+    """
+    def setUp(self):
+        """
+        Test suite set up method
+        """
+        self.client = APIClient()
+        self.user = User.objects.create(
+                username='test',
+                password='password',
+                )
+        self.user.set_password('password')
+        self.user.save()
+        self.user1 = User.objects.create(
+                username='test1',
+                password='password',
+                )
+        self.user1.set_password('password')
+        self.user1.save()
+        self.budget = Budget.objects.create(
+                owner=self.user,
+                title='Test Budget',
+                )
+        self.budget_1 = Budget.objects.create(
+                owner=self.user1,
+                title='Test Budget 1',
+                )
+
+        BudgetCategory.objects.create(
+                budget=self.budget,
+                title='Category 1',
+                )
+        BudgetCategory.objects.create(
+                budget=self.budget,
+                title='Category 2',
+                )
+
+        assign_perm('api.add_budget', self.user)
+        assign_perm('api.view_budget', self.user)
+        assign_perm('api.view_budget', self.user, self.budget)
+
+    def test_GET_authentication_required(self):
+        """
+        Authentication is required
+        """
+        response = self.client.get('/api/v1/budgets', )
+        self.assertEqual(response.status_code, 403)
+
+        response = self.client.get('/api/v1/budgets/%d' % (
+            self.budget.id, ), )
+        self.assertEqual(response.status_code, 403)
+
+    def test_GET_returns_allowed_instances(self):
+        """
+        GET to the endpoint returns instances
+
+        - that the user has permission to view
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/budgets', )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0].get('id'), self.budget.id)
+        self.assertEqual(response.data[0].get('title'), self.budget.title)
+        self.assertEqual(len(response.data[0].get('budget_categories')), 2)
+
+    def test_GET_instance_requires_permission(self):
+        """
+        GET with an id requires permission to view
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/budgets/%d' % (
+            self.budget_1.id,
+            ), )
+        self.assertEqual(response.status_code, 404)
+
+    def test_GET_instance(self):
+        """
+        GET with an id returns specified instance
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/budgets/%d' % (
+            self.budget.id,
+            ), )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get('id'), self.budget.id)
+        self.assertEqual(response.data.get('title'), self.budget.title)
+        self.assertEqual(len(response.data.get('budget_categories')), 2)
+
+    def test_POST_authentication_required(self):
+        """
+        POST requires authentication
+        """
+        response = self.client.post('/api/v1/budgets', )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_creates_instance(self):
+        """
+        POST to the endpoint creates a Budget instance
+        """
+        self.client.login(username='test', password='password', )
+        response = self.client.post(
+                '/api/v1/budgets',
+                {
+                    'title': 'My Budget',
+                },
+            )
+        self.assertEqual(response.status_code, 201, response.data)
+        self.assertEqual(response.data.get('title'), 'My Budget')
+
+        budgets = Budget.objects.filter(
+                title='My Budget',
+                owner__id=self.user.id,
+                )
+        self.assertEqual(budgets.count(), 1)
+        budget = budgets[0]
+
+        self.assertTrue(self.user.has_perm(
+            'api.change_budget',
+            budget))
+        self.assertTrue(self.user.has_perm(
+            'api.delete_budget',
+            budget))
+        self.assertTrue(self.user.has_perm(
+            'api.view_budget',
+            budget))
+
+
+class BudgetCategoryTest(TestCase):
+    """
+    Unit tests for the BudgetCategory API
+    """
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create(
+                username='test',
+                password='password',
+                )
+        self.user.set_password('password')
+        self.user.save()
+        self.user1 = User.objects.create(
+                username='test1',
+                password='password',
+                )
+        self.user1.set_password('password')
+        self.user1.save()
+        self.budget = Budget.objects.create(
+                owner=self.user,
+                title='Test Budget',
+                )
+        self.budget_1 = Budget.objects.create(
+                owner=self.user1,
+                title='Test Budget 1',
+                )
+
+        self.budget_category = BudgetCategory.objects.create(
+                budget=self.budget,
+                title='Category 1',
+                )
+        self.budget_category_1 = BudgetCategory.objects.create(
+                budget=self.budget_1,
+                title='Category 2',
+                )
+
+        assign_perm('api.add_budget', self.user)
+        assign_perm('api.change_budget', self.user)
+        assign_perm('api.view_budget', self.user)
+        assign_perm('api.change_budget', self.user, self.budget)
+        assign_perm('api.view_budget', self.user, self.budget)
+        assign_perm('api.add_budgetcategory', self.user)
+        assign_perm('api.change_budgetcategory', self.user)
+
+        assign_perm('api.add_budget', self.user1)
+        assign_perm('api.change_budget', self.user1)
+        assign_perm('api.view_budget', self.user1)
+        assign_perm('api.add_budgetcategory', self.user1)
+        assign_perm('api.change_budgetcategory', self.user1)
+
+    def test_GET_list_not_allowed(self):
+        """
+        Listing all BudgetCategories is not allowed
+        """
+        response = self.client.get('/api/v1/budget-categories', )
+        self.assertEqual(response.status_code, 403)
+
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/budget-categories', )
+        self.assertEqual(response.status_code, 403)
+
+    def test_GET_authentication_required(self):
+        """
+        User must be authenticated to retrieve a BudgetCategory
+        """
+        response = self.client.get('/api/v1/budget-categories/%d' % (
+            self.budget_category.id, ), )
+        self.assertEqual(response.status_code, 403)
+
+    def test_GET_returns_allowed_instance(self):
+        """
+        Return permitted budget_category
+
+        Only instances that the user has view permission for the related
+        budget_category are returned
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/budget-categories/%d' % (
+            self.budget_category.id, ), )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data.get('title') == self.budget_category.title)
+
+    def test_GET_return_403_if_not_permitted(self):
+        """
+        Return 403 on not permitted instances
+
+        Only instances that the user has view permission for the related
+        check_list are returned
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/budget-categories/%d' % (
+            self.budget_category_1.id, ), )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_authentication_required(self):
+        """
+        User must be authenticated to create a BudgetCategory
+        """
+        response = self.client.post(
+                '/api/v1/budget-categories',
+                { },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_authorization_required(self):
+        """
+        User must have permission to create a BudgetCategory
+
+        - 'add-budget' permission
+        """
+        login(self.client, username='test1', password='password', )
+        response = self.client.post(
+                '/api/v1/budget-categories',
+                {
+                    'budget': self.budget.id,
+                    'title': 'Category 1',
+                },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_creates_check_list_item(self):
+        """
+        Create a new BudgetCategory
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.post(
+                '/api/v1/budget-categories',
+                {
+                    'budget': self.budget.id,
+                    'title': 'Category 1',
+                },
+                )
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data.get('budget'), self.budget.id)
+        self.assertEqual(response.data.get('title'), 'Category 1')
 
 
 class CheckListPermissionsTest(TestCase):
@@ -285,6 +552,9 @@ class CheckListTest(TestCase):
         self.assertEqual(len(response.data.get('check_list_items')), 2)
 
     def test_POST_authentication_required(self):
+        """
+        POST requires authentication
+        """
         response = self.client.post('/api/v1/check-lists', )
         self.assertEqual(response.status_code, 403)
 

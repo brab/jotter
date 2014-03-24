@@ -9,6 +9,47 @@ from django.db import models
 from lib import increment_slug
 
 
+class Budget(models.Model):
+    """
+    Database model representing budgets
+    """
+    owner = models.ForeignKey(User, related_name='owned_budgets')
+    title = models.CharField(max_length=64)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta(type):
+        permissions = (
+                ('view_budget', 'View Budget'),
+                )
+
+
+class BudgetCategory(models.Model):
+    """
+    BudgetCategory database model
+    """
+    budget = models.ForeignKey(
+            Budget,
+            related_name='budget_categories',
+            )
+    title = models.CharField(max_length=64)
+
+    # amount in cents
+    amount = models.IntegerField(default=0)
+
+    def get_amount_dollars(self):
+        """
+        Return the amount in dollars
+        """
+        return '%.2f' % (self.amount / 100.0)
+
+    def set_amount_dollars(self, dollars):
+        """
+        Set the amount in dollars
+        """
+        self.amount = dollars * 100.0
+
+
 class CheckList(models.Model):
     """
     Database model representing check lists
@@ -19,7 +60,7 @@ class CheckList(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(type):
         permissions = (
                 ('view_checklist', 'View Check List'),
                 )

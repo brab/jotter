@@ -13,13 +13,111 @@ from guardian.shortcuts import assign_perm, get_perms, get_users_with_perms, \
         remove_perm
 from rest_framework import viewsets
 from rest_framework.filters import DjangoObjectPermissionsFilter
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
-from api.models import CheckList, CheckListItem
+from api.models import Budget, BudgetCategory, CheckList, CheckListItem
 from api.permissions import JotterObjectPermissions
-from api.serializers import CheckListSerializer, CheckListItemSerializer, \
-        UserSerializer
+from api.serializers import BudgetSerializer, BudgetCategorySerializer, \
+        CheckListSerializer, CheckListItemSerializer, UserSerializer
+
+
+class BudgetCategoryViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for the BudgetCategory model
+    """
+    model = BudgetCategory
+    serializer_class = BudgetCategorySerializer
+
+    def create(self, request, *args, **kw):
+        if not request.user.is_authenticated():
+            return Response(
+                    data={
+                        'detail': 'Authentication required',
+                        },
+                    status=403,
+                    )
+
+        budget = Budget.objects.get(id=request.DATA.get('budget'))
+        perms = get_perms(
+                user_or_group=request.user,
+                obj=budget,
+                )
+        if 'change_budget' not in perms:
+            return Response(
+                    data={
+                        'detail': 'Permission denied',
+                        },
+                    status=403,
+                    )
+
+        return super(BudgetCategoryViewSet, self).create(request, *args, **kw)
+
+    def list(self, request):
+        """
+        This action is not permitted
+        """
+        return Response(
+                data={
+                    'detail': 'Action not permitted',
+                    },
+                status=403,
+                )
+
+    def retrieve(self, request, pk=None):
+        if not request.user.is_authenticated():
+            return Response(
+                    data={
+                        'detail': 'Authentication required',
+                        },
+                    status=403,
+                    )
+        budget_category = BudgetCategory.objects.get(id=pk)
+
+        perms = get_perms(
+                user_or_group=request.user,
+                obj=budget_category.budget,
+                )
+
+        if 'view_budget' not in perms:
+            return Response(
+                    data={
+                        'detail': 'Permission denied',
+                        },
+                    status=403,
+                    )
+
+        serializer = self.serializer_class(budget_category)
+
+        return Response(
+                data=serializer.data,
+                status=200,
+                )
+
+
+class BudgetViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for the Budget model
+    """
+    allowed_methods = ['GET', 'POST', ]
+    filter_backends = (DjangoObjectPermissionsFilter, )
+    model = Budget
+    permission_classes = (JotterObjectPermissions, )
+    serializer_class = BudgetSerializer
+
+    def pre_save(self, obj):
+        """
+        Actions to perform before saving a Budget
+        """
+        obj.owner = self.request.user
+
+    def post_save(self, obj, created=False):
+        """
+        Actions to perform immediately after saving a Budget
+        """
+        if created:
+            assign_perm('api.change_budget', obj.owner, obj)
+            assign_perm('api.delete_budget', obj.owner, obj)
+            assign_perm('api.view_budget', obj.owner, obj)
 
 
 class CheckListItemViewSet(viewsets.ModelViewSet):
@@ -54,6 +152,9 @@ class CheckListItemViewSet(viewsets.ModelViewSet):
         return super(CheckListItemViewSet, self).create(request, *args, **kw)
 
     def list(self, request):
+        """
+        This action is not permitted
+        """
         return Response(
                 data={
                     'detail': 'Action not permitted',
@@ -99,6 +200,9 @@ class CheckListPermissionsViewSet(viewsets.ViewSet):
     permission_classes = []
 
     def list(self, request):
+        """
+        This action is not permitted
+        """
         return Response(
                 data={
                     'detail': 'Action not permitted',
