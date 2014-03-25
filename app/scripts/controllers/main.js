@@ -1,7 +1,8 @@
 'use strict()';
 
-jotterApp.controller('MainCtrl', ['$location', '$scope', 'CheckList', 'Session',
-function($location, $scope, CheckList, Session) {
+jotterApp.controller('MainCtrl',
+['$location', '$scope', 'Budget', 'CheckList', 'Session',
+function($location, $scope, Budget, CheckList, Session) {
   Session.getUser({
     onSuccess: function(user) {
       $scope.user = user;
@@ -28,11 +29,10 @@ function($location, $scope, CheckList, Session) {
     var newCheckList = new CheckList($scope.checkListEdit);
     var successFn = function() {
       $scope.checkLists.unshift(newCheckList);
-      $scope.newCheckListTitle = '';
     };
     var errorFn = function() {
       $scope.$root.$broadcast('alert', {
-        message: "and we can't save " + $scope.newCheckListTitle + " right now",
+        message: "and we can't save " + $scope.checkListEdit.title + " right now",
         status: 'danger',
         title: "Something's wrong"
       });
@@ -47,5 +47,38 @@ function($location, $scope, CheckList, Session) {
     } else {
       saveNewCheckList();
     }
+    $scope.showCheckListEdit = false;
+  };
+
+  $scope.budgetEdit = {};
+  $scope.budgets = Budget.query();
+
+  $scope.gotoBudget = function(budget) {
+    $location.path('/budgets/' + budget.id);
+  };
+
+  var saveNewBudget = function() {
+    var newBudget = new Budget($scope.budgetEdit);
+    var successFn = function() {
+      $scope.budgets.unshift(newBudget);
+    };
+    var errorFn = function() {
+      $scope.$root.$broadcast('alert', {
+        message: "and we can't save " + $scope.budgetEdit.title + " right now",
+        status: 'danger',
+        title: "Something's wrong"
+      });
+    };
+    newBudget.$save(successFn, errorFn);
+  };
+
+  $scope.saveBudget = function() {
+    if(angular.isDefined($scope.budgetEdit.id)) {
+      var budget = new Budget($scope.budgetEdit);
+      budget.$update();
+    } else {
+      saveNewBudget();
+    }
+    $scope.showBudgetEdit = false;
   };
 }]);

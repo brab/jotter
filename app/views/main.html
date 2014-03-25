@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row"> <!--checkLists-->
   <div class="lists col-md-12 col-lg-8 col-lg-offset-2" ng-show="user.isAuthenticated">
     <div class="panel panel-default">
       <div class="panel-heading"
@@ -14,7 +14,7 @@
            ></i>
         Lists
         <small class="text-muted"
-               kg-show="checkLists.length > 2">
+               ng-show="checkLists.length > 2">
           ({{ checkLists.length }} total)
         </small>
         <div class="btn-group pull-right">
@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="panel-body" ng-show="showCheckListEdit">
-        <form ng-submit="saveNewCheckList()">
+        <form ng-submit="saveCheckList()">
           <div class="input-group">
             <input
               class="form-control"
@@ -44,7 +44,7 @@
               <button
                 class="btn btn-default"
                 type="button"
-                ng-click="saveCheckList(); showCheckListEdit = false;">
+                ng-click="saveCheckList()">
                 <i class="fa fa-check text-success"></i>
               </button>
             </span>
@@ -57,6 +57,71 @@
             ng-click="gotoCheckList(checkList)">
           <strong>{{ checkList.title }}</strong>
           <small class="text-muted pull-right">({{ getNumChecked(checkList) }} checked)</small>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="row"> <!--budgets-->
+  <div class="budgets col-md-12 col-lg-8 col-lg-offset-2" ng-show="user.isAuthenticated">
+    <div class="panel panel-default">
+      <div class="panel-heading"
+           ng-init="budgetsLimit=2"
+           >
+        <i class="fa fa-chevron-right"
+           ng-click="budgetsLimit=10000"
+           ng-show="budgetsLimit==2"
+           ></i>
+        <i class="fa fa-chevron-down"
+           ng-click="budgetsLimit=2"
+           ng-show="budgetsLimit==10000"
+           ></i>
+        Budgets
+        <small class="text-muted"
+               ng-show="budgets.length > 2">
+          ({{ budgets.length }} total)
+        </small>
+        <div class="btn-group pull-right">
+          <button class="btn btn-default btn-xs"
+                  type="button"
+                  ng-click="showBudgetEdit = true;"
+                  >
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="panel-body" ng-show="showBudgetEdit">
+        <form ng-submit="saveBudget()">
+          <div class="input-group">
+            <input
+              class="form-control"
+              type="text"
+              placeholder="budget name"
+              ng-model="budgetEdit.title" />
+            <span class="input-group-btn">
+              <button
+                class="btn btn-default"
+                type="button"
+                ng-click="showBudgetEdit = false; budgetEdit.title = '';">
+                <i class="fa fa-times text-danger"></i>
+              </button>
+              <button
+                class="btn btn-default"
+                type="button"
+                ng-click="saveBudget()">
+                <i class="fa fa-check text-success"></i>
+              </button>
+            </span>
+          </div>
+        </form>
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item cursor-pointer"
+            ng-repeat="budget in budgets | limitTo:budgetsLimit"
+            ng-click="gotoBudget(budget)">
+          <strong>{{ budget.title }}</strong>
+          <small class="text-muted pull-right">($/$$$ spent)</small>
         </li>
       </ul>
     </div>
