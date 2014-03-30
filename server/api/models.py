@@ -50,6 +50,21 @@ class BudgetCategory(models.Model):
         self.amount = dollars * 100.0
 
 
+class BudgetExpense(models.Model):
+    """
+    BudgetExpense database model
+    """
+    budget_category = models.ForeignKey(
+            BudgetCategory,
+            related_name='budget_expenses',
+            )
+    title = models.CharField(max_length=64)
+    created = models.DateTimeField(auto_now_add=True)
+
+    # amount in cents
+    amount = models.IntegerField(default=0)
+
+
 class CheckList(models.Model):
     """
     Database model representing check lists

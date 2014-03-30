@@ -7,15 +7,17 @@ from django.views.generic import TemplateView
 
 from rest_framework import routers
 
-from api.views import BudgetViewSet, BudgetCategoryViewSet, CheckListViewSet, \
-        CheckListPermissionsViewSet, CheckListItemViewSet, GroupViewSet, \
-        SessionViewSet, UpdateCodebaseViewSet, UserViewSet
+from api.views import BudgetViewSet, BudgetCategoryViewSet, \
+        BudgetExpenseViewSet, CheckListViewSet, CheckListPermissionsViewSet, \
+        CheckListItemViewSet, GroupViewSet, SessionViewSet, \
+        UpdateCodebaseViewSet, UserViewSet
 
 
 router_v1 = routers.DefaultRouter(trailing_slash=False)
 
 router_v1.register(r'budgets', BudgetViewSet)
 router_v1.register(r'budget-categories', BudgetCategoryViewSet)
+router_v1.register(r'budget-expenses', BudgetExpenseViewSet)
 router_v1.register(r'check-lists', CheckListViewSet)
 router_v1.register(
         r'check-list-permissions',

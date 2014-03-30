@@ -5,7 +5,22 @@ from django.contrib.auth.models import User
 
 from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
-from api.models import Budget, BudgetCategory, CheckList, CheckListItem
+from api.models import Budget, BudgetCategory, BudgetExpense, CheckList, \
+        CheckListItem
+
+
+class BudgetExpenseSerializer(ModelSerializer):
+    """
+    Serializer for the BudgetExpense model
+    """
+    budget_category = PrimaryKeyRelatedField()
+
+    class Meta(type):
+        """
+        Meta
+        """
+        model = BudgetExpense
+        fields = ('budget_category', 'title', 'amount', 'created', )
 
 
 class BudgetCategorySerializer(ModelSerializer):
@@ -13,6 +28,10 @@ class BudgetCategorySerializer(ModelSerializer):
     Serializer for the BudgetCategory model
     """
     budget = PrimaryKeyRelatedField()
+    budget_expenses = BudgetExpenseSerializer(
+            many=True,
+            read_only=True,
+            )
 
     class Meta(type):
         """

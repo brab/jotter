@@ -15,10 +15,12 @@ from rest_framework import viewsets
 from rest_framework.filters import DjangoObjectPermissionsFilter
 from rest_framework.response import Response
 
-from api.models import Budget, BudgetCategory, CheckList, CheckListItem
+from api.models import Budget, BudgetCategory, BudgetExpense, CheckList, \
+        CheckListItem
 from api.permissions import JotterObjectPermissions
 from api.serializers import BudgetSerializer, BudgetCategorySerializer, \
-        CheckListSerializer, CheckListItemSerializer, UserSerializer
+        BudgetExpenseSerializer, CheckListSerializer, CheckListItemSerializer, \
+        UserSerializer
 
 
 class BudgetCategoryViewSet(viewsets.ModelViewSet):
@@ -29,6 +31,9 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = BudgetCategorySerializer
 
     def create(self, request, *args, **kw):
+        """
+        Handle POST requests to create object
+        """
         if not request.user.is_authenticated():
             return Response(
                     data={
@@ -87,6 +92,86 @@ class BudgetCategoryViewSet(viewsets.ModelViewSet):
                     )
 
         serializer = self.serializer_class(budget_category)
+
+        return Response(
+                data=serializer.data,
+                status=200,
+                )
+
+
+class BudgetExpenseViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for the BudgetExpense model
+    """
+    model = BudgetExpense
+    serializer_class = BudgetExpenseSerializer
+
+    def create(self, request, *args, **kw):
+        """
+        Handle POST requests to create object
+        """
+        if not request.user.is_authenticated():
+            return Response(
+                    data={
+                        'detail': 'Authentication required',
+                        },
+                    status=403,
+                    )
+
+        budget_category = BudgetCategory.objects.get(
+                id=request.DATA.get('budget_category'),
+                )
+        budget = budget_category.budget
+        perms = get_perms(
+                user_or_group=request.user,
+                obj=budget,
+                )
+        if 'change_budget' not in perms:
+            return Response(
+                    data={
+                        'detail': 'Permission denied',
+                        },
+                    status=403,
+                    )
+
+        return super(BudgetExpenseViewSet, self).create(request, *args, **kw)
+
+
+    def list(self, request):
+        """
+        This action is not permitted
+        """
+        return Response(
+                data={
+                    'detail': 'Action not permitted',
+                    },
+                status=403,
+                )
+
+    def retrieve(self, request, pk=None):
+        if not request.user.is_authenticated():
+            return Response(
+                    data={
+                        'detail': 'Authentication required',
+                        },
+                    status=403,
+                    )
+        budget_expense = BudgetExpense.objects.get(id=pk)
+
+        perms = get_perms(
+                user_or_group=request.user,
+                obj=budget_expense.budget_category.budget,
+                )
+
+        if 'view_budget' not in perms:
+            return Response(
+                    data={
+                        'detail': 'Permission denied',
+                        },
+                    status=403,
+                    )
+
+        serializer = self.serializer_class(budget_expense)
 
         return Response(
                 data=serializer.data,

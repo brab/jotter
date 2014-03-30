@@ -10,7 +10,8 @@ from django.test.utils import override_settings
 from guardian.shortcuts import assign_perm
 from rest_framework.test import APIClient
 
-from api.models import Budget, BudgetCategory, CheckList, CheckListItem
+from api.models import Budget, BudgetCategory, BudgetExpense, CheckList, \
+        CheckListItem
 from lib import increment_slug
 
 
@@ -292,6 +293,159 @@ class BudgetCategoryTest(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data.get('budget'), self.budget.id)
         self.assertEqual(response.data.get('title'), 'Category 1')
+
+
+class BudgetExpenseTest(TestCase):
+    """
+    Unit tests for the BudgetExpense API
+    """
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create(
+                username='test',
+                password='password',
+                )
+        self.user.set_password('password')
+        self.user.save()
+        self.user1 = User.objects.create(
+                username='test1',
+                password='password',
+                )
+        self.user1.set_password('password')
+        self.user1.save()
+        self.budget = Budget.objects.create(
+                owner=self.user,
+                title='Test Budget',
+                )
+        self.budget_1 = Budget.objects.create(
+                owner=self.user1,
+                title='Test Budget 1',
+                )
+
+        self.budget_category = BudgetCategory.objects.create(
+                budget=self.budget,
+                title='Category 1',
+                )
+        self.budget_category_1 = BudgetCategory.objects.create(
+                budget=self.budget_1,
+                title='Category 2',
+                )
+
+        self.budget_expense = BudgetExpense.objects.create(
+                budget_category=self.budget_category,
+                title='Expense 1',
+                )
+        self.budget_expense_1 = BudgetExpense.objects.create(
+                budget_category=self.budget_category_1,
+                title='Expense 2',
+                )
+
+        assign_perm('api.add_budget', self.user)
+        assign_perm('api.change_budget', self.user)
+        assign_perm('api.view_budget', self.user)
+        assign_perm('api.change_budget', self.user, self.budget)
+        assign_perm('api.view_budget', self.user, self.budget)
+        assign_perm('api.add_budgetcategory', self.user)
+        assign_perm('api.change_budgetcategory', self.user)
+        assign_perm('api.add_budgetexpense', self.user)
+        assign_perm('api.change_budgetexpense', self.user)
+
+        assign_perm('api.add_budget', self.user1)
+        assign_perm('api.change_budget', self.user1)
+        assign_perm('api.view_budget', self.user1)
+        assign_perm('api.add_budgetcategory', self.user1)
+        assign_perm('api.change_budgetcategory', self.user1)
+        assign_perm('api.add_budgetexpense', self.user1)
+        assign_perm('api.change_budgetexpense', self.user1)
+
+    def test_GET_list_not_allowed(self):
+        """
+        Listing all BudgetExpenses is not allowed
+        """
+        response = self.client.get('/api/v1/budget-expenses', )
+        self.assertEqual(response.status_code, 403)
+
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/budget-expenses', )
+        self.assertEqual(response.status_code, 403)
+
+    def test_GET_authentication_required(self):
+        """
+        User must be authenticated to retrieve a BudgetExpense
+        """
+        response = self.client.get('/api/v1/budget-expenses/%d' % (
+            self.budget_expense.id, ), )
+        self.assertEqual(response.status_code, 403)
+
+    def test_GET_returns_allowed_instance(self):
+        """
+        Return permitted budget_expense
+
+        Only instances that the user has view permission for the related
+        budget are returned
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/budget-expenses/%d' % (
+            self.budget_expense.id, ), )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data.get('title') == self.budget_expense.title)
+
+    def test_GET_return_403_if_not_permitted(self):
+        """
+        Return 403 on not permitted instances
+
+        Only instances that the user has view permission for the related
+        budget are returned
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.get('/api/v1/budget-expenses/%d' % (
+            self.budget_expense_1.id, ), )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_authentication_required(self):
+        """
+        User must be authenticated to create a BudgetExpense
+        """
+        response = self.client.post(
+                '/api/v1/budget-expenses',
+                { },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_authorization_required(self):
+        """
+        User must have permission to create a BudgetExpense
+
+        - 'add-budget' permission
+        """
+        login(self.client, username='test1', password='password', )
+        response = self.client.post(
+                '/api/v1/budget-expenses',
+                {
+                    'budget_category': self.budget_category.id,
+                    'title': 'Expense 1',
+                },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_POST_creates_check_list_item(self):
+        """
+        Create a new BudgetExpense
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.post(
+                '/api/v1/budget-expenses',
+                {
+                    'budget_category': self.budget_category.id,
+                    'title': 'Expense 1',
+                },
+                )
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(
+                response.data.get('budget_category'),
+                self.budget_category.id,
+                )
+        self.assertEqual(response.data.get('title'), 'Expense 1')
 
 
 class CheckListPermissionsTest(TestCase):
