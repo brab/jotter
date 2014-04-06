@@ -1,0 +1,150 @@
+<div class="row">
+  <div class="budget col-sm-12 col-lg-8 col-lg-offset-2">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong class="panel-title">{{ budget.title }}</strong>
+        <div class="btn-group pull-right">
+          <button class="btn btn-default btn-xs"
+            type="button"
+            ng-click="editBudgetPermissions()"
+            >
+            <i class="fa fa-share-square-o"></i>
+          </button>
+          <button class="btn btn-default btn-xs"
+            type="button"
+            ng-click="showBudgetCategoryEditForm = true"
+            >
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="panel-body" ng-init="showSearch=true">
+        <form class=""
+          role="form"
+          name="formEditBudgetCategory"
+          ng-submit="saveBudget()"
+          ng-show="showBudgetCategoryEditForm"
+          >
+          <div class="form-group col-sm-12">
+            <input class="form-control"
+              id="budgetCategoryEditTitle"
+              type="text"
+              placeholder="title"
+              ng-model="budgetCategoryEdit.title"
+              />
+          </div>
+          <div class="form-group col-sm-12"
+            ng-class="{'has-error': formEditBudgetCategory.budgetCategoryEditAmount.$invalid}"
+            >
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+              <input class="form-control"
+                id="budgetCategoryEditAmount"
+                name="budgetCategoryEditAmount"
+                type="number"
+                placeholder="0.00"
+                ng-model="budgetCategoryEdit.amountDollars"
+                ng-pattern="/^\d+(\.\d{2})?$/"
+                />
+            </div>
+          </div>
+          <div class="form-group col-sm-12">
+            <div class="btn-group pull-right">
+              <button
+                class="btn btn-default"
+                type="button"
+                ng-click="cancelBudgetCategoryEdit(); showBudgetCategoryEditForm = false">
+                <i class="fa fa-times text-danger"></i>
+              </button>
+              <button
+                class="btn btn-default"
+                type="button"
+                ng-click="saveBudgetCategory(); showBudgetCategoryEditForm = false;">
+                <i class="fa fa-check text-success"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"
+          ng-hide="budget.budget_categories.length > 0"
+          >
+          You don't have any categories in your budget yet. Tap the
+          <a href="" ng-click="showBudgetCategoryEditForm = true;"><i class="fa fa-plus"></i></a>
+          to get started!
+        </li>
+
+        <li class="list-group-item cursor-pointer"
+          ng-repeat="category in budget.budget_categories | orderBy:'title'"
+          >
+          <div class="row">
+            <div class="col-xs-8">
+              <h4>{{ category.title }}</h4>
+            </div>
+            <div class="col-xs-4">
+              <div class="btn-group pull-right">
+                <button class="btn btn-default btn-xs"
+                  type="button"
+                  data-toggle="modal"
+                  data-target="#modal-budget-expense-edit"
+                  ng-click="editBudgetExpense({budget_category: category})"
+                  >
+                  <i class="fa fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <small class="pull-right text-muted">
+                 {{ category.amount / 100 | currency }}
+              </small>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="progress">
+                <div class="progress-bar progress-bar-success"
+                  role="progressbar"
+                  ng-style="{width: (category.spent / category.amount * 100) + '%'}"
+                  >
+                  {{ category.spent / 100.0 | currency }}
+                </div>
+                <div class="text-center text-muted">
+                  {{ (category.amount - category.spent) / 100 | currency }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-sm-12">
+    <div class="modal" id="modal-budget-expense-edit">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" type="button" data-dismiss="modal">&times;</button>
+            <h4>Expense</h4>
+          </div>
+          <div class="modal-body">
+            <jtr-budget-expense-edit expense="budgetExpenseEdit"></jtr-budget-expense-edit>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-primary"
+              type="button"
+              data-dismiss="modal"
+              ng-click="saveBudgetExpense()"
+              >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

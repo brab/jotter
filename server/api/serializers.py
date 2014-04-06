@@ -20,7 +20,7 @@ class BudgetExpenseSerializer(ModelSerializer):
         Meta
         """
         model = BudgetExpense
-        fields = ('budget_category', 'title', 'amount', 'created', )
+        fields = ('id', 'budget_category', 'title', 'amount', 'created', )
 
 
 class BudgetCategorySerializer(ModelSerializer):
@@ -38,7 +38,7 @@ class BudgetCategorySerializer(ModelSerializer):
         Meta
         """
         model = BudgetCategory
-        fields = ('amount', 'budget', 'title', )
+        fields = ('id', 'amount', 'budget', 'title', 'budget_expenses', )
 
 
 class BudgetSerializer(ModelSerializer):

@@ -58,9 +58,9 @@
       "inject": false,
       "it": false,
       "jasmine": false,
-      "jotterApp": false,
-      "jotterDirectives": false,
-      "jotterServices": false,
+      "jotterApp": true,
+      "jotterDirectives": true,
+      "jotterServices": true,
       "module": false,
       "moment": false,
       "spyOn": false

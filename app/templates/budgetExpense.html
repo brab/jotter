@@ -1,0 +1,45 @@
+<div class="row budget-expense" id="top">
+  <div class="col-12">
+    <form name="form-budget-expense"
+      role="form"
+      ng-submit="saveBudgetExpense()"
+      >
+      <div class="form-group col-sm-12">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+          <input class="form-control input-lg"
+            id="expenseAmount"
+            name="expenseAmount"
+            type="text"
+            placeholder="0.00"
+            ng-model="expense.amountDollars"
+            ng-pattern="/^\d+(\.\d{2})?$/"
+            />
+        </div>
+      </div>
+      <div class="form-group col-sm-12">
+        <input class="form-control"
+          id="expenseTitle"
+          name="expenseTitle"
+          type="text"
+          placeholder="name"
+          ng-model="expense.title"
+          />
+      </div>
+      <div class="form-group col-sm-12">
+        <select class="form-control"
+          id="expenceBudgetCategory"
+          ui-select2
+          ng-model="expense.budget_categoryId"
+          >
+          <option ng-value="expense.budget_category.id"
+            ng-selected="true"
+            data-locked="true"
+            >
+            {{ expense.budget_category.title }}
+          </option>
+        </select>
+      </div>
+    </form>
+  </div>
+</div>

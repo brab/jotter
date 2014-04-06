@@ -286,11 +286,13 @@ class BudgetCategoryTest(TestCase):
         response = self.client.post(
                 '/api/v1/budget-categories',
                 {
+                    'amount': 50000,
                     'budget': self.budget.id,
                     'title': 'Category 1',
                 },
                 )
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data.get('amount'), 50000)
         self.assertEqual(response.data.get('budget'), self.budget.id)
         self.assertEqual(response.data.get('title'), 'Category 1')
 
