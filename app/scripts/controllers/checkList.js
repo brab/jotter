@@ -29,6 +29,16 @@ function($location, $routeParams, $scope, CheckList, CheckListItem, Session, Use
   });
   $scope.checkList = CheckList.get({ id: checkListId });
 
+  $scope.deleteCheckListItem = function(checkListItem) {
+    // jshint camelcase: false
+    checkListItem = new CheckListItem(checkListItem);
+    $scope.checkList.check_list_items = _.reject(
+        $scope.checkList.check_list_items,
+        function(item) {return item.id === checkListItem.id;}
+        );
+    checkListItem.$delete();
+  };
+
   var saveNewCheckListItem = function() {
     var newCheckListItem = new CheckListItem({
       // jshint camelcase: false
