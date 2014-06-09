@@ -151,6 +151,39 @@ class CheckListItemViewSet(viewsets.ModelViewSet):
 
         return super(CheckListItemViewSet, self).create(request, *args, **kw)
 
+    def destroy(self, request, pk):
+        """
+        Delete a CheckListItem
+        """
+        if not request.user.is_authenticated():
+            return Response(
+                    data={
+                        'detail': 'Authentication required',
+                        },
+                    status=403,
+                    )
+        check_list_item = CheckListItem.objects.get(id=pk)
+
+        perms = get_perms(
+                user_or_group=request.user,
+                obj=check_list_item.check_list,
+                )
+
+        if 'change_checklist' not in perms:
+            return Response(
+                    data={
+                        'detail': 'Permission denied',
+                        },
+                    status=403,
+                    )
+
+        check_list_item.delete()
+
+        return Response(
+                status=204,
+                )
+
+
     def list(self, request):
         """
         This action is not permitted
@@ -491,3 +524,4 @@ class UserViewSet(viewsets.ModelViewSet):
             assign_perm('api.view_checklist', obj)
             assign_perm('api.add_checklistitem', obj)
             assign_perm('api.change_checklistitem', obj)
+            assign_perm('api.delete_checklistitem', obj)

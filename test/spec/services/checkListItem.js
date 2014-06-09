@@ -40,6 +40,35 @@ describe('Service: CheckListItem', function () {
     expect(CheckListItem).toBeDefined();
   });
 
+  describe('delete()', function () {
+    it('should make a DELETE request when passed arguments', function () {
+      $httpBackend.expectDELETE('/api/v1/check-list-items/cli0001')
+        .respond(204);
+
+      resource = CheckListItem.delete({
+        id: 'cli0001'
+      });
+
+      $httpBackend.flush();
+    });
+
+    it('should make a DELETE request when called on an instance', function () {
+      $httpBackend.expectDELETE('/api/v1/check-list-items/cli0001')
+        .respond(204);
+
+      var checkListItem = new CheckListItem({
+        check_list: 'cl0001',
+        checked: false,
+        id: 'cli0001',
+        title: 'Thing 1',
+        description: 'Something about thing 1'
+      });
+
+      checkListItem.$delete();
+      $httpBackend.flush();
+    });
+  });
+
   describe('save()', function () {
     it('should make a POST request when passed arguments', function () {
       $httpBackend.expectPOST('/api/v1/check-list-items')
