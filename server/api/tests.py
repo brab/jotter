@@ -791,6 +791,7 @@ class CheckListItemTest(TestCase):
         assign_perm('api.view_checklist', self.user, self.check_list)
         assign_perm('api.add_checklistitem', self.user)
         assign_perm('api.change_checklistitem', self.user)
+        assign_perm('api.delete_checklistitem', self.user)
 
         assign_perm('api.add_checklist', self.user1)
         assign_perm('api.change_checklist', self.user1)
@@ -891,6 +892,43 @@ class CheckListItemTest(TestCase):
         self.assertEqual(response.data.get('checked'), False)
         self.assertEqual(response.data.get('description'), 'more info')
         self.assertEqual(response.data.get('title'), 'Item 1')
+
+    def test_DELETE_authentication_required(self):
+        """
+        User must be authenticated to delete a CheckListItem
+        """
+        response = self.client.delete(
+                '/api/v1/check-list-items/%s' % self.check_list_item.id,
+                { },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_DELETE_authorization_required(self):
+        """
+        User must have permission to delete a CheckListItem
+
+        - 'change-checklist' permission
+        """
+        login(self.client, username='test1', password='password', )
+        response = self.client.delete(
+                '/api/v1/check-list-items/%s' % self.check_list_item.id,
+                { },
+                )
+        self.assertEqual(response.status_code, 403)
+
+    def test_DELETE_deletes_check_list_item(self):
+        """
+        Delete a CheckListItem
+        """
+        login(self.client, username='test', password='password', )
+        response = self.client.delete(
+                '/api/v1/check-list-items/%s' % self.check_list_item.id,
+                { },
+                )
+        self.assertEqual(response.status_code, 204)
+
+        with self.assertRaises(CheckListItem.DoesNotExist):
+            CheckListItem.objects.get(id=self.check_list_item.id, )
 
 
 class SessionTest(TestCase):
