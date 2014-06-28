@@ -121,7 +121,7 @@
             ng-repeat="budget in budgets | limitTo:budgetsLimit"
             ng-click="gotoBudget(budget)">
           <strong>{{ budget.title }}</strong>
-          <small class="text-muted pull-right">($/$$$ spent)</small>
+          <small class="text-muted pull-right">({{ budget.spent / 100 | currency }}/{{ budget.amount / 100 | currency }} spent)</small>
         </li>
       </ul>
     </div>

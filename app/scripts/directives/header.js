@@ -7,7 +7,7 @@ function ($location, Session) {
     restrict: 'E',
     scope: true,
     templateUrl: 'templates/header.html',
-    link: function postLink (scope, element, attrs) {
+    link: function postLink(scope, element, attrs) {
       Session.getUser({
         onSuccess: function (user) {
           scope.user = user;
