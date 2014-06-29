@@ -17,8 +17,7 @@ function($location, $routeParams, $scope, Budget, BudgetCategory, BudgetExpense,
   });
 
   var budgetId = $routeParams.id;
-  if(angular.isUndefined(budgetId) ||
-      budgetId === '') {
+  if(angular.isUndefined(budgetId) || budgetId === '') {
     $scope.$root.$broadcast('alert', {
       title: "I can't find that budget"
     });

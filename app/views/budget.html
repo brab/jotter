@@ -97,8 +97,11 @@
           </div>
           <div class="row">
             <div class="col-sm-12">
-              <small class="pull-right text-muted">
-                 {{ category.amount / 100 | currency }}
+              <small
+                class="pull-right text-muted"
+                ng-show="category.spent < category.amount"
+                >
+                {{ category.amount / 100 | currency }}
               </small>
             </div>
           </div>
@@ -107,9 +110,24 @@
               <div class="progress">
                 <div class="progress-bar progress-bar-success"
                   role="progressbar"
+                  ng-show="category.spent > 0 && category.spent <= category.amount"
                   ng-style="{width: (category.spent / category.amount * 100) + '%'}"
                   >
                   {{ category.spent / 100.0 | currency }}
+                </div>
+                <div class="progress-bar progress-bar-success"
+                  role="progress"
+                  ng-show="category.spent > category.amount"
+                  ng-style="{width: (category.amount / category.spent * 100) + '%'}"
+                  >
+                  {{ category.amount / 100.0 | currency }}
+                </div>
+                <div class="progress-bar progress-bar-danger"
+                  role="progress"
+                  ng-show="category.spent > category.amount"
+                  ng-style="{width: ((category.spent - category.amount) / category.spent * 100) + '%'}"
+                  >
+                  {{ (category.spent - category.amount) / 100.0 | currency }}
                 </div>
                 <div class="text-center text-muted">
                   {{ (category.amount - category.spent) / 100 | currency }}
