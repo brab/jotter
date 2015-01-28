@@ -2,3 +2,14 @@ import os
 
 PROJECT_PATH = os.path.dirname(__file__)
 ANGULAR_ROOT = os.path.realpath(os.path.join(PROJECT_PATH, '../../dist'))
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dfm7u9a2vf0jjn',
+        'USER': 'fvzcfefrxzmdow',
+        'PASSWORD': '7eDPMDUaaZAasHxEn47dKGbFwc',
+        'HOST': 'ec2-54-243-49-82.compute-1.amazonaws.com',
+        'PORT': '5432',
+    }
+}
