@@ -6,10 +6,10 @@ ANGULAR_ROOT = os.path.realpath(os.path.join(PROJECT_PATH, '../../dist'))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dfm7u9a2vf0jjn',
-        'USER': 'fvzcfefrxzmdow',
-        'PASSWORD': '7eDPMDUaaZAasHxEn47dKGbFwc',
-        'HOST': 'ec2-54-243-49-82.compute-1.amazonaws.com',
+        'NAME': 'defb3g9paetm00',
+        'USER': 'nccocygwaeqqwf',
+        'PASSWORD': '643357c02f9eba04254965ea11191250d42de924a65cc2d579a4ef33974c58f4',
+        'HOST': 'ec2-54-163-245-150.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
